@@ -337,7 +337,7 @@ HRESULT Texture::outputToTGA(DirectX::Blob &blob, Format format, std::filesystem
     }
 
     std::wstring wpath = outputPath.generic_wstring();
-    hr = DirectX::SaveToTGAFile(*convImage.GetImage(0, 0, 0), wpath.c_str(), &metadata);
+    hr = DirectX::SaveToTGAFile(*convImage.GetImage(0, 0, 0), DirectX::TGA_FLAGS_NONE, wpath.c_str(), nullptr);
     if (FAILED(hr))
         return hr;
 
