@@ -33,7 +33,8 @@ size_t Texture::getScaleFactor(int texdW, int texdH)
     case 16777216:
         return 32;
     default:
-        LOG_AND_EXIT("Could not find scale factor, please report this to Anthony!");
+        LOG("[w] TEXT Scale Factor could not be found, defaulting to 1, this may cause issues!");
+        return 1;
     }
 }
 
@@ -1203,7 +1204,9 @@ void Texture::H3::Convert(std::vector<char> textData, std::vector<char> texdData
         TEXT.header.type,
         TEXT.header.flags - (ps4swizzle ? 1 : 0),
         TEXT.header.format,
-        isCompressed};
+        isCompressed,
+        TEXT.header.textScalingWidth,
+        TEXT.header.textScalingHeight};
 
     LOG("Outputting meta...");
     writeFile(&meta, sizeof(meta), outPath.generic_string() + ".tonymeta");
@@ -1274,8 +1277,8 @@ void Texture::H3::Rebuild(std::string tgaPath, std::string outputPath, bool rebu
         TEXT.header.textAtlasOffset = 0x98;
 
         TEXT.header.textScalingData1 = 0xFF;
-        TEXT.header.textScalingWidth = ((2 >> builtTEXT.width) + 1);
-        TEXT.header.textScalingHeight = ((2 >> builtTEXT.height) + 1);
+        TEXT.header.textScalingWidth = meta.textScalingWidth; //((2 >> builtTEXT.width) + 1);
+        TEXT.header.textScalingHeight = meta.textScalingHeight; //((2 >> builtTEXT.height) + 1);
         TEXT.header.textMipsLevels = builtTEXT.mipsCount;
 
         LOG("Writing TEXT and TEXD...");

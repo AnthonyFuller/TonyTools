@@ -231,6 +231,8 @@ namespace Texture
             uint32_t flags;
             Format format;
             bool isCompressed;
+            uint8_t textScalingWidth;
+            uint8_t textScalingHeight;
         };
 
         bool readHeader(std::vector<char> textureData, Header &header);
