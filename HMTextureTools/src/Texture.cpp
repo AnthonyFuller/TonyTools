@@ -678,7 +678,6 @@ bool Texture::H2016::readHeader(std::vector<char> textureData, Header &header, b
     assert_msg(header.magic == 1, "Invalid texture magic! Please make sure it is an actual texture!");
 
     assert_msg(header.defaultMip == 0, "Unknown default mip! Please report this to Anthony!");
-    assert_msg(header.interpretAs == 0, "Unknown interpret as! Please report this to Anthony!");
     assert_msg(header.dimensions == 0, "Unknown dimensions! Please report this to Anthony!");
     assert_msg(header.mipsInterpolMode == 0, "Unknown interpol mode! Please report this to Anthony!");
 
@@ -742,7 +741,8 @@ void Texture::H2016::Convert(std::vector<char> textureData, std::string outputPa
     H2016::Meta meta = {
         texture.header.type,
         texture.header.flags - (ps4swizzle ? 1 : 0),
-        texture.header.format};
+        texture.header.format,
+        texture.header.interpretAs};
 
     LOG("Outputting meta...");
     writeFile(&meta, sizeof(meta), outPath.generic_string() + ".tonymeta");
@@ -837,7 +837,9 @@ void Texture::H2016::Rebuild(std::string tgaPath, std::string outputPath, bool r
                 builtTEXD.width,
                 builtTEXD.height,
                 meta.format,
-                builtTEXD.mipsCount};
+                builtTEXD.mipsCount,
+                0,
+                meta.interpretAs};
 
             for (int i = 0; i < 0xE; i++)
                 TEXD.header.mipsDataSizes[i] = builtTEXD.mipsSizes[i];

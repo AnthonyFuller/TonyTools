@@ -137,6 +137,7 @@ namespace Texture
             Type type;
             uint32_t flags;
             Format format;
+            uint8_t interpretAs;
         };
 
         bool readHeader(std::vector<char> textureData, Header &header, bool isTEXD);
