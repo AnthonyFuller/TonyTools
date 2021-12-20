@@ -1,0 +1,107 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - master
+    tags:
+      - v*
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  build_windows:
+    name: Build [Windows]
+    runs-on: [windows-latest]
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        submodules: recursive
+
+    - name: Update Windows SDK
+      uses: fbactions/setup-winsdk@v1
+      with:
+        winsdk-build-version: 19041
+
+    - name: Get latest CMake
+      uses: lukka/get-cmake@latest
+
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v1.0.2
+    
+    - name: Generate projects
+      run: |
+        mkdir _build
+        cd _build
+        cmake -DCMAKE_SYSTEM_VERSION=10.0.19041.0 -DBUILD_TOOLS=OFF ..
+    
+    - name: Build
+      run: |
+        cmake --build _build --config Release
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: "TonyTools"
+        path: |
+          _build/artifacts/Release/**/*
+          !_build/artifacts/Release/MJBATesting.exe
+
+  create_release:
+    name: Create release
+    needs: [build_windows]
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Get version
+      id: get_version
+      run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+    
+    - name: Create release
+      id: release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ steps.get_version.outputs.VERSION }}
+        release_name: "TonyTools ${{ steps.get_version.outputs.VERSION }}"
+        draft: true
+        prerelease: ${{ contains(github.ref, '-pre') }}
+
+    outputs:
+      upload_url: ${{ steps.release.outputs.upload_url }}
+
+  upload_release_asset:
+    name: Upload release asset
+    needs: [create_release]
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Get version
+      id: get_version
+      run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+
+    - name: Download artifact
+      uses: actions/download-artifact@v2
+      with:
+        name: TonyTools
+        path: TonyTools
+
+    - name: Package artifact for release
+      run: |
+        cd TonyTools
+        zip -r TonyTools.zip *
+
+    - name: Upload release asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ needs.create_release.outputs.upload_url }}
+        asset_path: TonyTools/TonyTools.zip
+        asset_name: "TonyTools_${{ steps.get_version.outputs.VERSION }}.zip"
+        asset_content_type: application/zip
