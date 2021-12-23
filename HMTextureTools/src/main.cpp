@@ -74,6 +74,10 @@ int main(int argc, char *argv[])
         .default_value(false)
         .implicit_value(true);
 
+    program.add_argument("--texdoutput")
+        .help("path to the output TEXD. only for rebuilding both and porting. [currently only works on H3]")
+        .nargs(1);
+
     program.add_argument("--istexd")
         .help("use this option if the input texture is a TEXD (only works on H2016 and H2! rebuilding both overrides this option!)")
         .default_value(false)
@@ -172,6 +176,10 @@ int main(int argc, char *argv[])
         LOG_AND_EXIT(program);
     }
 
+    std::string textOutputPath = "";
+    if (program.is_used("--texdoutput"))
+        textOutputPath = program.get<std::string>("--texdoutput");
+
     HRESULT hr = CoInitializeEx(nullptr, COINITBASE_MULTITHREADED);
     if (FAILED(hr))
         handleHRESULT("Failed to initalise COM!", hr);
@@ -200,7 +208,7 @@ int main(int argc, char *argv[])
             Texture::H2::Convert(rawTEXT, outPath, ps4swizzle, portTo, isTEXD);
             break;
         case Texture::Version::H3:
-            Texture::H3::Convert(rawTEXT, rawTEXD, outPath, ps4swizzle, portTo, h3TEXDpath != "");
+            Texture::H3::Convert(rawTEXT, rawTEXD, outPath, ps4swizzle, portTo, h3TEXDpath != "", textOutputPath);
             break;
         }
     }
@@ -220,7 +228,7 @@ int main(int argc, char *argv[])
             Texture::H2::Rebuild(texturePath, outPath, rebuildBoth, isTEXD, ps4swizzle);
             break;
         case Texture::Version::H3:
-            Texture::H3::Rebuild(texturePath, outPath, rebuildBoth, ps4swizzle);
+            Texture::H3::Rebuild(texturePath, outPath, rebuildBoth, ps4swizzle, rebuildBoth ? textOutputPath : "");
             break;
         }
     }

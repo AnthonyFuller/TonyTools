@@ -237,11 +237,11 @@ HRESULT Texture::compress(builtTexture &texture, DirectX::ScratchImage &mipChain
             mipChain.GetPixels()[i] = 0xFF;
     case Texture::Format::DXT1:
     case Texture::Format::DXT5:
-    case Texture::Format::BC7:
     case Texture::Format::BC4:
+    case Texture::Format::BC7:
         hr = DirectX::Compress(EncodingDevice(), mipChain.GetImages(), mipChain.GetImageCount(), mipChain.GetMetadata(), toDxgiFormat(format), DirectX::TEX_COMPRESS_PARALLEL, DirectX::TEX_THRESHOLD_DEFAULT, outImage);
         if (FAILED(hr))
-            hr = DirectX::Compress(mipChain.GetImages(), mipChain.GetImageCount(), mipChain.GetMetadata(), toDxgiFormat(format), DirectX::TEX_COMPRESS_DEFAULT, DirectX::TEX_THRESHOLD_DEFAULT, outImage);
+        hr = DirectX::Compress(mipChain.GetImages(), mipChain.GetImageCount(), mipChain.GetMetadata(), toDxgiFormat(format), DirectX::TEX_COMPRESS_DEFAULT, DirectX::TEX_THRESHOLD_DEFAULT, outImage);
         if (FAILED(hr))
             return hr;
         break;
@@ -356,7 +356,7 @@ HRESULT Texture::import(std::filesystem::path tgaPath, Format format, bool rebui
 
     LOG("Loading TGA...");
     std::wstring wpath = tgaPath.generic_wstring();
-    hr = DirectX::LoadFromTGAFile(wpath.c_str(), &meta, inputImage);
+    hr = DirectX::LoadFromTGAFile(wpath.c_str(), DirectX::TGA_FLAGS_NONE, &meta, inputImage);
     if (FAILED(hr))
         return hr;
 
@@ -1120,7 +1120,7 @@ bool Texture::H3::readHeader(std::vector<char> textureData, Header &header)
     return true;
 }
 
-void Texture::H3::Convert(std::vector<char> textData, std::vector<char> texdData, std::string outputPath, bool ps4swizzle, Version portTo, bool hasTEXD)
+void Texture::H3::Convert(std::vector<char> textData, std::vector<char> texdData, std::string outputPath, bool ps4swizzle, Version portTo, bool hasTEXD, std::string texdOutPath)
 {
     HRESULT hr;
     Texture::H3::TEXT TEXT{};
@@ -1216,7 +1216,7 @@ void Texture::H3::Convert(std::vector<char> textData, std::vector<char> texdData
     {
         LOG("Porting to " + versionToString(portTo));
 
-        H3::Rebuild(outPath.generic_string(), outputPath, hasTEXD, false);
+        H3::Rebuild(outPath.generic_string(), outputPath, hasTEXD, false, texdOutPath);
 
         remove(outPath.generic_string().c_str());
         remove((outPath.generic_string() + ".tonymeta").c_str());
@@ -1228,7 +1228,7 @@ void Texture::H3::Convert(std::vector<char> textData, std::vector<char> texdData
     }
 }
 
-void Texture::H3::Rebuild(std::string tgaPath, std::string outputPath, bool rebuildBoth, bool ps4swizzle)
+void Texture::H3::Rebuild(std::string tgaPath, std::string outputPath, bool rebuildBoth, bool ps4swizzle, std::string texdOutput)
 {
     HRESULT hr;
     H3::TEXT TEXT{};
@@ -1245,7 +1245,12 @@ void Texture::H3::Rebuild(std::string tgaPath, std::string outputPath, bool rebu
 
     if (rebuildBoth)
     {
-        if (meta.isCompressed)
+        if (meta.isCompressed && (builtTEXD.mipsCount == builtTEXT.mipsCount))
+        {
+            TEXT.pixels = builtTEXT.compressedPixels;
+            TEXD.pixels = std::move(builtTEXT.compressedPixels);
+        }
+        else if (meta.isCompressed)
         {
             TEXT.pixels = std::move(builtTEXT.compressedPixels);
             TEXD.pixels = std::move(builtTEXD.compressedPixels);
@@ -1282,8 +1287,8 @@ void Texture::H3::Rebuild(std::string tgaPath, std::string outputPath, bool rebu
         TEXT.header.textMipsLevels = builtTEXT.mipsCount;
 
         LOG("Writing TEXT and TEXD...");
-        writeTexture<H3::TEXT>(TEXT, outputPath + ".TEXT");
-        writeFile(TEXD.pixels.data(), TEXD.pixels.size(), outputPath + ".TEXD");
+        writeTexture<H3::TEXT>(TEXT, texdOutput == "" ? outputPath + ".TEXT" : outputPath);
+        writeFile(TEXD.pixels.data(), TEXD.pixels.size(), texdOutput == "" ? outputPath + ".TEXD" : texdOutput);
 
         LOG("Finished rebuilding TGA to TEXT and TEXD.");
     }

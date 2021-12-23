@@ -237,8 +237,8 @@ namespace Texture
 
         bool readHeader(std::vector<char> textureData, Header &header);
 
-        void Convert(std::vector<char> textData, std::vector<char> texdData, std::string outputPath, bool ps4swizzle, Version portTo, bool hasTEXD);
-        void Rebuild(std::string tgaPath, std::string outputPath, bool rebuildBoth, bool ps4swizzle);
+        void Convert(std::vector<char> textData, std::vector<char> texdData, std::string outputPath, bool ps4swizzle, Version portTo, bool hasTEXD, std::string texdOutPath);
+        void Rebuild(std::string tgaPath, std::string outputPath, bool rebuildBoth, bool ps4swizzle, std::string texdOutput);
     };
 
     size_t getScaleFactor(int texdW, int texdH);
