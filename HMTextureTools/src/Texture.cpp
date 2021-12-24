@@ -362,9 +362,7 @@ HRESULT Texture::import(std::filesystem::path tgaPath, Format format, bool rebui
 
     switch (format)
     {
-    case Texture::Format::A8:
     case Texture::Format::R8G8:
-    case Texture::Format::R8G8B8A8:
         DirectX::ScratchImage tempImg{};
         hr = DirectX::Convert(*inputImage.GetImage(0, 0, 0), toDxgiFormat(format), DirectX::TEX_FILTER_DEFAULT, DirectX::TEX_THRESHOLD_DEFAULT, tempImg);
         if (FAILED(hr))
@@ -1294,7 +1292,12 @@ void Texture::H3::Rebuild(std::string tgaPath, std::string outputPath, bool rebu
     }
     else
     {
-        uint32_t filesize = sizeof(H3::Header) + builtTEXT.pixels.size();
+        if (meta.isCompressed)
+            TEXT.pixels = std::move(builtTEXT.compressedPixels);
+        else
+            TEXT.pixels = std::move(builtTEXT.pixels);
+
+        uint32_t filesize = sizeof(H3::Header) + TEXT.pixels.size();
 
         TEXT.header = {
             1,
@@ -1309,15 +1312,15 @@ void Texture::H3::Rebuild(std::string tgaPath, std::string outputPath, bool rebu
         for (int i = 0; i < 0xE; i++)
         {
             TEXT.header.texdMipsSizes[i] = builtTEXT.mipsSizes[i];
-            TEXT.header.texdBlockSizes[i] = builtTEXT.mipsSizes[i];
+            if (meta.isCompressed)
+                TEXT.header.texdBlockSizes[i] = builtTEXT.compressedSizes[i];
+            else
+                TEXT.header.texdBlockSizes[i] = builtTEXT.mipsSizes[i];
         }
 
         TEXT.header.textAtlasOffset = 0x98;
-
         TEXT.header.textScalingData1 = 0xFF;
         TEXT.header.textMipsLevels = builtTEXT.mipsCount;
-
-        TEXT.pixels = std::move(builtTEXT.pixels);
 
         LOG("Writing TEXT...");
         writeTexture<H3::TEXT>(TEXT, outputPath);
