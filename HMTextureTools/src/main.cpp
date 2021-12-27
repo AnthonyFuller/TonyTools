@@ -83,6 +83,10 @@ int main(int argc, char *argv[])
         .default_value(false)
         .implicit_value(true);
 
+    program.add_argument("--metapath")
+        .help("path to the input/output meta")
+        .nargs(1);
+
     program.add_argument("--ps4swizzle")
         .help("use this option if you want deswizzle/swizzle textures (porting with this option will only deswizzle!)")
         .default_value(false)
@@ -176,9 +180,13 @@ int main(int argc, char *argv[])
         LOG_AND_EXIT(program);
     }
 
-    std::string textOutputPath = "";
+    std::string texdOutputPath = "";
     if (program.is_used("--texdoutput"))
-        textOutputPath = program.get<std::string>("--texdoutput");
+        texdOutputPath = program.get<std::string>("--texdoutput");
+
+    std::string metaPath = "";
+    if (program.is_used("--metapath"))
+        metaPath = program.get<std::string>("--metapath");
 
     HRESULT hr = CoInitializeEx(nullptr, COINITBASE_MULTITHREADED);
     if (FAILED(hr))
@@ -199,16 +207,16 @@ int main(int argc, char *argv[])
         switch (version)
         {
         case Texture::Version::HMA:
-            Texture::HMA::Convert(rawTEXT, outPath, ps4swizzle);
+            Texture::HMA::Convert(rawTEXT, outPath, ps4swizzle, metaPath);
             break;
         case Texture::Version::H2016:
-            Texture::H2016::Convert(rawTEXT, outPath, ps4swizzle, portTo, isTEXD);
+            Texture::H2016::Convert(rawTEXT, outPath, ps4swizzle, portTo, isTEXD, texdOutputPath, metaPath);
             break;
         case Texture::Version::H2:
-            Texture::H2::Convert(rawTEXT, outPath, ps4swizzle, portTo, isTEXD);
+            Texture::H2::Convert(rawTEXT, outPath, ps4swizzle, portTo, isTEXD, texdOutputPath, metaPath);
             break;
         case Texture::Version::H3:
-            Texture::H3::Convert(rawTEXT, rawTEXD, outPath, ps4swizzle, portTo, h3TEXDpath != "", textOutputPath);
+            Texture::H3::Convert(rawTEXT, rawTEXD, outPath, ps4swizzle, portTo, h3TEXDpath != "", texdOutputPath, metaPath);
             break;
         }
     }
@@ -219,16 +227,16 @@ int main(int argc, char *argv[])
         switch (version)
         {
         case Texture::Version::HMA:
-            Texture::HMA::Rebuild(texturePath, outPath, ps4swizzle);
+            Texture::HMA::Rebuild(texturePath, outPath, ps4swizzle, metaPath);
             break;
         case Texture::Version::H2016:
-            Texture::H2016::Rebuild(texturePath, outPath, rebuildBoth, isTEXD, ps4swizzle);
+            Texture::H2016::Rebuild(texturePath, outPath, rebuildBoth, isTEXD, ps4swizzle, rebuildBoth ? texdOutputPath : "", metaPath);
             break;
         case Texture::Version::H2:
-            Texture::H2::Rebuild(texturePath, outPath, rebuildBoth, isTEXD, ps4swizzle);
+            Texture::H2::Rebuild(texturePath, outPath, rebuildBoth, isTEXD, ps4swizzle, rebuildBoth ? texdOutputPath : "", metaPath);
             break;
         case Texture::Version::H3:
-            Texture::H3::Rebuild(texturePath, outPath, rebuildBoth, ps4swizzle, rebuildBoth ? textOutputPath : "");
+            Texture::H3::Rebuild(texturePath, outPath, rebuildBoth, ps4swizzle, rebuildBoth ? texdOutputPath : "", metaPath);
             break;
         }
     }

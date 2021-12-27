@@ -99,8 +99,8 @@ namespace Texture
 
         bool readHeader(std::vector<char> textureData, Header &header);
 
-        void Convert(std::vector<char> textureData, std::string outputPath, bool ps4swizzle);
-        void Rebuild(std::string tgaPath, std::string outputPath, bool ps4swizzle);
+        void Convert(std::vector<char> textureData, std::string outputPath, bool ps4swizzle, std::string metaPath);
+        void Rebuild(std::string tgaPath, std::string outputPath, bool ps4swizzle, std::string metaPath);
     };
 
     namespace H2016
@@ -142,8 +142,8 @@ namespace Texture
 
         bool readHeader(std::vector<char> textureData, Header &header, bool isTEXD);
 
-        void Convert(std::vector<char> textureData, std::string outputPath, bool ps4swizzle, Version portTo, bool isTEXD);
-        void Rebuild(std::string tgaPath, std::string outputPath, bool rebuildBoth, bool isTEXD, bool ps4swizzle);
+        void Convert(std::vector<char> textureData, std::string outputPath, bool ps4swizzle, Version portTo, bool isTEXD, std::string texdOutput, std::string metaPath);
+        void Rebuild(std::string tgaPath, std::string outputPath, bool rebuildBoth, bool isTEXD, bool ps4swizzle, std::string texdOutput, std::string metaPath);
     };
 
     namespace H2
@@ -182,8 +182,8 @@ namespace Texture
 
         bool readHeader(std::vector<char> textureData, Header &header, bool isTEXD);
 
-        void Convert(std::vector<char> textureData, std::string outputPath, bool ps4swizzle, Version portTo, bool isTEXD);
-        void Rebuild(std::string tgaPath, std::string outputPath, bool rebuildBoth, bool isTEXD, bool ps4swizzle);
+        void Convert(std::vector<char> textureData, std::string outputPath, bool ps4swizzle, Version portTo, bool isTEXD, std::string texdOutput, std::string metaPath);
+        void Rebuild(std::string tgaPath, std::string outputPath, bool rebuildBoth, bool isTEXD, bool ps4swizzle, std::string texdOutput, std::string metaPath);
     };
 
     namespace H3
@@ -237,8 +237,8 @@ namespace Texture
 
         bool readHeader(std::vector<char> textureData, Header &header);
 
-        void Convert(std::vector<char> textData, std::vector<char> texdData, std::string outputPath, bool ps4swizzle, Version portTo, bool hasTEXD, std::string texdOutPath);
-        void Rebuild(std::string tgaPath, std::string outputPath, bool rebuildBoth, bool ps4swizzle, std::string texdOutput);
+        void Convert(std::vector<char> textData, std::vector<char> texdData, std::string outputPath, bool ps4swizzle, Version portTo, bool hasTEXD, std::string texdOutPath, std::string metaPath);
+        void Rebuild(std::string tgaPath, std::string outputPath, bool rebuildBoth, bool ps4swizzle, std::string texdOutput, std::string metaPath);
     };
 
     size_t getScaleFactor(int texdW, int texdH);

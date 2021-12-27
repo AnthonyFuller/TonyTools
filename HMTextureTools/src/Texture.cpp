@@ -523,13 +523,13 @@ template <typename T>
 T Texture::readMetaFile(std::filesystem::path path)
 {
     // Check file exists
-    if (!std::filesystem::exists(path.generic_string() + ".tonymeta"))
+    if (!std::filesystem::exists(path.generic_string()))
     {
         LOG_AND_EXIT("Could not find the meta file associated with this texture! Please make sure it exists.");
     }
 
     // Load file data into vector
-    std::ifstream FILE(path.generic_string() + ".tonymeta", std::ifstream::binary);
+    std::ifstream FILE(path.generic_string(), std::ifstream::binary);
     if (!FILE.good())
     {
         LOG_AND_EXIT("Could not open read stream to file!");
@@ -577,7 +577,7 @@ bool Texture::HMA::readHeader(std::vector<char> textureData, Header &header)
     return true;
 }
 
-void Texture::HMA::Convert(std::vector<char> textureData, std::string outputPath, bool ps4swizzle)
+void Texture::HMA::Convert(std::vector<char> textureData, std::string outputPath, bool ps4swizzle, std::string metaPath)
 {
     Texture::HMA::TEXT texture{};
 
@@ -617,19 +617,19 @@ void Texture::HMA::Convert(std::vector<char> textureData, std::string outputPath
         texture.header.mipsInterpolMode};
 
     LOG("Outputting meta...");
-    writeFile(&meta, sizeof(meta), outPath.generic_string() + ".tonymeta");
+    writeFile(&meta, sizeof(meta), metaPath != "" ? metaPath : (outPath.generic_string() + ".tonymeta"));
     LOG("Finished outputting meta");
 
     LOG("Converted HMA texture to TGA successfully!");
 }
 
-void Texture::HMA::Rebuild(std::string tgaPath, std::string outputPath, bool ps4swizzle)
+void Texture::HMA::Rebuild(std::string tgaPath, std::string outputPath, bool ps4swizzle, std::string metaPath)
 {
     HRESULT hr;
     Texture::HMA::TEXT TEXT{};
 
     LOG("Reading meta file...");
-    HMA::Meta meta = readMetaFile<HMA::Meta>(tgaPath);
+    HMA::Meta meta = readMetaFile<HMA::Meta>(metaPath != "" ? metaPath : tgaPath + ".tonymeta");
 
     builtTexture builtTEXT{};
     builtTexture builtTEXD{};
@@ -686,7 +686,7 @@ bool Texture::H2016::readHeader(std::vector<char> textureData, Header &header, b
     return true;
 }
 
-void Texture::H2016::Convert(std::vector<char> textureData, std::string outputPath, bool ps4swizzle, Version portTo, bool isTEXD)
+void Texture::H2016::Convert(std::vector<char> textureData, std::string outputPath, bool ps4swizzle, Version portTo, bool isTEXD, std::string texdOutput, std::string metaPath)
 {
     Texture::H2016::TEXT texture{};
 
@@ -744,7 +744,7 @@ void Texture::H2016::Convert(std::vector<char> textureData, std::string outputPa
         texture.header.interpretAs};
 
     LOG("Outputting meta...");
-    writeFile(&meta, sizeof(meta), outPath.generic_string() + ".tonymeta");
+    writeFile(&meta, sizeof(meta), metaPath != "" ? metaPath : (outPath.generic_string() + ".tonymeta"));
     LOG("Finished outputting meta");
 
     if (portTo != Version::NONE)
@@ -755,17 +755,17 @@ void Texture::H2016::Convert(std::vector<char> textureData, std::string outputPa
         switch (portTo)
         {
         case Version::H2016:
-            H2016::Rebuild(outPath.generic_string(), portPath.generic_string(), false, isTEXD, ps4swizzle);
+            H2016::Rebuild(outPath.generic_string(), portPath.generic_string(), false, isTEXD, ps4swizzle, texdOutput, metaPath);
             break;
         case Version::H2:
-            H2::Rebuild(outPath.generic_string(), portPath.generic_string(), false, isTEXD, ps4swizzle);
+            H2::Rebuild(outPath.generic_string(), portPath.generic_string(), false, isTEXD, ps4swizzle, texdOutput, metaPath);
             break;
         default:
             LOG_AND_EXIT("Invalid port to location!");
         }
 
         remove(outPath.generic_string().c_str());
-        remove((outPath.generic_string() + ".tonymeta").c_str());
+        remove((metaPath != "" ? metaPath : (outPath.generic_string() + ".tonymeta")).c_str());
         LOG_AND_EXIT("Ported!");
     }
     else
@@ -774,14 +774,14 @@ void Texture::H2016::Convert(std::vector<char> textureData, std::string outputPa
     }
 }
 
-void Texture::H2016::Rebuild(std::string tgaPath, std::string outputPath, bool rebuildBoth, bool isTEXD, bool ps4swizzle)
+void Texture::H2016::Rebuild(std::string tgaPath, std::string outputPath, bool rebuildBoth, bool isTEXD, bool ps4swizzle, std::string texdOutput, std::string metaPath)
 {
     HRESULT hr;
     Texture::H2016::TEXT TEXT{};
     Texture::H2016::TEXT TEXD{};
 
     LOG("Reading meta file...");
-    H2016::Meta meta = readMetaFile<H2016::Meta>(tgaPath);
+    H2016::Meta meta = readMetaFile<H2016::Meta>(metaPath != "" ? metaPath : (tgaPath + ".tonymeta"));
 
     builtTexture builtTEXT{};
     builtTexture builtTEXD{};
@@ -814,8 +814,8 @@ void Texture::H2016::Rebuild(std::string tgaPath, std::string outputPath, bool r
         TEXT.pixels = std::move(builtTEXT.pixels);
 
         LOG("Writing TEXT and TEXD...");
-        writeTexture<H2016::TEXT>(TEXT, outputPath + ".TEXT");
-        writeTexture<H2016::TEXT>(TEXD, outputPath + ".TEXD");
+        writeTexture<H2016::TEXT>(TEXT, texdOutput == "" ? outputPath + ".TEXT" : outputPath);
+        writeTexture<H2016::TEXT>(TEXD, texdOutput == "" ? outputPath + ".TEXD" : texdOutput);
 
         LOG("Finished rebuilding TGA to TEXT and TEXD.");
     }
@@ -903,7 +903,7 @@ bool Texture::H2::readHeader(std::vector<char> textureData, Header &header, bool
     return true;
 }
 
-void Texture::H2::Convert(std::vector<char> textureData, std::string outputPath, bool ps4swizzle, Version portTo, bool isTEXD)
+void Texture::H2::Convert(std::vector<char> textureData, std::string outputPath, bool ps4swizzle, Version portTo, bool isTEXD, std::string texdOutput, std::string metaPath)
 {
     Texture::H2::TEXT texture{};
 
@@ -954,7 +954,7 @@ void Texture::H2::Convert(std::vector<char> textureData, std::string outputPath,
         texture.header.format};
 
     LOG("Outputting meta...");
-    writeFile(&meta, sizeof(meta), outPath.generic_string() + ".tonymeta");
+    writeFile(&meta, sizeof(meta), metaPath != "" ? metaPath : (outPath.generic_string() + ".tonymeta"));
     LOG("Finished outputting meta");
 
     if (portTo != Version::NONE)
@@ -965,17 +965,17 @@ void Texture::H2::Convert(std::vector<char> textureData, std::string outputPath,
         switch (portTo)
         {
         case Version::H2016:
-            H2016::Rebuild(outPath.generic_string(), portPath.generic_string(), false, isTEXD, ps4swizzle);
+            H2016::Rebuild(outPath.generic_string(), portPath.generic_string(), false, isTEXD, ps4swizzle, texdOutput, metaPath);
             break;
         case Version::H2:
-            H2::Rebuild(outPath.generic_string(), portPath.generic_string(), false, isTEXD, ps4swizzle);
+            H2::Rebuild(outPath.generic_string(), portPath.generic_string(), false, isTEXD, ps4swizzle, texdOutput, metaPath);
             break;
         default:
             LOG_AND_EXIT("Invalid port to location!");
         }
 
         remove(outPath.generic_string().c_str());
-        remove((outPath.generic_string() + ".tonymeta").c_str());
+        remove((metaPath != "" ? metaPath : (outPath.generic_string() + ".tonymeta")).c_str());
         LOG_AND_EXIT("Ported!");
     }
     else
@@ -984,14 +984,14 @@ void Texture::H2::Convert(std::vector<char> textureData, std::string outputPath,
     }
 }
 
-void Texture::H2::Rebuild(std::string tgaPath, std::string outputPath, bool rebuildBoth, bool isTEXD, bool ps4swizzle)
+void Texture::H2::Rebuild(std::string tgaPath, std::string outputPath, bool rebuildBoth, bool isTEXD, bool ps4swizzle, std::string texdOutput, std::string metaPath)
 {
     HRESULT hr;
     Texture::H2::TEXT TEXT{};
     Texture::H2::TEXT TEXD{};
 
     LOG("Reading meta file...");
-    H2::Meta meta = readMetaFile<H2::Meta>(tgaPath);
+    H2::Meta meta = readMetaFile<H2::Meta>(metaPath != "" ? metaPath : (tgaPath + ".tonymeta"));
 
     builtTexture builtTEXT{};
     builtTexture builtTEXD{};
@@ -1027,8 +1027,8 @@ void Texture::H2::Rebuild(std::string tgaPath, std::string outputPath, bool rebu
         TEXT.pixels = std::move(builtTEXT.pixels);
 
         LOG("Writing TEXT and TEXD...");
-        writeTexture<H2::TEXT>(TEXT, outputPath + ".TEXT");
-        writeTexture<H2::TEXT>(TEXD, outputPath + ".TEXD");
+        writeTexture<H2::TEXT>(TEXT, texdOutput == "" ? outputPath + ".TEXT" : outputPath);
+        writeTexture<H2::TEXT>(TEXD, texdOutput == "" ? outputPath + ".TEXD" : texdOutput);
 
         LOG("Finished rebuilding TGA to TEXT and TEXD.");
     }
@@ -1118,7 +1118,7 @@ bool Texture::H3::readHeader(std::vector<char> textureData, Header &header)
     return true;
 }
 
-void Texture::H3::Convert(std::vector<char> textData, std::vector<char> texdData, std::string outputPath, bool ps4swizzle, Version portTo, bool hasTEXD, std::string texdOutPath)
+void Texture::H3::Convert(std::vector<char> textData, std::vector<char> texdData, std::string outputPath, bool ps4swizzle, Version portTo, bool hasTEXD, std::string texdOutput, std::string metaPath)
 {
     HRESULT hr;
     Texture::H3::TEXT TEXT{};
@@ -1207,17 +1207,17 @@ void Texture::H3::Convert(std::vector<char> textData, std::vector<char> texdData
         TEXT.header.textScalingHeight};
 
     LOG("Outputting meta...");
-    writeFile(&meta, sizeof(meta), outPath.generic_string() + ".tonymeta");
+    writeFile(&meta, sizeof(meta), metaPath != "" ? metaPath : (outPath.generic_string() + ".tonymeta"));
     LOG("Finished outputting meta");
 
     if (portTo == Version::H3)
     {
         LOG("Porting to " + versionToString(portTo));
 
-        H3::Rebuild(outPath.generic_string(), outputPath, hasTEXD, false, texdOutPath);
+        H3::Rebuild(outPath.generic_string(), outputPath, hasTEXD, false, texdOutput, metaPath);
 
         remove(outPath.generic_string().c_str());
-        remove((outPath.generic_string() + ".tonymeta").c_str());
+        remove((metaPath != "" ? metaPath : (outPath.generic_string() + ".tonymeta")).c_str());
         LOG_AND_EXIT("Ported!");
     }
     else
@@ -1226,14 +1226,14 @@ void Texture::H3::Convert(std::vector<char> textData, std::vector<char> texdData
     }
 }
 
-void Texture::H3::Rebuild(std::string tgaPath, std::string outputPath, bool rebuildBoth, bool ps4swizzle, std::string texdOutput)
+void Texture::H3::Rebuild(std::string tgaPath, std::string outputPath, bool rebuildBoth, bool ps4swizzle, std::string texdOutput, std::string metaPath)
 {
     HRESULT hr;
     H3::TEXT TEXT{};
     H3::TEXD TEXD{};
 
     LOG("Reading meta file...");
-    H3::Meta meta = readMetaFile<H3::Meta>(tgaPath);
+    H3::Meta meta = readMetaFile<H3::Meta>(metaPath != "" ? metaPath : (tgaPath + ".tonymeta"));
 
     builtTexture builtTEXT{};
     builtTexture builtTEXD{};
