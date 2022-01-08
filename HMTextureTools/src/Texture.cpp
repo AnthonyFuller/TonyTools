@@ -112,6 +112,8 @@ DXGI_FORMAT Texture::toDxgiFormat(Format format)
     {
     case Texture::Format::R8G8B8A8:
         return DXGI_FORMAT_R8G8B8A8_UNORM;
+    case Texture::Format::R16G16B16A16:
+        return DXGI_FORMAT_R16G16B16A16_FLOAT;
     case Texture::Format::A8:
         return DXGI_FORMAT_A8_UNORM;
     case Texture::Format::R8G8:
@@ -160,6 +162,11 @@ HRESULT Texture::createDDS(Format format, uint32_t width, uint32_t height, uint3
     {
     case Texture::Format::R8G8B8A8:
         ddsHeader.ddspf = DirectX::DDSPF_A8B8G8R8;
+        break;
+    case Texture::Format::R16G16B16A16:
+        ddsHeader.ddspf.size = sizeof(DirectX::DDS_PIXELFORMAT);
+        ddsHeader.ddspf.flags = DDS_FOURCC;
+        ddsHeader.ddspf.fourCC = 113;
         break;
     case Texture::Format::R8G8:
         ddsHeader.ddspf = DirectX::DDSPF_R8G8_B8G8;
@@ -308,6 +315,11 @@ HRESULT Texture::outputToTGA(DirectX::Blob &blob, Format format, std::filesystem
     case Texture::Format::A8:
     case Texture::Format::R8G8B8A8:
         convImage = std::move(origImage);
+        break;
+    case Texture::Format::R16G16B16A16:
+        hr = DirectX::Convert(*origImage.GetImage(0, 0, 0), DXGI_FORMAT_R8G8B8A8_UNORM, DirectX::TEX_FILTER_DEFAULT, DirectX::TEX_THRESHOLD_DEFAULT, convImage);
+        if (FAILED(hr))
+            return hr;
         break;
     case Texture::Format::R8G8:
         hr = DirectX::Convert(*origImage.GetImage(0, 0, 0), DXGI_FORMAT_R8G8B8A8_UNORM, DirectX::TEX_FILTER_DEFAULT, DirectX::TEX_THRESHOLD_DEFAULT, convImage);
