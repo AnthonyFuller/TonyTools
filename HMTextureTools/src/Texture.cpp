@@ -93,6 +93,7 @@ size_t Texture::getPixelBlockSize(Format format)
     {
     // Only for block compressed formats
     case Texture::Format::DXT1:
+    case Texture::Format::DXT3:
     case Texture::Format::DXT5:
     case Texture::Format::BC4:
     case Texture::Format::BC5:
@@ -117,6 +118,8 @@ DXGI_FORMAT Texture::toDxgiFormat(Format format)
         return DXGI_FORMAT_R8G8_UNORM;
     case Texture::Format::DXT1:
         return DXGI_FORMAT_BC1_UNORM;
+    case Texture::Format::DXT3:
+        return DXGI_FORMAT_BC2_UNORM;
     case Texture::Format::DXT5:
         return DXGI_FORMAT_BC3_UNORM;
     case Texture::Format::BC4:
@@ -166,6 +169,9 @@ HRESULT Texture::createDDS(Format format, uint32_t width, uint32_t height, uint3
         break;
     case Texture::Format::DXT1:
         ddsHeader.ddspf = DirectX::DDSPF_DXT1;
+        break;
+    case Texture::Format::DXT3:
+        ddsHeader.ddspf = DirectX::DDSPF_DXT3;
         break;
     case Texture::Format::DXT5:
         ddsHeader.ddspf = DirectX::DDSPF_DXT5;
@@ -236,6 +242,7 @@ HRESULT Texture::compress(builtTexture &texture, DirectX::ScratchImage &mipChain
         for (int i = 2; i < mipChain.GetPixelsSize(); i += 4)
             mipChain.GetPixels()[i] = 0xFF;
     case Texture::Format::DXT1:
+    case Texture::Format::DXT3:
     case Texture::Format::DXT5:
     case Texture::Format::BC4:
     case Texture::Format::BC7:
@@ -312,6 +319,7 @@ HRESULT Texture::outputToTGA(DirectX::Blob &blob, Format format, std::filesystem
     case Texture::Format::BC5:
         fixChannel = true;
     case Texture::Format::DXT1:
+    case Texture::Format::DXT3:
     case Texture::Format::DXT5:
     case Texture::Format::BC7:
         dxgiFormat = DXGI_FORMAT_R8G8B8A8_UNORM;

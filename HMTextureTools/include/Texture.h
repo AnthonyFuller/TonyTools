@@ -44,6 +44,7 @@ namespace Texture
         R8G8 = 0x34, //Normals. very rarely used. Legacy? Only one such tex in chunk0;
         A8 = 0x42,   //8-bit grayscale uncompressed. Not used on models?? Overlays
         DXT1 = 0x49, //Color maps, 1-bit alpha (mask). Many uses, color, normal, spec, rough maps on models and decals. Also used as masks.
+        DXT3 = 0x4C,
         DXT5 = 0x4F, //Packed color, full alpha. Similar use as DXT5.
         BC4 = 0x52,  //8-bit grayscale. Few or no direct uses on models?
         BC5 = 0x55,  //2-channel normal maps
