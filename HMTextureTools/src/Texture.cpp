@@ -33,7 +33,7 @@ size_t Texture::getScaleFactor(int texdW, int texdH)
     case 16777216:
         return 32;
     default:
-        LOG("[w] TEXT Scale Factor could not be found, defaulting to 1, this may cause issues!");
+        LOG("[WARNING] TEXT Scale Factor could not be found, defaulting to 1, this may cause issues!");
         return 1;
     }
 }
@@ -691,8 +691,8 @@ bool Texture::H2016::readHeader(std::vector<char> textureData, Header &header, b
 
     if (header.texdIdentifier == 16384 && !isTEXD)
     {
-        LOG("[w] Input texture identified to be TEXT that has a TEXD or is a TEXD. You have not specified that this is a TEXD!");
-        LOG("[w] This can cause issues if it actually is a TEXD so you have been warned! [If this is incorrect please let Anthony know!]");
+        LOG("[WARNING] Input texture identified to be TEXT that has a TEXD or is a TEXD. You have not specified that this is a TEXD!");
+        LOG("[WARNING] This can cause issues if it actually is a TEXD so you have been warned! [If this is incorrect please let Anthony know!]");
     }
 
     assert_msg(header.magic == 1, "Invalid texture magic! Please make sure it is an actual texture!");
@@ -910,8 +910,8 @@ bool Texture::H2::readHeader(std::vector<char> textureData, Header &header, bool
 
     if (header.texdIdentifier == 16384 && !isTEXD)
     {
-        LOG("[w] Input texture identified to be TEXT that has a TEXD or is a TEXD. You have not specified that this is a TEXD!");
-        LOG("[w] This can cause issues if it actually is a TEXD so you have been warned! [If this is incorrect please let Anthony know!]");
+        LOG("[WARNING] Input texture identified to be TEXT that has a TEXD or is a TEXD. You have not specified that this is a TEXD!");
+        LOG("[WARNING] This can cause issues if it actually is a TEXD so you have been warned! [If this is incorrect please let Anthony know!]");
     }
 
     assert_msg(header.magic == 1, "Invalid texture magic! Please make sure it is an actual texture!");
