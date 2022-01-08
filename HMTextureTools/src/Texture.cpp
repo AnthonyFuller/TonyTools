@@ -361,6 +361,7 @@ HRESULT Texture::outputToTGA(DirectX::Blob &blob, Format format, std::filesystem
     hr = DirectX::SaveToTGAFile(*convImage.GetImage(0, 0, 0), DirectX::TGA_FLAGS_NONE, wpath.c_str(), nullptr);
     if (FAILED(hr))
         return hr;
+    LOG("[WARNING] Some image editors/viewers do not show the proper texture e.g. Paint.NET due to what is suspended to be the Alpha channels. Photoshop is recommended!");
 
     return S_OK;
 }
