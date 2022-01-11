@@ -41,13 +41,20 @@ jobs:
       run: |
         cmake --build _build --config Release
 
-    - name: Upload build artifacts
+    - name: Upload build artifact [Released]
       uses: actions/upload-artifact@v2
       with:
         name: "TonyTools"
         path: |
           _build/artifacts/Release/**/*
           !_build/artifacts/Release/MJBATesting.exe
+
+    - name: Upload build artifact [In-Dev]
+      uses: actions/upload-artifact@v2
+      with:
+        name: "TonyTools_In-Dev"
+        path: |
+          _build/artifacts/Release/MJBATesting.exe
 
   create_release:
     name: Create release
