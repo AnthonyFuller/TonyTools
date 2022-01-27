@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.15.0)
 
-file(GLOB MJBATesting_src
-    "src/*.cpp"
+set(MJBATesting_src 
+    "src/main.cpp"
 )
 
 add_executable(MJBATesting
