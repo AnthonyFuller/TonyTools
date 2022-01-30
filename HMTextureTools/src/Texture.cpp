@@ -255,7 +255,7 @@ HRESULT Texture::compress(builtTexture &texture, DirectX::ScratchImage &mipChain
     case Texture::Format::BC7:
         hr = DirectX::Compress(EncodingDevice(), mipChain.GetImages(), mipChain.GetImageCount(), mipChain.GetMetadata(), toDxgiFormat(format), DirectX::TEX_COMPRESS_PARALLEL, DirectX::TEX_THRESHOLD_DEFAULT, outImage);
         if (FAILED(hr))
-        hr = DirectX::Compress(mipChain.GetImages(), mipChain.GetImageCount(), mipChain.GetMetadata(), toDxgiFormat(format), DirectX::TEX_COMPRESS_DEFAULT, DirectX::TEX_THRESHOLD_DEFAULT, outImage);
+            hr = DirectX::Compress(mipChain.GetImages(), mipChain.GetImageCount(), mipChain.GetMetadata(), toDxgiFormat(format), DirectX::TEX_COMPRESS_DEFAULT, DirectX::TEX_THRESHOLD_DEFAULT, outImage);
         if (FAILED(hr))
             return hr;
         break;
@@ -931,7 +931,9 @@ void Texture::H2::Convert(std::vector<char> textureData, std::string outputPath,
     readHeader(textureData, texture.header, isTEXD);
 
     if (toDxgiFormat(texture.header.format) == DXGI_FORMAT_UNKNOWN)
+    {
         LOG_AND_EXIT("Invalid texture format found. Please report this to Anthony!");
+    }
 
     texture.pixels.resize(textureData.size() - 0x90);
     std::memcpy(&texture.pixels[0], &textureData[0x90], (textureData.size() - 0x90));
@@ -1301,7 +1303,7 @@ void Texture::H3::Rebuild(std::string tgaPath, std::string outputPath, bool rebu
         TEXT.header.textAtlasOffset = 0x98;
 
         TEXT.header.textScalingData1 = 0xFF;
-        TEXT.header.textScalingWidth = meta.textScalingWidth; //((2 >> builtTEXT.width) + 1);
+        TEXT.header.textScalingWidth = meta.textScalingWidth;   //((2 >> builtTEXT.width) + 1);
         TEXT.header.textScalingHeight = meta.textScalingHeight; //((2 >> builtTEXT.height) + 1);
         TEXT.header.textMipsLevels = builtTEXT.mipsCount;
 
