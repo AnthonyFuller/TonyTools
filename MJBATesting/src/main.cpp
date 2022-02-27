@@ -28,11 +28,15 @@ struct Quaternion
     float z;
     float w;
 
-    Quaternion(QuantizedQuaternion quanQuat) {
+    Quaternion(QuantizedQuaternion quanQuat)
+    {
         x = ((float)quanQuat.x / 32767) - 1;
         y = ((float)quanQuat.y / 32767) - 1;
         z = ((float)quanQuat.z / 32767) - 1;
         w = ((float)quanQuat.w / 32767) - 1;
+
+        // Checking to make sure the final Quaternion is valid
+        assert(roundf(x*x + y*y + z*z + w*w) == 1);
     }
 };
 
@@ -43,7 +47,8 @@ struct Transform
     float z;
     float w;
 
-    Transform(uint64_t data, Vector3 transScale) {
+    Transform(uint64_t data, Vector3 transScale)
+    {
         // This is ugly as fuck
         x = (float)((int)(data >> 31) >> 11) * transScale.x;
         y = (float)((int)(data >> 10) >> 11) * transScale.y;
@@ -112,7 +117,7 @@ AnimDataOffsets generateOffsets(AnimDataHdr hdr)
     return offsets;
 }
 
-std::vector<Quaternion> readQuantQuatArr(file_buffer& buff, int numOfQuat)
+std::vector<Quaternion> readQuantQuatArr(file_buffer &buff, int numOfQuat)
 {
     std::vector<Quaternion> quatArr;
     for (int i = 0; i < numOfQuat; i++)
@@ -126,7 +131,7 @@ std::vector<Quaternion> readQuantQuatArr(file_buffer& buff, int numOfQuat)
     return quatArr;
 }
 
-std::vector<Transform> readQuantTransArr(file_buffer& buff, int numOfTrans, Vector3 transScale)
+std::vector<Transform> readQuantTransArr(file_buffer &buff, int numOfTrans, Vector3 transScale)
 {
     std::vector<Transform> transArr;
     for (int i = 0; i < numOfTrans; i++)
@@ -140,7 +145,7 @@ std::vector<Transform> readQuantTransArr(file_buffer& buff, int numOfTrans, Vect
     return transArr;
 }
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
     file_buffer buff;
     buff.load(argv[1]);
@@ -151,7 +156,7 @@ int main(int argc, char* argv[])
 
     buff.index = offsets.constQuats;
     assert(buff.index == offsets.constQuats);
-    std::vector<Quaternion> constQuats = readQuantQuatArr(buff, (offsets.quats - offsets.constQuats) / 8);
+    std::vector<Quaternion> constQuats = readQuantQuatArr(buff, hdr.constBoneQuat);
 
     assert(buff.index == offsets.quats);
     std::vector<Quaternion> quats = readQuantQuatArr(buff, (offsets.bindPoseQuats - offsets.quats) / 8);
@@ -160,7 +165,7 @@ int main(int argc, char* argv[])
     std::vector<Quaternion> bindPoseQuats = readQuantQuatArr(buff, (offsets.constTrans - offsets.bindPoseQuats) / 8);
 
     assert(buff.index == offsets.constTrans);
-    std::vector<Transform> constTrans = readQuantTransArr(buff, (offsets.trans - offsets.constTrans) / 8, hdr.translationScale);
+    std::vector<Transform> constTrans = readQuantTransArr(buff, hdr.constBoneTrans, hdr.translationScale);
 
     assert(buff.index == offsets.trans);
     std::vector<Transform> trans = readQuantTransArr(buff, (offsets.bindPoseTrans - offsets.trans) / 8, hdr.translationScale);
