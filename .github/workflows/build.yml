@@ -48,6 +48,7 @@ jobs:
         path: |
           _build/artifacts/Release/**/*
           !_build/artifacts/Release/MJBATesting.exe
+          !_build/artifacts/Release/VTXD.exe
 
     - name: Upload build artifact [In-Dev]
       uses: actions/upload-artifact@v2
@@ -55,6 +56,7 @@ jobs:
         name: "TonyTools_In-Dev"
         path: |
           _build/artifacts/Release/MJBATesting.exe
+          _build/artifacts/Release/VTXD.exe
 
   create_release:
     name: Create release
