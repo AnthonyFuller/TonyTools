@@ -50,6 +50,7 @@ jobs:
           !_build/artifacts/Release/MJBATesting.exe
           !_build/artifacts/Release/VTXD.exe
           !_build/artifacts/Release/SCDA.exe
+          !_build/artifacts/Release/JSONPatchCreator.exe
 
     - name: Upload build artifact [In-Dev]
       uses: actions/upload-artifact@v2
@@ -59,6 +60,7 @@ jobs:
           _build/artifacts/Release/MJBATesting.exe
           _build/artifacts/Release/VTXD.exe
           _build/artifacts/Release/SCDA.exe
+          _build/artifacts/Release/JSONPatchCreator.exe
 
   create_release:
     name: Create release
