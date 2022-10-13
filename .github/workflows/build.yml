@@ -49,6 +49,7 @@ jobs:
           _build/artifacts/Release/**/*
           !_build/artifacts/Release/MJBATesting.exe
           !_build/artifacts/Release/VTXD.exe
+          !_build/artifacts/Release/SCDA.exe
 
     - name: Upload build artifact [In-Dev]
       uses: actions/upload-artifact@v2
@@ -57,6 +58,7 @@ jobs:
         path: |
           _build/artifacts/Release/MJBATesting.exe
           _build/artifacts/Release/VTXD.exe
+          _build/artifacts/Release/SCDA.exe
 
   create_release:
     name: Create release
