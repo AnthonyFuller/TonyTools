@@ -51,6 +51,7 @@ jobs:
           !_build/artifacts/Release/VTXD.exe
           !_build/artifacts/Release/SCDA.exe
           !_build/artifacts/Release/JSONPatchCreator.exe
+          !_build/artifacts/Release/BOXCExporter.exe
 
     - name: Upload build artifact [In-Dev]
       uses: actions/upload-artifact@v2
@@ -61,6 +62,7 @@ jobs:
           _build/artifacts/Release/VTXD.exe
           _build/artifacts/Release/SCDA.exe
           _build/artifacts/Release/JSONPatchCreator.exe
+          _build/artifacts/Release/BOXCExporter.exe
 
   create_release:
     name: Create release
@@ -98,18 +100,31 @@ jobs:
       id: get_version
       run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
 
-    - name: Download artifact
+    - name: Download main artifact
       uses: actions/download-artifact@v2
       with:
         name: TonyTools
         path: TonyTools
 
-    - name: Package artifact for release
+    - name: Download in-dev artifact
+      if: ${{ contains(github.ref, '-pre') }}
+      uses: actions/download-artifact@v2
+      with:
+        name: TonyTools_In-Dev
+        path: TonyTools_In-Dev
+
+    - name: Package main artifact for release
       run: |
         cd TonyTools
         zip -r TonyTools.zip *
 
-    - name: Upload release asset
+    - name: Package in-dev artifact for release
+      if: ${{ contains(github.ref, '-pre') }}
+      run: |
+        cd TonyTools_In-Dev
+        zip -r TonyTools_In-Dev.zip *
+
+    - name: Upload main release asset
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -117,4 +132,15 @@ jobs:
         upload_url: ${{ needs.create_release.outputs.upload_url }}
         asset_path: TonyTools/TonyTools.zip
         asset_name: "TonyTools_${{ steps.get_version.outputs.VERSION }}.zip"
+        asset_content_type: application/zip
+
+    - name: Upload in-dev release asset
+      if: ${{ contains(github.ref, '-pre') }}
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ needs.create_release.outputs.upload_url }}
+        asset_path: TonyTools_In-Dev/TonyTools_In-Dev.zip
+        asset_name: "TonyTools_In-Dev_${{ steps.get_version.outputs.VERSION }}.zip"
         asset_content_type: application/zip
