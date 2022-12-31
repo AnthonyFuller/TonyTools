@@ -243,6 +243,7 @@ HRESULT Texture::compress(builtTexture &texture, DirectX::ScratchImage &mipChain
     case Texture::Format::A8:
     case Texture::Format::R8G8:
     case Texture::Format::R8G8B8A8:
+    case Texture::Format::R16G16B16A16:
         outImage = std::move(mipChain);
         break;
     case Texture::Format::BC5:
@@ -316,17 +317,12 @@ HRESULT Texture::outputToTGA(DirectX::Blob &blob, Format format, std::filesystem
     case Texture::Format::R8G8B8A8:
         convImage = std::move(origImage);
         break;
+    case Texture::Format::R8G8:
+        fixChannel = true;
     case Texture::Format::R16G16B16A16:
         hr = DirectX::Convert(*origImage.GetImage(0, 0, 0), DXGI_FORMAT_R8G8B8A8_UNORM, DirectX::TEX_FILTER_DEFAULT, DirectX::TEX_THRESHOLD_DEFAULT, convImage);
         if (FAILED(hr))
             return hr;
-        break;
-    case Texture::Format::R8G8:
-        hr = DirectX::Convert(*origImage.GetImage(0, 0, 0), DXGI_FORMAT_R8G8B8A8_UNORM, DirectX::TEX_FILTER_DEFAULT, DirectX::TEX_THRESHOLD_DEFAULT, convImage);
-        if (FAILED(hr))
-            return hr;
-
-        fixChannel = true;
         break;
     case Texture::Format::BC5:
         fixChannel = true;
@@ -384,6 +380,7 @@ HRESULT Texture::import(std::filesystem::path tgaPath, Format format, bool rebui
     switch (format)
     {
     case Texture::Format::R8G8:
+    case Texture::Format::R16G16B16A16:
         DirectX::ScratchImage tempImg{};
         hr = DirectX::Convert(*inputImage.GetImage(0, 0, 0), toDxgiFormat(format), DirectX::TEX_FILTER_DEFAULT, DirectX::TEX_THRESHOLD_DEFAULT, tempImg);
         if (FAILED(hr))
