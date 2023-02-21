@@ -2,17 +2,30 @@
 [![Build](https://github.com/AnthonyFuller/TonyTools/actions/workflows/build.yml/badge.svg)](https://github.com/AnthonyFuller/TonyTools/actions/workflows/build.yml)  
 Some tools I've made, found or edited that are useful to me.
 
-Each tool will include it's own usage instructions. To display them just run the tool (all command line).
+Each tool will include its own usage instructions. To display them just run the tool (all command line).
 
 ## Tools Included
-- HMTextureTools \[Made by me\]
-    - Allows you to convert between various texture formats from the Hitman WOA Trilogy from various platforms.
+All are by me unless specified.
+- HMTextureTools
+    - Allows you to convert and rebuild various texture formats from the Hitman WOA Trilogy from various platforms.
 
-- HMAScrambler \[Made by me\]
-   - Allows you to convert between .scrambled to .ini (and vice versa) from the game Hitman Absolution.
+- HMAScrambler
+   - Allows you to convert .scrambled to .ini (and vice versa) from the game Hitman Absolution.
 
-- BOXCExporter \[Made by me, credit to @dafitius for informing me of the format\]
+- BOXCExporter \[Credit to @dafitius for informing me of the format, DEV\]
     - Allows you to convert BOXC to position and textures.
+
+- JSONPatchCreator \[DEV\]
+    - A simple JSON patch creator for testing.
+
+- MJBATesting \[DEV\]
+    - A project for me to reverse engineer the MJBA format.
+
+- SCDA \[DEV\]
+    - A library/tool for messing with SCDA files.
+
+- VTXD \[DEV\]
+    - A library/tool for messing with VTXD files.
 
 ## Third-Party Libraries
 Various third party libraries are used for my projects, their respective read me files and licenses have been included in their directories (If they aren't submodules).  
@@ -21,4 +34,4 @@ Libraries used are:
 - [DirectXTex](https://github.com/microsoft/DirectXTex)
 - [lz4](https://github.com/lz4/lz4/)
 - [libmorton](https://github.com/Forceflow/libmorton/)
-- [rapidjson](https://github.com/Tencent/rapidjson)
+- [nlohmann json](https://github.com/nlohmann/json) (License is at top of the file)
