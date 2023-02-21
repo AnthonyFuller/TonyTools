@@ -1,4 +1,5 @@
 #include "main.h"
+#include "EncodingDevice.h"
 
 inline void handleHRESULT(std::string status, HRESULT hr)
 {
@@ -79,4 +80,39 @@ void outputToTGA(DirectX::Blob &blob, std::filesystem::path outputPath)
     hr = DirectX::SaveToTGAFile(*convImage.GetImage(0, 0, 0), DirectX::TGA_FLAGS_NONE, wpath.c_str(), nullptr);
     if (FAILED(hr))
         handleHRESULT("Failed to save TGA!", hr);
+}
+
+std::vector<char> loadTGA(std::filesystem::path tgaPath)
+{
+    HRESULT hr;
+    DirectX::TexMetadata meta;
+    DirectX::ScratchImage inputImage;
+    DirectX::ScratchImage mipChain;
+
+    std::wstring wpath = tgaPath.generic_wstring();
+    hr = DirectX::LoadFromTGAFile(wpath.c_str(), DirectX::TGA_FLAGS_NONE, &meta, inputImage);
+    if (FAILED(hr))
+        handleHRESULT("Failed to load TGA!", hr);
+
+    if (inputImage.GetImage(0, 0, 0)->width != 128 || inputImage.GetImage(0, 0, 0)->height != 768)
+    {
+        LOG_AND_EXIT("Invalid image size! Must be 128x768!");
+    }
+
+    hr = DirectX::GenerateMipMaps(*inputImage.GetImage(0, 0, 0), DirectX::TEX_FILTER_DEFAULT, 5, mipChain);
+    if (FAILED(hr))
+        handleHRESULT("Failed to generate mipmaps!", hr);
+
+    DirectX::ScratchImage outImage;
+    hr = DirectX::Compress(EncodingDevice(), mipChain.GetImages(), mipChain.GetImageCount(), mipChain.GetMetadata(), DXGI_FORMAT_BC6H_UF16, DirectX::TEX_COMPRESS_PARALLEL, DirectX::TEX_THRESHOLD_DEFAULT, outImage);
+        if (FAILED(hr))
+            hr = DirectX::Compress(mipChain.GetImages(), mipChain.GetImageCount(), mipChain.GetMetadata(), DXGI_FORMAT_BC6H_UF16, DirectX::TEX_COMPRESS_DEFAULT, DirectX::TEX_THRESHOLD_DEFAULT, outImage);
+        if (FAILED(hr))
+            handleHRESULT("Failed to compress image!", hr);
+
+    std::vector<char> pixels;
+    pixels.resize(outImage.GetPixelsSize());
+    std::memcpy(pixels.data(), outImage.GetPixels(), outImage.GetPixelsSize());
+
+    return pixels;
 }

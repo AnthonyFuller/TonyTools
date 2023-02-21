@@ -18,10 +18,9 @@
 #include "buffer.hpp"
 #include "Texture.hpp"
 #include "argparse.hpp"
+#include "json.hpp"
 
-#define RAPIDJSON_HAS_STDSTRING 1
-#include "rapidjson/document.h"
-#include "rapidjson/prettywriter.h"
+using json = nlohmann::json;
 
 class Vector3
 {
@@ -30,15 +29,10 @@ public:
     float y;
     float z;
 
-    rapidjson::Value toJSON(rapidjson::Document::AllocatorType& allocator)
+    json toJSON()
 	{
-		rapidjson::Value vec3Arr(rapidjson::kArrayType);
-
-		vec3Arr.PushBack(x, allocator);
-		vec3Arr.PushBack(y, allocator);
-		vec3Arr.PushBack(z, allocator);
-
-		return vec3Arr;
+		json j = {x, y, z};
+        return j;
 	}
 };
 

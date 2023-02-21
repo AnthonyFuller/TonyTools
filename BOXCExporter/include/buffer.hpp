@@ -66,7 +66,7 @@ class buffer {
 
 	template <typename T>
 	void write_vector(T v) noexcept {
-		write<std::size_t>(v.size());
+		write<std::uint32_t>(v.size());
 
 		for (const auto& e : v) write<typename T::value_type>(e);
 	}

@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.15.0)
 
 set(BOXCExporter_src 
     "src/main.cpp"
+    "src/EncodingDevice.cpp"
 )
 
 add_executable(BOXCExporter
@@ -14,5 +15,5 @@ target_include_directories(BOXCExporter PRIVATE
 
 add_dependencies(BOXCExporter DirectXTex)
 
-target_include_directories(BOXCExporter PRIVATE DirectXTex rapidjson)
-target_link_libraries(BOXCExporter PRIVATE DirectXTex rapidjson)
+target_include_directories(BOXCExporter PRIVATE DirectXTex)
+target_link_libraries(BOXCExporter PRIVATE DirectXTex)
