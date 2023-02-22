@@ -28,14 +28,16 @@ jobs:
     - name: Get latest CMake
       uses: lukka/get-cmake@latest
 
-    - name: Setup MSBuild
-      uses: microsoft/setup-msbuild@v1.3.1
+    - name: Setup VS environment
+      uses: ilammy/msvc-dev-cmd@v1
+      with:
+        arch: x64
     
     - name: Generate projects
       run: |
         mkdir _build
         cd _build
-        cmake -G Ninja -DCMAKE_SYSTEM_VERSION=10.0.19041.0 -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_CXX_COMPILER=cl -DCMAKE_C_COMPILER=cl ..
+        cmake -G Ninja -DCMAKE_SYSTEM_VERSION='10.0.19041.0' -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_CXX_COMPILER=cl -DCMAKE_C_COMPILER=cl ..
     
     - name: Build
       run: |
