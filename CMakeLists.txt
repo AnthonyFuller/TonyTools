@@ -21,7 +21,6 @@ add_subdirectory("Third-Party")
 
 # Add projects
 add_subdirectory("HMTextureTools")
-add_subdirectory("HMLanguageTools")
 add_subdirectory("HMAScrambler")
 add_subdirectory("MJBATesting")
 add_subdirectory("BOXCExporter")
