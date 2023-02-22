@@ -16,7 +16,7 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         submodules: recursive
 
@@ -29,7 +29,7 @@ jobs:
       uses: lukka/get-cmake@latest
 
     - name: Setup MSBuild
-      uses: microsoft/setup-msbuild@v1.0.2
+      uses: microsoft/setup-msbuild@v1.3.1
     
     - name: Generate projects
       run: |
@@ -37,7 +37,7 @@ jobs:
         cd _build
         cmake -G Ninja `
           -DCMAKE_BUILD_TYPE=RelWithDebInfo`
-          -DCMAKE_SYSTEM_VERSION=10.0.19041.0 `
+          -DCMAKE_SYSTEM_VERSION="10.0.19041.0" `
           -DBUILD_TOOLS=OFF `
           ..
     
@@ -46,7 +46,7 @@ jobs:
         cmake --build _build
 
     - name: Upload build artifact [Released]
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: "TonyTools"
         path: |
@@ -58,7 +58,7 @@ jobs:
           !_build/artifacts/Release/BOXCExporter.exe
 
     - name: Upload build artifact [In-Dev]
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: "TonyTools_In-Dev"
         path: |
