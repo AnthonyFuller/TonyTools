@@ -4,7 +4,7 @@ project(TonyTools)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set(CMAKE_PDB_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}../artifacts)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
 set(CMAKE_CXX_STANDARD 20)
 
@@ -21,6 +21,7 @@ add_subdirectory("Third-Party")
 
 # Add projects
 add_subdirectory("HMTextureTools")
+add_subdirectory("HMLanguageTools")
 add_subdirectory("HMAScrambler")
 add_subdirectory("MJBATesting")
 add_subdirectory("BOXCExporter")

@@ -20,11 +20,6 @@ jobs:
       with:
         submodules: recursive
 
-    - name: Update Windows SDK
-      uses: fbactions/setup-winsdk@v1
-      with:
-        winsdk-build-version: 19041
-
     - name: Get latest CMake
       uses: lukka/get-cmake@latest
 
@@ -37,7 +32,11 @@ jobs:
       run: |
         mkdir _build
         cd _build
-        cmake -G Ninja -DCMAKE_SYSTEM_VERSION='10.0.19041.0' -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_CXX_COMPILER=cl -DCMAKE_C_COMPILER=cl ..
+        cmake -G Ninja `
+          -DCMAKE_BUILD_TYPE=RelWithDebInfo `
+          -DCMAKE_CXX_COMPILER=cl `
+          -DCMAKE_C_COMPILER=cl `
+          ..
     
     - name: Build
       run: |
@@ -48,23 +47,19 @@ jobs:
       with:
         name: "TonyTools"
         path: |
-          _build/artifacts/Release/**/*
-          !_build/artifacts/Release/MJBATesting.exe
-          !_build/artifacts/Release/VTXD.exe
-          !_build/artifacts/Release/SCDA.exe
-          !_build/artifacts/Release/JSONPatchCreator.exe
-          !_build/artifacts/Release/BOXCExporter.exe
+          _build/HMTextureTools.exe
+          _build/HMAScrambler.exe
 
     - name: Upload build artifact [In-Dev]
       uses: actions/upload-artifact@v3
       with:
         name: "TonyTools_In-Dev"
         path: |
-          _build/artifacts/Release/MJBATesting.exe
-          _build/artifacts/Release/VTXD.exe
-          _build/artifacts/Release/SCDA.exe
-          _build/artifacts/Release/JSONPatchCreator.exe
-          _build/artifacts/Release/BOXCExporter.exe
+          _build/MJBATesting.exe
+          _build/VTXD.exe
+          _build/SCDA.exe
+          _build/JSONPatchCreator.exe
+          _build/BOXCExporter.exe
 
   create_release:
     name: Create release
