@@ -35,9 +35,7 @@ jobs:
       run: |
         mkdir _build
         cd _build
-        cmake -G Ninja -DCMAKE_SYSTEM_VERSION=10.0.19041.0 `
-          -DCMAKE_BUILD_TYPE=RelWithDebInfo `
-          ..
+        cmake -G Ninja -DCMAKE_SYSTEM_VERSION=10.0.19041.0 -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_CXX_COMPILER=cl -DCMAKE_C_COMPILER=cl ..
     
     - name: Build
       run: |
