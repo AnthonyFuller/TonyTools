@@ -35,11 +35,15 @@ jobs:
       run: |
         mkdir _build
         cd _build
-        cmake -DCMAKE_SYSTEM_VERSION=10.0.19041.0 -DBUILD_TOOLS=OFF ..
+        cmake -G Ninja `
+          -DCMAKE_BUILD_TYPE=RelWithDebInfo`
+          -DCMAKE_SYSTEM_VERSION=10.0.19041.0 `
+          -DBUILD_TOOLS=OFF `
+          ..
     
     - name: Build
       run: |
-        cmake --build _build --config Release
+        cmake --build _build
 
     - name: Upload build artifact [Released]
       uses: actions/upload-artifact@v2
