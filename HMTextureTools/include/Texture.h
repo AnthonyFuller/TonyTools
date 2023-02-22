@@ -8,12 +8,12 @@
 
 #include "Global.h"
 
-#include "DirectXTex.h"
-#include "DDS.h"
-#include "morton.h"
+#include <DirectXTex.h>
+#include <DDS.h>
+#include <libmorton/morton.h>
 #include "EncodingDevice.h"
-#include "lz4.h"
-#include "lz4hc.h"
+#include <lz4.h>
+#include <lz4hc.h>
 
 namespace Texture
 {

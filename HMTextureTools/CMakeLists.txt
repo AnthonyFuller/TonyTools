@@ -17,4 +17,4 @@ target_include_directories(HMTextureTools PRIVATE
 add_dependencies(HMTextureTools DirectXTex lz4 libmorton)
 
 target_include_directories(HMTextureTools PRIVATE DirectXTex lz4)
-target_link_libraries(HMTextureTools PRIVATE DirectXTex libmorton lz4)
+target_link_libraries(HMTextureTools PRIVATE DirectXTex libmorton::libmorton lz4)
