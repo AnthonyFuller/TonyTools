@@ -35,10 +35,8 @@ jobs:
       run: |
         mkdir _build
         cd _build
-        cmake -G Ninja `
-          -DCMAKE_BUILD_TYPE=RelWithDebInfo`
-          -DCMAKE_SYSTEM_VERSION="10.0.19041.0" `
-          -DBUILD_TOOLS=OFF `
+        cmake -G Ninja -DCMAKE_SYSTEM_VERSION=10.0.19041.0 `
+          -DCMAKE_BUILD_TYPE=RelWithDebInfo `
           ..
     
     - name: Build
