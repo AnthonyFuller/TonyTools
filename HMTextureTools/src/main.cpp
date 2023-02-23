@@ -3,10 +3,7 @@
 #include <cassert>
 #include <iterator>
 
-#include "DirectXTex.h"
-#include "DDS.h"
-
-#include "argparse.hpp"
+#include <argparse/argparse.hpp>
 #include "EncodingDevice.h"
 #include "Global.h"
 #include "Texture.h"

@@ -13,12 +13,12 @@
 #define LOG_AND_RETURN(x) std::cout << x << std::endl; return
 #define LOG_AND_EXIT_NOP(x) std::cout << x << std::endl; std::exit(0)
 
-#include "DirectXTex.h"
-#include "DDS.h"
+#include <DirectXTex.h>
+#include <DDS.h>
 #include "buffer.hpp"
 #include "Texture.hpp"
-#include "argparse.hpp"
-#include "json.hpp"
+#include <argparse/argparse.hpp>
+#include <nlohmann/json.hpp>
 
 using json = nlohmann::json;
 

@@ -13,7 +13,7 @@ target_include_directories(BOXCExporter PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
-add_dependencies(BOXCExporter DirectXTex)
+add_dependencies(BOXCExporter DirectXTex nlohmann_json::nlohmann_json argparse)
 
 target_include_directories(BOXCExporter PRIVATE DirectXTex)
-target_link_libraries(BOXCExporter PRIVATE DirectXTex)
+target_link_libraries(BOXCExporter PRIVATE DirectXTex nlohmann_json::nlohmann_json argparse)

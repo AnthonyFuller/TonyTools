@@ -1,5 +1,9 @@
 cmake_minimum_required(VERSION 3.15.0)
+include(FetchContent)
+
 project(TonyTools)
+
+set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
 
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set(CMAKE_PDB_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
@@ -17,7 +21,50 @@ if(MSVC)
 endif()
 
 # Add third-party libraries
-add_subdirectory("Third-Party")
+# zhmtools/resourcelib
+set(BUILD_ZHMTOOLS OFF)
+FetchContent_Declare(zhmtools
+    GIT_REPOSITORY https://github.com/OrfeasZ/ZHMTools.git
+    GIT_TAG v3.2.0
+)
+
+# DirectXTex
+set(BUILD_TOOLS OFF)
+set(BUILD_SAMPLE OFF)
+FetchContent_Declare(directxtex
+    GIT_REPOSITORY https://github.com/microsoft/DirectXTex.git
+    GIT_TAG jan2023
+)
+
+# libmorton
+set(BUILD_TESTING OFF)
+FetchContent_Declare(libmorton
+    GIT_REPOSITORY https://github.com/Forceflow/libmorton.git
+    GIT_TAG v0.2.11
+)
+
+# lz4
+set(LZ4_BUILD_CLI OFF)
+set(LZ4_BUILD_LEGACY_LZ4C OFF)
+set(LZ4_BUNDLED_MODE ON)
+FetchContent_Declare(lz4
+    GIT_REPOSITORY https://github.com/lz4/lz4.git
+    GIT_TAG v1.9.4
+    SOURCE_SUBDIR build/cmake
+)
+
+# argparse
+FetchContent_Declare(argparse
+    GIT_REPOSITORY https://github.com/p-ranav/argparse.git
+    GIT_TAG v2.9
+)
+
+# nlohmann json
+FetchContent_Declare(json
+    URL https://github.com/nlohmann/json/releases/download/v3.11.2/json.tar.xz
+)
+
+FetchContent_MakeAvailable(zhmtools directxtex libmorton lz4 argparse json)
 
 # Add projects
 add_subdirectory("HMTextureTools")

@@ -28,10 +28,11 @@ All are by me unless specified.
     - A library/tool for messing with VTXD files.
 
 ## Third-Party Libraries
-Various third party libraries are used for my projects, their respective read me files and licenses have been included in their directories (If they aren't submodules).  
-Libraries used are:
-- [argparse](https://github.com/p-ranav/argparse) (License is at top of the file)
+Various third party libraries are used for my projects, and where the library allows, they have been included through CMake's `FetchContent` feature.
+A list of all third-party libraries can be found below:
+- [argparse](https://github.com/p-ranav/argparse)
 - [DirectXTex](https://github.com/microsoft/DirectXTex)
 - [lz4](https://github.com/lz4/lz4/)
 - [libmorton](https://github.com/Forceflow/libmorton/)
-- [nlohmann json](https://github.com/nlohmann/json) (License is at top of the file)
+- [nlohmann json](https://github.com/nlohmann/json)
+- [ZHMTools](https://github.com/OrfeasZ/ZHMTools)
