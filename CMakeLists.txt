@@ -25,23 +25,23 @@ endif()
 # zhmtools/resourcelib
 set(BUILD_ZHMTOOLS OFF)
 FetchContent_Declare(zhmtools
-    GIT_REPOSITORY https://github.com/OrfeasZ/ZHMTools.git
-    GIT_TAG v3.2.0
+    GIT_REPOSITORY  https://github.com/OrfeasZ/ZHMTools.git
+    GIT_TAG         v3.2.0
 )
 
 # DirectXTex
 set(BUILD_TOOLS OFF)
 set(BUILD_SAMPLE OFF)
 FetchContent_Declare(directxtex
-    GIT_REPOSITORY https://github.com/microsoft/DirectXTex.git
-    GIT_TAG jan2023
+    GIT_REPOSITORY  https://github.com/microsoft/DirectXTex.git
+    GIT_TAG         jan2023
 )
 
 # libmorton
 set(BUILD_TESTING OFF)
 FetchContent_Declare(libmorton
-    GIT_REPOSITORY https://github.com/Forceflow/libmorton.git
-    GIT_TAG v0.2.11
+    GIT_REPOSITORY  https://github.com/Forceflow/libmorton.git
+    GIT_TAG         v0.2.11
 )
 
 # lz4
@@ -49,20 +49,21 @@ set(LZ4_BUILD_CLI OFF)
 set(LZ4_BUILD_LEGACY_LZ4C OFF)
 set(LZ4_BUNDLED_MODE ON)
 FetchContent_Declare(lz4
-    GIT_REPOSITORY https://github.com/lz4/lz4.git
-    GIT_TAG v1.9.4
-    SOURCE_SUBDIR build/cmake
+    GIT_REPOSITORY  https://github.com/lz4/lz4.git
+    GIT_TAG         v1.9.4
+    SOURCE_SUBDIR   build/cmake
 )
 
 # argparse
 FetchContent_Declare(argparse
-    GIT_REPOSITORY https://github.com/p-ranav/argparse.git
-    GIT_TAG v2.9
+    GIT_REPOSITORY  https://github.com/p-ranav/argparse.git
+    GIT_TAG         v2.9
 )
 
 # nlohmann json
 FetchContent_Declare(json
-    URL https://github.com/nlohmann/json/releases/download/v3.11.2/json.tar.xz
+    URL         https://github.com/nlohmann/json/releases/download/v3.11.2/json.tar.xz
+    URL_HASH    SHA256=8c4b26bf4b422252e13f332bc5e388ec0ab5c3443d24399acb675e68278d341f
 )
 
 FetchContent_MakeAvailable(zhmtools directxtex libmorton lz4 argparse json)
