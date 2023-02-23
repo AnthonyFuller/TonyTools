@@ -1,9 +1,10 @@
-cmake_minimum_required(VERSION 3.15.0)
+cmake_minimum_required(VERSION 3.25.0)
 include(FetchContent)
 
 project(TonyTools)
 
-set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
+cmake_policy(SET CMP0077 NEW)
+cmake_policy(SET CMP0135 NEW)
 
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set(CMAKE_PDB_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
