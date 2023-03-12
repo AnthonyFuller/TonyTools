@@ -481,7 +481,7 @@ std::string Language::DLGE::Convert(Language::Version version, std::vector<char>
         uint32_t curDepend = 1;
         uint32_t numOfSections = 0;
 
-        while (buff.index != buff.size()) {
+        while (buff.index != (buff.size() - 2)) {
             switch (buff.peek<uint8_t>()) {
                 case 0x01: { // eDEIT_WavFile
                     buff.index += 1; // we don't need to record the type
