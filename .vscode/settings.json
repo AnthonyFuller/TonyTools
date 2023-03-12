@@ -86,7 +86,14 @@
         "queue": "cpp",
         "ranges": "cpp",
         "span": "cpp",
-        "valarray": "cpp"
+        "valarray": "cpp",
+        "bitset": "cpp",
+        "cinttypes": "cpp",
+        "csignal": "cpp",
+        "shared_mutex": "cpp",
+        "unordered_set": "cpp",
+        "hash_map": "cpp",
+        "*.tcc": "cpp"
     },
     "cmake.preferredGenerators": [ "Ninja" ],
     "cmake.configureOnOpen": true,

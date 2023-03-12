@@ -9,6 +9,9 @@ All are by me unless specified.
 - HMTextureTools
     - Allows you to convert and rebuild various texture formats from the Hitman WOA Trilogy from various platforms.
 
+- HMLanguageTools \[DEV\]
+    - Allows you to convert and rebuild various language formats from the Hitman WOA Trilogy.
+
 - HMAScrambler
    - Allows you to convert .scrambled to .ini (and vice versa) from the game Hitman Absolution.
 
@@ -36,3 +39,4 @@ A list of all third-party libraries can be found below:
 - [libmorton](https://github.com/Forceflow/libmorton/)
 - [nlohmann json](https://github.com/nlohmann/json)
 - [ZHMTools](https://github.com/OrfeasZ/ZHMTools)
+- [hash library](https://github.com/stbrumme/hash-library)

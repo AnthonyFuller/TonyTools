@@ -60,6 +60,7 @@ jobs:
           _build/SCDA.exe
           _build/JSONPatchCreator.exe
           _build/BOXCExporter.exe
+          _build/HMLanguageTools.exe
 
   create_release:
     name: Create release

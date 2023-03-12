@@ -22,11 +22,14 @@ if(MSVC)
 endif()
 
 # Add third-party libraries
+# hash library
+add_subdirectory("Third-Party")
+
 # zhmtools/resourcelib
-set(BUILD_ZHMTOOLS OFF)
+set(ZHM_BUILD_TOOLS OFF)
 FetchContent_Declare(zhmtools
     GIT_REPOSITORY  https://github.com/OrfeasZ/ZHMTools.git
-    GIT_TAG         v3.2.0
+    GIT_TAG         6add9ff00c53a07243e2f4b11c005bfa6dd542ec
 )
 
 # DirectXTex
@@ -70,6 +73,7 @@ FetchContent_MakeAvailable(zhmtools directxtex libmorton lz4 argparse json)
 
 # Add projects
 add_subdirectory("HMTextureTools")
+add_subdirectory("HMLanguageTools")
 add_subdirectory("HMAScrambler")
 add_subdirectory("MJBATesting")
 add_subdirectory("BOXCExporter")
