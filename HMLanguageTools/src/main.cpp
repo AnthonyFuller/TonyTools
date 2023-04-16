@@ -11,7 +11,7 @@
 #define LOG(x) std::cout << x << std::endl
 #define LOG_AND_EXIT(x) std::cout << x << std::endl; std::exit(0)
 
-argparse::ArgumentParser program("HMLanguageTools", "v1.0.0-pre");
+argparse::ArgumentParser program("HMLanguageTools", "v1.5.1");
 
 void toUppercase(std::string &inputstr)
 {
@@ -66,11 +66,11 @@ int main(int argc, char *argv[])
         .help("the mode to use: convert or rebuild")
         .required();
 
-    program.add_argument("type")
+    program.add_argument("game")
         .help("the game the file is from: H2016, H2, or H3")
         .required();
 
-    program.add_argument("game")
+    program.add_argument("type")
         .help("the type of file: LOCR or RLTV")
         .required();
 
@@ -83,7 +83,7 @@ int main(int argc, char *argv[])
         .required();
 
     program.add_argument("--metapath")
-        .help("path to the input/output for the BINARY meta (RPKG Tool!)")
+        .help("path to the input/output for the meta JSON (RPKG Tool!)")
         .nargs(1);
 
     program.add_argument("--langmap")
@@ -104,11 +104,11 @@ int main(int argc, char *argv[])
     auto mode = program.get<std::string>("mode");
     toLowercase(mode);
 
-    auto type = program.get<std::string>("type");
-    toUppercase(type);
-
     auto game = program.get<std::string>("game");
     toUppercase(game);
+
+    auto type = program.get<std::string>("type");
+    toUppercase(type);
 
     auto inputPath = program.get<std::string>("input_path");
     toLowercase(inputPath);
