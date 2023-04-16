@@ -71,7 +71,7 @@ int main(int argc, char *argv[])
         .required();
 
     program.add_argument("game")
-        .help("the type of file: DLGE, LOCR, or RLTV")
+        .help("the type of file: LOCR or RLTV")
         .required();
 
     program.add_argument("input_path")
@@ -151,13 +151,14 @@ int main(int argc, char *argv[])
         std::vector<char> metaFileData = readFile(metaPath, true);
         std::string output = "";
 
-        if (type == "DLGE")
-        {
-            output = Language::DLGE::Convert(version, readFile(inputPath), std::string(metaFileData.begin(), metaFileData.end()),
-                program.is_used("--langmap") ? program.get<std::string>("--langmap") : ""
-            );
-        }
-        else if (type == "LOCR")
+        //if (type == "DLGE")
+        //{
+        //    output = Language::DLGE::Convert(version, readFile(inputPath), std::string(metaFileData.begin(), metaFileData.end()),
+        //        program.is_used("--langmap") ? program.get<std::string>("--langmap") : ""
+        //    );
+        //}
+        //else
+        if (type == "LOCR")
         {
             output = Language::LOCR::Convert(version, readFile(inputPath), std::string(metaFileData.begin(), metaFileData.end()),
                 program.is_used("--langmap") ? program.get<std::string>("--langmap") : ""
@@ -187,11 +188,12 @@ int main(int argc, char *argv[])
         std::vector<char> inputFileData = readFile(inputPath);
         Language::Rebuilt output{};
 
-        if (type == "DLGE")
-        {
-            output = Language::DLGE::Rebuild(version, std::string(inputFileData.begin(), inputFileData.end()));
-        }
-        else if (type == "LOCR")
+        //if (type == "DLGE")
+        //{
+        //    output = Language::DLGE::Rebuild(version, std::string(inputFileData.begin(), inputFileData.end()));
+        //}
+        //else
+        if (type == "LOCR")
         {
             output = Language::LOCR::Rebuild(version, std::string(inputFileData.begin(), inputFileData.end()));
         }

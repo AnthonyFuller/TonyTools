@@ -9,8 +9,9 @@ All are by me unless specified.
 - HMTextureTools
     - Allows you to convert and rebuild various texture formats from the Hitman WOA Trilogy from various platforms.
 
-- HMLanguageTools \[DEV\]
+- HMLanguageTools
     - Allows you to convert and rebuild various language formats from the Hitman WOA Trilogy.
+    - DLGE support is currently still in development.
 
 - HMAScrambler
    - Allows you to convert .scrambled to .ini (and vice versa) from the game Hitman Absolution.
