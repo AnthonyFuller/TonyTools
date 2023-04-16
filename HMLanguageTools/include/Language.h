@@ -27,7 +27,7 @@ namespace Language
     namespace DLGE
     {
         // Thanks to Notex for compiling this list
-        const std::unordered_map<uint32_t, std::string> EffectMap = {
+        const std::unordered_map<uint32_t, std::string> TagMap = {
             { 0xE287BCB1, "In-world_AI_Important" },
             { 0x81949AAC, "In-world_AI_Normal" },
             { 0x3521986B, "In-world_Cinematic" },

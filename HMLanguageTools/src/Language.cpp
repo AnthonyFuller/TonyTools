@@ -139,9 +139,9 @@ ResourceGenerator* getGenerator(Language::Version version, const char* resourceT
 
 std::vector<std::string> split(std::string str)
 {
-    std::regex regex{R"([,]+)"};
-    std::sregex_token_iterator it{str.begin(), str.end(), regex, -1};
-    return std::vector<std::string>{it, {}};
+    std::regex regex{ R"([,]+)" };
+    std::sregex_token_iterator it{ str.begin(), str.end(), regex, -1 };
+    return std::vector<std::string>{ it, {} };
 }
 
 // From https://github.com/glacier-modding/RPKG-Tool/blob/145d8d7d9711d57f1434489706c3d81b2feeed73/src/crypto.cpp#L3-L41
@@ -197,6 +197,21 @@ std::vector<char> xteaEncrypt(std::string str)
     }
 
     return data;
+}
+
+uint32_t getWavHashFromPath(std::string path)
+{
+    if (is_valid_hash(path)) return -1;
+
+    std::regex r{ R"([^\/]*(?=\.wav))" };
+    std::smatch m;
+    std::regex_search(path, m, r);
+
+    if (m.size() != 1) return -1;
+
+    CRC32 crc32;
+
+    return std::strtoul(crc32(m[0]).c_str(), nullptr, 16);
 }
 
 // RTLV
@@ -460,7 +475,7 @@ std::string Language::DLGE::Convert(Language::Version version, std::vector<char>
         { "hash", "" },
         { "DITL", "" },
         { "CLNG", "" },
-        { "lines", json::object() },
+        { "wavs", json::object() },
         { "containers", json::array() }
     };
 
@@ -478,29 +493,44 @@ std::string Language::DLGE::Convert(Language::Version version, std::vector<char>
         j["DITL"] = meta.at("hash_reference_data").at(buff.read<uint32_t>()).at("hash");
         j["CLNG"] = meta.at("hash_reference_data").at(buff.read<uint32_t>()).at("hash");
 
-        uint32_t curDepend = 1;
         uint32_t numOfSections = 0;
 
         while (buff.index != (buff.size() - 2)) {
             switch (buff.peek<uint8_t>()) {
                 case 0x01: { // eDEIT_WavFile
                     buff.index += 1; // we don't need to record the type
-                    uint32_t effect = buff.read<uint32_t>();
-                    uint32_t hash = buff.read<uint32_t>();
+                    uint32_t soundTagHash = buff.read<uint32_t>();
+                    uint32_t wavNameHash = buff.read<uint32_t>();
                     assert(buff.read<uint32_t>() == 0);
 
+                    std::string wavName = "";
+                    std::string soundTagName = "";
+
+                    if (TagMap.contains(soundTagHash)) {
+                        soundTagName = TagMap.at(soundTagHash);
+                    } else {
+                        soundTagName = std::format("{:X}", soundTagHash);
+                    }
 
                     for (uint32_t i = 0; i < languages.size(); i++) {
-                        // "Pretend" to read for sake of debugging containers
-                        buff.index += 8;
-                        buff.index += buff.peek<uint32_t>() + 4;
+                        if (version == Version::H2016) {
+                            assert(buff.read<uint32_t>() == 0);
+                        }
+                        
+                        uint32_t wavIndex = buff.read<uint32_t>(); // WWES/WWEM depend index
+                        uint32_t ffxIndex = buff.read<uint32_t>(); // FaceFX depend index
+
+                        uint32_t subtitleSize = buff.read<uint32_t>();
+                        if (subtitleSize != 0) {
+
+                        }
                     }
                     break;
                 }
                 // Right now, we only have basic information on these containers,
                 // so we will read them the same and output them as "known" JSON
                 // structs so we can then do more reverse engineering
-                case 0x02:// eDEIT_RandomContainer
+                case 0x02: // eDEIT_RandomContainer
                 case 0x03: // eDEIT_SwitchContainer
                 case 0x04: { // eDEIT_SequenceContainer
                     Container container(buff);
