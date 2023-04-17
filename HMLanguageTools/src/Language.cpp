@@ -230,7 +230,7 @@ std::string Language::RTLV::Convert(Language::Version version, std::vector<char>
     };
 
     try {
-        ojson jConv = json::parse(converted->JsonData);
+        ojson jConv = ojson::parse(converted->JsonData);
         converter->FreeJsonString(converted);
         converted = nullptr;
 
@@ -254,7 +254,7 @@ std::string Language::RTLV::Convert(Language::Version version, std::vector<char>
             j["subtitles"][lang] = text;
         }
 
-        ojson meta = json::parse(metaJson);
+        ojson meta = ojson::parse(metaJson);
         j["hash"] = meta["hash_path"].is_null() ? meta.at("hash_value") : meta.at("hash_path");
 
         return j.dump();
@@ -276,7 +276,7 @@ Language::Rebuilt Language::RTLV::Rebuild(Language::Version version, std::string
     std::vector<std::pair<std::string, std::string>> depends{};
 
     try {
-        ojson jSrc = json::parse(jsonString);
+        ojson jSrc = ojson::parse(jsonString);
 
         if (jSrc.at("videos").size() < 1 || jSrc.at("subtitles").size() < 1) {
             fprintf(stderr, "[LANG//RTLV] Videos and/or subtitles object is empty!\n");
@@ -398,7 +398,7 @@ std::string Language::LOCR::Convert(Language::Version version, std::vector<char>
     }
 
     try {
-        ojson meta = json::parse(metaJson);
+        ojson meta = ojson::parse(metaJson);
         j["hash"] = meta["hash_path"].is_null() ? meta.at("hash_value") : meta.at("hash_path");
 
         return j.dump();
@@ -415,7 +415,7 @@ Language::Rebuilt Language::LOCR::Rebuild(Language::Version version, std::string
     std::vector<std::pair<std::string, std::string>> depends{};
     
     try {
-        ojson jSrc = nlohmann::ordered_json::parse(jsonString);
+        ojson jSrc = ojson::parse(jsonString);
 
         buffer buff;
 
@@ -488,7 +488,7 @@ std::string Language::DLGE::Convert(Language::Version version, std::vector<char>
     }
 
     try {
-        ojson meta = json::parse(metaJson);
+        ojson meta = ojson::parse(metaJson);
         j["hash"] = meta["hash_path"].is_null() ? meta.at("hash_value") : meta.at("hash_path");
         j["DITL"] = meta.at("hash_reference_data").at(buff.read<uint32_t>()).at("hash");
         j["CLNG"] = meta.at("hash_reference_data").at(buff.read<uint32_t>()).at("hash");
