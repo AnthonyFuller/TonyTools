@@ -309,7 +309,7 @@ Language::Rebuilt Language::RTLV::Rebuild(Language::Version version, std::string
 
             depends.push_back(std::make_pair<std::string, std::string>(
                 video,
-                depends.size() >= 1 ? "8B" : "81"
+                depends.size() >= 1 ? (version == Version::H3 ? "89" : "8B") : "81"
             ));
         }
 
