@@ -129,7 +129,7 @@ jobs:
       with:
         upload_url: ${{ needs.create_release.outputs.upload_url }}
         asset_path: TonyTools/TonyTools.zip
-        asset_name: "TonyTools_${{ steps.get_version.outputs.VERSION }}.zip"
+        asset_name: "TonyTools.zip"
         asset_content_type: application/zip
 
     - name: Upload in-dev release asset
@@ -140,5 +140,5 @@ jobs:
       with:
         upload_url: ${{ needs.create_release.outputs.upload_url }}
         asset_path: TonyTools_In-Dev/TonyTools_In-Dev.zip
-        asset_name: "TonyTools_In-Dev_${{ steps.get_version.outputs.VERSION }}.zip"
+        asset_name: "TonyTools_In-Dev.zip"
         asset_content_type: application/zip
