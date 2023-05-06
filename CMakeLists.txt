@@ -29,7 +29,7 @@ add_subdirectory("Third-Party")
 set(ZHM_BUILD_TOOLS OFF)
 FetchContent_Declare(zhmtools
     GIT_REPOSITORY  https://github.com/OrfeasZ/ZHMTools.git
-    GIT_TAG         6add9ff00c53a07243e2f4b11c005bfa6dd542ec
+    GIT_TAG         v3.2.1
 )
 
 # DirectXTex
