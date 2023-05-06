@@ -267,13 +267,25 @@ std::string Language::RTLV::Convert(Language::Version version, std::vector<char>
     }
 }
 
-Language::Rebuilt Language::RTLV::Rebuild(Language::Version version, std::string jsonString)
+Language::Rebuilt Language::RTLV::Rebuild(Language::Version version, std::string jsonString, std::string langMap)
 {
     ResourceGenerator* generator = getGenerator(version, "RTLV");
     if (!generator) return {};
 
     Language::Rebuilt out{};
     std::vector<std::pair<std::string, std::string>> depends{};
+    
+    std::unordered_map<std::string, uint32_t> languages;
+    if (!langMap.empty()) {
+        std::vector<std::string> langs = split(langMap);
+        for (int i = 0; i < langs.size(); i++) {
+            languages[langs.at(i)] = i;
+        }
+    } else if (version == Version::H3) {
+        languages = { {"xx", 0}, {"en", 1}, {"fr", 2}, {"it", 3}, {"de", 4}, {"es", 5}, {"ru", 6}, {"cn", 7}, {"tc", 8 }, {"jp", 9} };
+    } else {
+        languages = { {"xx", 0}, {"en", 1}, {"fr", 2}, {"it", 3}, {"de", 4}, {"es", 5}, {"ru", 6}, {"mx", 7}, {"br", 8}, {"pl", 9}, {"cn", 10}, {"jp", 11}, {"tc", 12} };
+    }
 
     try {
         ojson jSrc = ojson::parse(jsonString);
@@ -291,6 +303,11 @@ Language::Rebuilt Language::RTLV::Rebuild(Language::Version version, std::string
         };
 
         for (auto& [lang, video] : jSrc.at("videos").items()) {
+            if (!languages.contains(lang)) {
+                fprintf(stderr, "[LANG//RTLV] Language map does not contain language \"%s\".\n", lang.c_str());
+                return {};
+            }
+
             j.at("AudioLanguages").push_back(lang);
 
             video = video.get<std::string>();
@@ -309,7 +326,7 @@ Language::Rebuilt Language::RTLV::Rebuild(Language::Version version, std::string
 
             depends.push_back(std::make_pair<std::string, std::string>(
                 video,
-                depends.size() >= 1 ? (version == Version::H3 ? "89" : "8B") : "81"
+                std::format("{:2X}", 0x80 + languages[lang])
             ));
         }
 

@@ -199,7 +199,9 @@ int main(int argc, char *argv[])
         }
         else if (type == "RTLV")
         {
-            output = Language::RTLV::Rebuild(version, std::string(inputFileData.begin(), inputFileData.end()));
+            output = Language::RTLV::Rebuild(version, std::string(inputFileData.begin(), inputFileData.end()),
+                program.is_used("--langmap") ? program.get<std::string>("--langmap") : ""
+            );
         }
         else
         {

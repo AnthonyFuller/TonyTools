@@ -125,6 +125,6 @@ namespace Language
     namespace RTLV
     {
         std::string Convert(Version version, std::vector<char> data, std::string metaJson);
-        Rebuilt Rebuild(Version version, std::string jsonString);
+        Rebuilt Rebuild(Version version, std::string jsonString, std::string langMap);
     } // namespace RTLV
 } // namespace Language
