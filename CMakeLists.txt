@@ -69,7 +69,13 @@ FetchContent_Declare(json
     URL_HASH    SHA256=8c4b26bf4b422252e13f332bc5e388ec0ab5c3443d24399acb675e68278d341f
 )
 
-FetchContent_MakeAvailable(zhmtools directxtex libmorton lz4 argparse json)
+# Tessil ordered-map (we only use the set)
+FetchContent_Declare(tessil
+    GIT_REPOSITORY  https://github.com/Tessil/ordered-map.git
+    GIT_TAG         v1.0.0
+)
+
+FetchContent_MakeAvailable(zhmtools directxtex libmorton lz4 argparse json tessil)
 
 # Add projects
 add_subdirectory("HMTextureTools")

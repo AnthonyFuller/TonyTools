@@ -15,6 +15,6 @@ target_include_directories(HMLanguageTools PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
-add_dependencies(HMLanguageTools ResourceLib_HM2016 ResourceLib_HM2 ResourceLib_HM3 argparse nlohmann_json::nlohmann_json hash)
+add_dependencies(HMLanguageTools ResourceLib_HM2016 ResourceLib_HM2 ResourceLib_HM3 argparse nlohmann_json::nlohmann_json hash tsl::ordered_map)
 
-target_link_libraries(HMLanguageTools PRIVATE ResourceLib_HM2016 ResourceLib_HM2 ResourceLib_HM3 argparse nlohmann_json::nlohmann_json hash)
+target_link_libraries(HMLanguageTools PRIVATE ResourceLib_HM2016 ResourceLib_HM2 ResourceLib_HM3 argparse nlohmann_json::nlohmann_json hash tsl::ordered_map)
