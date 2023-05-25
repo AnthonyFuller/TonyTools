@@ -6,6 +6,7 @@
 
 #include <argparse/argparse.hpp>
 #include <hash/md5.h>
+
 #include "Language.h"
 
 #define LOG(x) std::cout << x << std::endl
@@ -71,7 +72,7 @@ int main(int argc, char *argv[])
         .required();
 
     program.add_argument("type")
-        .help("the type of file: LOCR or RLTV")
+        .help("the type of file: CLNG, DITL, DLGE, LOCR, or RLTV")
         .required();
 
     program.add_argument("input_path")
@@ -89,6 +90,16 @@ int main(int argc, char *argv[])
     program.add_argument("--langmap")
         .help("custom language map, overrides the one provided by version e.g. xx,en,tc,am,on,gu,ss")
         .nargs(1);
+
+    program.add_argument("--defaultlocale")
+        .help("the default audio locale, used for DLGE conversion")
+        .default_value(std::string("en"))
+        .nargs(1);
+
+    program.add_argument("--hexprecision")
+        .help("should random weights be output as their hex variants, used for DLGE convert only")
+        .default_value(false)
+        .implicit_value(true);
     ///////////////////
 
     try
@@ -114,6 +125,10 @@ int main(int argc, char *argv[])
     toLowercase(inputPath);
 
     auto outPath = program.get<std::string>("output_path");
+
+    auto defLocale = program.get<std::string>("--defaultlocale");
+
+    auto hexPrecision = program.get<bool>("--hexprecision");
 
     Language::Version version = Language::Version::NONE;
     if (game == "H2016")
@@ -151,14 +166,23 @@ int main(int argc, char *argv[])
         std::vector<char> metaFileData = readFile(metaPath, true);
         std::string output = "";
 
-        //if (type == "DLGE")
-        //{
-        //    output = Language::DLGE::Convert(version, readFile(inputPath), std::string(metaFileData.begin(), metaFileData.end()),
-        //        program.is_used("--langmap") ? program.get<std::string>("--langmap") : ""
-        //    );
-        //}
-        //else
-        if (type == "LOCR")
+        if (type == "CLNG")
+        {
+            output = Language::CLNG::Convert(version, readFile(inputPath), std::string(metaFileData.begin(), metaFileData.end()),
+                program.is_used("--langmap") ? program.get<std::string>("--langmap") : ""
+            );
+        }
+        else if (type == "DITL")
+        {
+            output = Language::DITL::Convert(version, readFile(inputPath), std::string(metaFileData.begin(), metaFileData.end()));
+        }
+        else if (type == "DLGE")
+        {
+            output = Language::DLGE::Convert(version, readFile(inputPath), std::string(metaFileData.begin(), metaFileData.end()),
+                defLocale, hexPrecision, program.is_used("--langmap") ? program.get<std::string>("--langmap") : ""
+            );
+        }
+        else if (type == "LOCR")
         {
             output = Language::LOCR::Convert(version, readFile(inputPath), std::string(metaFileData.begin(), metaFileData.end()),
                 program.is_used("--langmap") ? program.get<std::string>("--langmap") : ""
@@ -170,6 +194,7 @@ int main(int argc, char *argv[])
         }
         else
         {
+            LOG(type);
             LOG("Invalid type specified.");
             return 1;
         }
@@ -188,12 +213,21 @@ int main(int argc, char *argv[])
         std::vector<char> inputFileData = readFile(inputPath);
         Language::Rebuilt output{};
 
-        //if (type == "DLGE")
-        //{
-        //    output = Language::DLGE::Rebuild(version, std::string(inputFileData.begin(), inputFileData.end()));
-        //}
-        //else
-        if (type == "LOCR")
+        if (type == "CLNG")
+        {
+            output = Language::CLNG::Rebuild(version, std::string(inputFileData.begin(), inputFileData.end()));
+        }
+        else if (type == "DITL")
+        {
+            output = Language::DITL::Rebuild(version, std::string(inputFileData.begin(), inputFileData.end()));
+        }
+        else if (type == "DLGE")
+        {
+            output = Language::DLGE::Rebuild(version, std::string(inputFileData.begin(), inputFileData.end()), defLocale,
+                program.is_used("--langmap") ? program.get<std::string>("--langmap") : ""
+            );
+        }
+        else if (type == "LOCR")
         {
             output = Language::LOCR::Rebuild(version, std::string(inputFileData.begin(), inputFileData.end()));
         }

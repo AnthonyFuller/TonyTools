@@ -3,8 +3,6 @@ cmake_minimum_required(VERSION 3.15.0)
 set(HMLanguageTools_src
     "src/main.cpp"
     "src/Language.cpp"
-    "src/buffer.hpp"
-    "src/zip.hpp"
 )
 
 add_executable(HMLanguageTools
