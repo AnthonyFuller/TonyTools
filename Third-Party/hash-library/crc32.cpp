@@ -423,9 +423,9 @@ std::string CRC32::operator()(const void* data, size_t numBytes)
 
 
 /// compute CRC32 of a string, excluding final zero
-std::string CRC32::operator()(const std::string& text)
+uint32_t CRC32::operator()(const std::string& text)
 {
   reset();
   add(text.c_str(), text.size());
-  return getHash();
+  return m_hash;
 }

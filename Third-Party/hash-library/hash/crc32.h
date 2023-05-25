@@ -50,7 +50,7 @@ public:
   /// compute CRC32 of a memory block
   std::string operator()(const void* data, size_t numBytes);
   /// compute CRC32 of a string, excluding final zero
-  std::string operator()(const std::string& text);
+  uint32_t operator()(const std::string& text);
 
   /// add arbitrary number of bytes
   void add(const void* data, size_t numBytes);
