@@ -3,8 +3,8 @@ cmake_minimum_required(VERSION 3.25.0)
 set(HMLanguages_src
     "src/Languages.cpp"
     "src/bimap.hpp"
-    "src/buffer.hpp"
     "src/zip.hpp"
+    "src/buffer.hpp"
 )
 
 set(HMLanguages_hdrs

@@ -26,5 +26,5 @@ add_library(hash STATIC
 )
 
 target_include_directories(hash PUBLIC
-    "${CMAKE_CURRENT_SOURCE_DIR}/hash-library"
+    ${CMAKE_CURRENT_SOURCE_DIR}/hash-library
 )
