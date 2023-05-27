@@ -16,10 +16,47 @@ set(CMAKE_CXX_STANDARD 20)
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 
-# For libmorton to compile
-if(MSVC)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DNOMINMAX=1")
+option(TONYTOOLS_BUILD_TOOLS "Whether or not tools should be built" ON)
+
+if(TONYTOOLS_BUILD_TOOLS)
+    # For libmorton to compile
+    if(MSVC)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DNOMINMAX=1")
+    endif()
+
+    # DirectXTex
+    set(BUILD_TOOLS OFF)
+    set(BUILD_SAMPLE OFF)
+    FetchContent_Declare(directxtex
+        GIT_REPOSITORY  https://github.com/microsoft/DirectXTex.git
+        GIT_TAG         jan2023
+    )
+
+    # libmorton
+    set(BUILD_TESTING OFF)
+    FetchContent_Declare(libmorton
+        GIT_REPOSITORY  https://github.com/Forceflow/libmorton.git
+        GIT_TAG         v0.2.11
+    )
+
+    # lz4
+    set(LZ4_BUILD_CLI OFF)
+    set(LZ4_BUILD_LEGACY_LZ4C OFF)
+    set(LZ4_BUNDLED_MODE ON)
+    FetchContent_Declare(lz4
+        GIT_REPOSITORY  https://github.com/lz4/lz4.git
+        GIT_TAG         v1.9.4
+        SOURCE_SUBDIR   build/cmake
+    )
+
+    # argparse
+    FetchContent_Declare(argparse
+        GIT_REPOSITORY  https://github.com/p-ranav/argparse.git
+        GIT_TAG         v2.9
+    )
 endif()
+
+# Currently, only the following external libraries are required for libraries
 
 # Add third-party libraries
 # hash library
@@ -30,37 +67,6 @@ set(ZHM_BUILD_TOOLS OFF)
 FetchContent_Declare(zhmtools
     GIT_REPOSITORY  https://github.com/OrfeasZ/ZHMTools.git
     GIT_TAG         v3.2.1
-)
-
-# DirectXTex
-set(BUILD_TOOLS OFF)
-set(BUILD_SAMPLE OFF)
-FetchContent_Declare(directxtex
-    GIT_REPOSITORY  https://github.com/microsoft/DirectXTex.git
-    GIT_TAG         jan2023
-)
-
-# libmorton
-set(BUILD_TESTING OFF)
-FetchContent_Declare(libmorton
-    GIT_REPOSITORY  https://github.com/Forceflow/libmorton.git
-    GIT_TAG         v0.2.11
-)
-
-# lz4
-set(LZ4_BUILD_CLI OFF)
-set(LZ4_BUILD_LEGACY_LZ4C OFF)
-set(LZ4_BUNDLED_MODE ON)
-FetchContent_Declare(lz4
-    GIT_REPOSITORY  https://github.com/lz4/lz4.git
-    GIT_TAG         v1.9.4
-    SOURCE_SUBDIR   build/cmake
-)
-
-# argparse
-FetchContent_Declare(argparse
-    GIT_REPOSITORY  https://github.com/p-ranav/argparse.git
-    GIT_TAG         v2.9
 )
 
 # nlohmann json
@@ -75,14 +81,23 @@ FetchContent_Declare(tessil
     GIT_TAG         v1.0.0
 )
 
-FetchContent_MakeAvailable(zhmtools directxtex libmorton lz4 argparse json tessil)
+if(TONYTOOLS_BUILD_TOOLS)
+    FetchContent_MakeAvailable(zhmtools directxtex libmorton lz4 argparse json tessil)
+else()
+    FetchContent_MakeAvailable(zhmtools json tessil)
+endif()
 
-# Add projects
-add_subdirectory("HMTextureTools")
-add_subdirectory("HMLanguageTools")
-add_subdirectory("HMAScrambler")
-add_subdirectory("MJBATesting")
-add_subdirectory("BOXCExporter")
-add_subdirectory("VTXD")
-add_subdirectory("SCDA")
-add_subdirectory("JSONPatchCreator")
+# Add Libraries and Tools
+if(TONYTOOLS_BUILD_TOOLS)
+    add_subdirectory("Tools/HMTextureTools")
+    add_subdirectory("Tools/HMLanguageTools")
+    add_subdirectory("Tools/HMAScrambler")
+    add_subdirectory("Tools/MJBATesting")
+    add_subdirectory("Tools/BOXCExporter")
+    add_subdirectory("Tools/VTXD")
+    add_subdirectory("Tools/SCDA")
+    add_subdirectory("Tools/JSONPatchCreator")
+endif()
+
+add_subdirectory("Libraries/HMLanguages")
+

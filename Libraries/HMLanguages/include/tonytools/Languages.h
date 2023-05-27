@@ -7,6 +7,8 @@
 #include "buffer.hpp"
 #include "bimap.hpp"
 
+namespace TonyTools
+{
 namespace Language
 {
     enum class Version : uint8_t
@@ -726,3 +728,4 @@ namespace Language
         Rebuilt Rebuild(Version version, std::string jsonString, std::string langMap);
     } // namespace RTLV
 } // namespace Language
+} // namespace TonyTools

@@ -1,4 +1,4 @@
-#include "Language.h"
+#include "tonytools/Languages.h"
 
 #include <iostream>
 #include <filesystem>
@@ -17,18 +17,22 @@
 
 #include "zip.hpp"
 
+using namespace TonyTools;
+
 #pragma region JSON Setup
 using json = nlohmann::ordered_json;
 
-namespace Language {
-    namespace DLGE {
-        NLOHMANN_JSON_SERIALIZE_ENUM(Type, {
-            {Type::eDEIT_Invalid, "Invalid"},
-            {Type::eDEIT_WavFile, "WavFile"},
-            {Type::eDEIT_RandomContainer, "Random"},
-            {Type::eDEIT_SwitchContainer, "Switch"},
-            {Type::eDEIT_SequenceContainer, "Sequence"}
-        });
+namespace TonyTools {
+    namespace Language {
+        namespace DLGE {
+            NLOHMANN_JSON_SERIALIZE_ENUM(Type, {
+                {Type::eDEIT_Invalid, "Invalid"},
+                {Type::eDEIT_WavFile, "WavFile"},
+                {Type::eDEIT_RandomContainer, "Random"},
+                {Type::eDEIT_SwitchContainer, "Switch"},
+                {Type::eDEIT_SequenceContainer, "Sequence"}
+            });
+        }
     }
 }
 #pragma endregion
@@ -735,8 +739,7 @@ std::string Language::DLGE::Convert(Language::Version version, std::vector<char>
     json j = {
         {"hash", ""},
         {"DITL", ""},
-        {"CLNG", ""},
-        {"rootContainer", nullptr}
+        {"CLNG", ""}
     };
 
     // These are H2 languages by default.
@@ -744,6 +747,7 @@ std::string Language::DLGE::Convert(Language::Version version, std::vector<char>
     if (!langMap.empty())
     {
         languages = split(langMap);
+        j.push_back({"langmap", langMap});
     }
     else if (version == Version::H2016)
     {
@@ -754,6 +758,8 @@ std::string Language::DLGE::Convert(Language::Version version, std::vector<char>
     {
         languages = {"xx", "en", "fr", "it", "de", "es", "ru", "cn", "tc", "jp"};
     }
+
+    j.push_back({"rootContainer", nullptr});
 
     try
     {
