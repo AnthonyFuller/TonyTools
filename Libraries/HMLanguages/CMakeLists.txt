@@ -8,7 +8,7 @@ set(HMLanguages_src
 )
 
 set(HMLanguages_hdrs
-    "include/tonytools/Languages.h"
+    "include/TonyTools/Languages.h"
 )
 
 add_library(HMLanguages STATIC
