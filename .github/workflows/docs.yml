@@ -1,0 +1,44 @@
+name: Documentation
+
+on:
+  push:
+    branches: ["master"]
+    paths: ["Documentation/**/*.*"]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    permissions:
+      pages: write
+      id-token: write
+
+    strategy:
+      matrix:
+        node-version: [20]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "yarn"
+
+      - name: Build Site
+        run: |
+          cd Documentation
+          yarn install
+          yarn build
+
+      - name: Upload Site
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: Documentation/.vitepress/dist
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v2
+
+            

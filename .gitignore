@@ -53,3 +53,8 @@ _deps
 
 # Local History for Visual Studio Code
 .history/
+
+# Documentation
+Documentation/node_modules
+Documentation/.vitepress/cache
+Documentation/.vitepress/dist

@@ -1,0 +1,14 @@
+{
+    "scripts": {
+        "dev": "vitepress dev",
+        "build": "vitepress build",
+        "preview": "vitepress preview"
+    },
+    "name": "tt-docs",
+    "version": "1.0.0",
+    "main": "index.js",
+    "license": "MIT",
+    "devDependencies": {
+        "vitepress": "^1.0.0-beta.1"
+    }
+}
