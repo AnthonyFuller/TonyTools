@@ -34,5 +34,6 @@ export default defineConfig({
         socialLinks: [
             { icon: "github", link: "https://github.com/AnthonyFuller/TonyTools" }
         ]
-    }
+    },
+    cleanUrls: true
 })
