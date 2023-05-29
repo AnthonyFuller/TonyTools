@@ -1,10 +1,8 @@
-# Tony's Tools
-[![Build](https://github.com/AnthonyFuller/TonyTools/actions/workflows/build.yml/badge.svg)](https://github.com/AnthonyFuller/TonyTools/actions/workflows/build.yml)  
-Some tools I've made, found or edited that are useful to me.
+---
+outline: deep
+---
 
-For more information about what this repo actually contains, see the [docs](https://tonytools.win).
-
-## Third-Party Libraries
+# Third-Party Libraries
 
 Various third-party libraries are used for my projects, and where the library allows, they have all been included using CMake's [FetchContent](https://cmake.org/cmake/help/latest/module/FetchContent.html) feature. A list of all third-party libraries used can be found below:
 

@@ -7,7 +7,8 @@ export default defineConfig({
             {
                 text: "General",
                 items: [
-                    { text: "Installation", link: "/general/installation" }
+                    { text: "Installation", link: "/general/installation" },
+                    { text: "Third-Party", link: "/general/thirdparty"}
                 ]
             },
             {
