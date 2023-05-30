@@ -2,6 +2,7 @@ import { defineConfig } from "vitepress"
 
 export default defineConfig({
     title: "TonyTools",
+    description: "Documentation hub for the TonyTools suite of libraries and tools.",
     themeConfig: {
         sidebar: [
             {
