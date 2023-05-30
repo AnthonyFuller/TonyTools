@@ -1,4 +1,9 @@
 import { defineConfig } from "vitepress"
+import { SitemapStream } from 'sitemap'
+import { createWriteStream } from 'node:fs'
+import { resolve } from 'node:path'
+
+const links: any = []
 
 export default defineConfig({
     title: "TonyTools",
@@ -9,7 +14,7 @@ export default defineConfig({
                 text: "General",
                 items: [
                     { text: "Installation", link: "/general/installation" },
-                    { text: "Third-Party", link: "/general/thirdparty"}
+                    { text: "Third-Party", link: "/general/thirdparty" }
                 ]
             },
             {
@@ -36,5 +41,24 @@ export default defineConfig({
             { icon: "github", link: "https://github.com/AnthonyFuller/TonyTools" }
         ]
     },
-    cleanUrls: true
+    cleanUrls: true,
+    // Sitemap setup
+    lastUpdated: true,
+    transformHtml: (_, id, { pageData }) => {
+        if (!/[\\/]404\.html$/.test(id))
+            links.push({
+                url: pageData.relativePath.replace(/((^|\/)index)?\.md$/, '$2'),
+                lastmod: pageData.lastUpdated
+            })
+    },
+    buildEnd: async ({ outDir }) => {
+        const sitemap = new SitemapStream({
+            hostname: 'https://tonytools.win'
+        })
+        const writeStream = createWriteStream(resolve(outDir, 'sitemap.xml'))
+        sitemap.pipe(writeStream)
+        links.forEach((link) => sitemap.write(link))
+        sitemap.end()
+        await new Promise((r) => writeStream.on('finish', r))
+    }
 })
