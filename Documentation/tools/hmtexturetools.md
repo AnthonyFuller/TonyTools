@@ -61,8 +61,8 @@ positional arguments:
     output_path         the path to the output file.
 
 optional arguments:
-    --texd <path>       path to the input TEXD, H3 only, does nothing for rebuild
-                            or other games.
+    --texd <path>       path to the input TEXD, H3 only, does nothing for 
+                            rebuild or other games.
     -p, --port <game>   the game to port to, HMA is unsupported. convert only.
     --rebuildboth       use this option for the input TGA to be downscaled to
                             make a TEXT and TEXD. rebuild only.
