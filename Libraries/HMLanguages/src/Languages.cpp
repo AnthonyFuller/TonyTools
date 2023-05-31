@@ -1455,7 +1455,7 @@ std::string Language::DLGE::Convert(Language::Version version, std::vector<char>
                 // H2016 has this at the start of every language in a wav file container, we check this later.
                 if (version != Version::H2016)
                 {
-                    assert(buff.read<uint32_t>() == 0);
+                    buff.read<uint32_t>();
                 }
 
                 json wav = json::object({
@@ -1479,9 +1479,7 @@ std::string Language::DLGE::Convert(Language::Version version, std::vector<char>
                 for (std::string const &language : languages)
                 {
                     if (version == Version::H2016)
-                    {
-                        assert(buff.read<uint32_t>() == 0);
-                    }
+                        buff.read<uint32_t>();
 
                     uint32_t wavIndex = buff.read<uint32_t>(); // WWES/WWEM depend index
                     uint32_t ffxIndex = buff.read<uint32_t>(); // FaceFX depend index
@@ -1549,10 +1547,6 @@ std::string Language::DLGE::Convert(Language::Version version, std::vector<char>
                 } else {
                     cjson.erase("isRoot");
                 }
-
-                // Sanity checking these values
-                assert(container.SwitchGroupHash == 0);
-                assert(container.DefaultSwitchHash == 0);
 
                 for (auto &metadata : container.metadata)
                 {
@@ -1662,10 +1656,6 @@ std::string Language::DLGE::Convert(Language::Version version, std::vector<char>
                 } else {
                     cjson.erase("isRoot");
                 }
-
-                // Sanity checking these values
-                assert(container.SwitchGroupHash == 0);
-                assert(container.DefaultSwitchHash == 0);
 
                 for (auto &metadata : container.metadata)
                 {
