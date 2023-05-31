@@ -44,9 +44,7 @@ bool is_valid_hash(std::string hash)
     const std::string valid_chars = "0123456789ABCDEF";
 
     if (hash.length() != 16)
-    {
         return false;
-    }
 
     return std::all_of(hash.begin(), hash.end(), ::isxdigit);
 }
@@ -54,9 +52,7 @@ bool is_valid_hash(std::string hash)
 std::string computeHash(std::string str)
 {
     MD5 md5;
-    str = md5(str);
-    str = "00" + str.substr(2, 14);
-
+    str = "00" + md5(str).substr(2, 14);
     std::transform(str.begin(), str.end(), str.begin(), ::toupper);
 
     return str;
@@ -74,12 +70,11 @@ std::string generateMeta(std::string hash, uint32_t size, std::string type, tsl:
         {"hash_size_final", size},
         {"hash_size_in_memory", ULONG_MAX},
         {"hash_size_in_video_memory", ULONG_MAX},
-        {"hash_reference_data", json::array()}};
+        {"hash_reference_data", json::array()}
+    };
 
     for (const auto &[hash, flag] : depends)
-    {
         j.at("hash_reference_data").push_back({{"hash", hash}, {"flag", flag}});
-    }
 
     return j.dump();
 }
@@ -178,22 +173,17 @@ std::string xteaDecrypt(std::vector<char> data)
 {
     for (uint32_t i = 0; i < data.size() / 8; i++)
     {
-        uint32_t *strV0 = (uint32_t *)(data.data() + (i * 8));
-        uint32_t *strV1 = (uint32_t *)(data.data() + (i * 8) + 4);
+        uint32_t* v0 = (uint32_t*)(data.data() + (i * 8));
+        uint32_t* v1 = (uint32_t*)(data.data() + (i * 8) + 4);
 
-        uint32_t v0 = *strV0;
-        uint32_t v1 = *strV1;
         uint32_t sum = xteaDelta * xteaRounds;
 
-        for (uint32_t i = 0; i < xteaRounds; i++)
+        for (uint32_t j = 0; j < xteaRounds; j++)
         {
-            v1 -= (v0 << 4 ^ v0 >> 5) + v0 ^ sum + xteaKeys[sum >> 11 & 3];
+            *v1 -= (*v0 << 4 ^ *v0 >> 5) + *v0 ^ sum + xteaKeys[sum >> 11 & 3];
             sum -= xteaDelta;
-            v0 -= (v1 << 4 ^ v1 >> 5) + v1 ^ sum + xteaKeys[sum & 3];
+            *v0 -= (*v1 << 4 ^ *v1 >> 5) + *v1 ^ sum + xteaKeys[sum & 3];
         }
-
-        *strV0 = v0;
-        *strV1 = v1;
     }
 
     return std::string(data.begin(), std::find(data.begin(), data.end(), '\0'));
@@ -207,22 +197,17 @@ std::vector<char> xteaEncrypt(std::string str)
 
     for (uint32_t i = 0; i < paddedSize / 8; i++)
     {
-        uint32_t *vecV0 = (uint32_t *)(data.data() + (i * 8));
-        uint32_t *vecV1 = (uint32_t *)(data.data() + (i * 8) + 4);
+        uint32_t* v0 = (uint32_t *)(data.data() + (i * 8));
+        uint32_t* v1 = (uint32_t *)(data.data() + (i * 8) + 4);
 
-        uint32_t v0 = *vecV0;
-        uint32_t v1 = *vecV1;
         uint32_t sum = 0;
 
-        for (uint32_t i = 0; i < xteaRounds; i++)
+        for (uint32_t j = 0; j < xteaRounds; j++)
         {
-            v0 += (((v1 << 4) ^ (v1 >> 5)) + v1) ^ (sum + xteaKeys[sum & 3]);
+            *v0 += (((*v1 << 4) ^ (*v1 >> 5)) + *v1) ^ (sum + xteaKeys[sum & 3]);
             sum += xteaDelta;
-            v1 += (((v0 << 4) ^ (v0 >> 5)) + v0) ^ (sum + xteaKeys[(sum >> 11) & 3]);
+            *v1 += (((*v0 << 4) ^ (*v0 >> 5)) + *v0) ^ (sum + xteaKeys[(sum >> 11) & 3]);
         }
-
-        *vecV0 = v0;
-        *vecV1 = v1;
     }
 
     return data;
@@ -253,9 +238,7 @@ uint32_t hexStringToNum(std::string string)
 
     uint32_t num = std::strtoul(string.c_str(), nullptr, 16);
     if (!std::all_of(string.begin(), string.end(), ::isxdigit))
-    {
         return crc32(string);
-    }
 
     return num;
 }
@@ -876,7 +859,8 @@ std::string Language::RTLV::Convert(Language::Version version, std::vector<char>
     json j = {
         {"hash", ""},
         {"videos", json::object()},
-        {"subtitles", json::object()}};
+        {"subtitles", json::object()}
+    };
 
     try
     {
@@ -891,9 +875,7 @@ std::string Language::RTLV::Convert(Language::Version version, std::vector<char>
         }
 
         for (const auto &[lang, id] : c9::zip(jConv.at("AudioLanguages"), jConv.at("VideoRidsPerAudioLanguage")))
-        {
             j["videos"][lang] = std::format("{:08X}{:08X}", id.at("m_IDHigh").get<uint32_t>(), id.at("m_IDLow").get<uint32_t>());
-        }
 
         if (jConv.at("SubtitleLanguages").size() != jConv.at("SubtitleMarkupsPerLanguage").size())
         {
@@ -902,9 +884,7 @@ std::string Language::RTLV::Convert(Language::Version version, std::vector<char>
         }
 
         for (const auto &[lang, text] : c9::zip(jConv.at("SubtitleLanguages"), jConv.at("SubtitleMarkupsPerLanguage")))
-        {
             j["subtitles"][lang] = text;
-        }
 
         json meta = json::parse(metaJson);
         j["hash"] = meta["hash_path"].is_null() ? meta.at("hash_value") : meta.at("hash_path");
@@ -916,10 +896,10 @@ std::string Language::RTLV::Convert(Language::Version version, std::vector<char>
         if (converted)
             converter->FreeJsonString(converted);
 
-        fprintf(stderr, "[LANG//RTLV] JSON error:\n");
-        fprintf(stderr, "\t%s\n", err.what());
-        return "";
+        fprintf(stderr, "[LANG//RTLV] JSON error:\n"
+                        "\t%s\n", err.what());
     }
+    return "";
 }
 
 Language::Rebuilt Language::RTLV::Rebuild(Language::Version version, std::string jsonString, std::string langMap)
@@ -936,18 +916,12 @@ Language::Rebuilt Language::RTLV::Rebuild(Language::Version version, std::string
     {
         std::vector<std::string> langs = split(langMap);
         for (int i = 0; i < langs.size(); i++)
-        {
             languages[langs.at(i)] = i;
-        }
     }
     else if (version == Version::H3)
-    {
         languages = {{"xx", 0}, {"en", 1}, {"fr", 2}, {"it", 3}, {"de", 4}, {"es", 5}, {"ru", 6}, {"cn", 7}, {"tc", 8}, {"jp", 9}};
-    }
     else
-    {
         languages = {{"xx", 0}, {"en", 1}, {"fr", 2}, {"it", 3}, {"de", 4}, {"es", 5}, {"ru", 6}, {"mx", 7}, {"br", 8}, {"pl", 9}, {"cn", 10}, {"jp", 11}, {"tc", 12}};
-    }
 
     try
     {
@@ -966,18 +940,17 @@ Language::Rebuilt Language::RTLV::Rebuild(Language::Version version, std::string
             languages.clear();
             std::vector<std::string> langs = split(jSrc.at("langmap").get<std::string>());
             for (int i = 0; i < langs.size(); i++)
-            {
                 languages[langs.at(i)] = i;
-            }
         }
 
         json j = {
             {"AudioLanguages", {}},
             {"VideoRidsPerAudioLanguage", {}},
             {"SubtitleLanguages", {}},
-            {"SubtitleMarkupsPerLanguage", {}}};
+            {"SubtitleMarkupsPerLanguage", {}}
+        };
 
-        for (auto &[lang, video] : jSrc.at("videos").items())
+        for (const auto &[lang, video] : jSrc.at("videos").items())
         {
             if (!languages.contains(lang))
             {
@@ -1003,7 +976,7 @@ Language::Rebuilt Language::RTLV::Rebuild(Language::Version version, std::string
             depends[video] = std::format("{:2X}", 0x80 + languages[lang]);
         }
 
-        for (auto &[lang, text] : jSrc.at("subtitles").items())
+        for (const auto &[lang, text] : jSrc.at("subtitles").items())
         {
             j.at("SubtitleLanguages").push_back(lang);
             j.at("SubtitleMarkupsPerLanguage").push_back(text);
@@ -1024,10 +997,10 @@ Language::Rebuilt Language::RTLV::Rebuild(Language::Version version, std::string
     }
     catch (json::exception err)
     {
-        fprintf(stderr, "[LANG//RTLV] JSON error:\n");
-        fprintf(stderr, "\t%s\n", err.what());
-        return {};
+        fprintf(stderr, "[LANG//RTLV] JSON error:\n"
+                        "\t%s\n", err.what());
     }
+    return {};
 }
 #pragma endregion
 
@@ -1045,19 +1018,16 @@ std::string Language::LOCR::Convert(Language::Version version, std::vector<char>
 
     json j = {
         {"hash", ""},
-        {"languages", json::object()}};
+        {"languages", json::object()}
+    };
 
     uint32_t numLanguages = (buff.read<uint32_t>() - isLOCRv2) / 4;
     buff.index -= 4;
     std::vector<std::string> languages = {"xx", "en", "fr", "it", "de", "es", "ru", "mx", "br", "pl", "cn", "jp", "tc"};;
     if (!langMap.empty())
-    {
         languages = split(langMap);
-    }
     else if (version == Version::H3)
-    {
         languages = {"xx", "en", "fr", "it", "de", "es", "ru", "cn", "tc", "jp"};
-    }
 
     if (numLanguages > languages.size())
     {
@@ -1095,7 +1065,8 @@ std::string Language::LOCR::Convert(Language::Version version, std::vector<char>
 
     if (buff.index != buff.size())
     {
-        fprintf(stderr, "[LANG//LOCR] Did not read to end of file! Report this to the author!\n");
+        fprintf(stderr, "[LANG//LOCR] Did not read to end of file! Report this!\n");
+        return "";
     }
 
     try
@@ -1107,10 +1078,10 @@ std::string Language::LOCR::Convert(Language::Version version, std::vector<char>
     }
     catch (json::exception err)
     {
-        fprintf(stderr, "[LANG//LOCR] JSON error:\n");
-        fprintf(stderr, "\t%s\n", err.what());
-        return "";
+        fprintf(stderr, "[LANG//LOCR] JSON error:\n"
+                        "\t%s\n", err.what());
     }
+    return "";
 }
 
 Language::Rebuilt Language::LOCR::Rebuild(Language::Version version, std::string jsonString)
@@ -1129,9 +1100,9 @@ Language::Rebuilt Language::LOCR::Rebuild(Language::Version version, std::string
         uint32_t curOffset = buff.index;
         buff.insert(jSrc.at("languages").size() * 4);
 
-        for (auto &[lang, strings] : jSrc.at("languages").items())
+        for (const auto &[lang, strings] : jSrc.at("languages").items())
         {
-            if (strings.size() == 0)
+            if (!strings.size())
             {
                 uint32_t temp = buff.index;
                 buff.index = curOffset;
@@ -1148,7 +1119,7 @@ Language::Rebuilt Language::LOCR::Rebuild(Language::Version version, std::string
             buff.index = temp;
 
             buff.write<uint32_t>(strings.size());
-            for (auto &[strHash, string] : strings.items())
+            for (const auto &[strHash, string] : strings.items())
             {
                 buff.write<uint32_t>(hexStringToNum(strHash));
                 buff.write<std::vector<char>>(xteaEncrypt(string.get<std::string>()));
@@ -1163,10 +1134,10 @@ Language::Rebuilt Language::LOCR::Rebuild(Language::Version version, std::string
     }
     catch (json::exception err)
     {
-        fprintf(stderr, "[LANG//LOCR] JSON error:\n");
-        fprintf(stderr, "\t%s\n", err.what());
-        return {};
+        fprintf(stderr, "[LANG//LOCR] JSON error:\n"
+                        "\t%s\n", err.what());
     }
+    return {};
 }
 #pragma endregion
 
@@ -1208,10 +1179,10 @@ std::string Language::DITL::Convert(Language::Version version, std::vector<char>
     }
     catch (json::exception err)
     {
-        fprintf(stderr, "[LANG//DITL] JSON error:\n");
-        fprintf(stderr, "\t%s\n", err.what());
-        return "";
+        fprintf(stderr, "[LANG//DITL] JSON error:\n"
+                        "\t%s\n", err.what());
     }
+    return "";
 }
 
 Language::Rebuilt Language::DITL::Rebuild(Language::Version version, std::string jsonString)
@@ -1230,9 +1201,7 @@ Language::Rebuilt Language::DITL::Rebuild(Language::Version version, std::string
         for (const auto &[tagName, hash] : jSrc.at("soundtags").items())
         {
             if (depends.contains(hash))
-            {
                 buff.write<uint32_t>(depends.find(hash) - depends.begin());
-            }
             else
             {
                 buff.write<uint32_t>(depends.size());
@@ -1249,10 +1218,10 @@ Language::Rebuilt Language::DITL::Rebuild(Language::Version version, std::string
     }
     catch (json::exception err)
     {
-        fprintf(stderr, "[LANG//DITL] JSON error:\n");
-        fprintf(stderr, "\t%s\n", err.what());
-        return {};
+        fprintf(stderr, "[LANG//DITL] JSON error:\n"
+                        "\t%s\n", err.what());
     }
+    return {};
 }
 #pragma endregion
 
@@ -1266,15 +1235,12 @@ std::string Language::CLNG::Convert(Language::Version version, std::vector<char>
         {"languages", json::object()}
     };
 
-    std::vector<std::string> languages = {"xx", "en", "fr", "it", "de", "es", "ru", "mx", "br", "pl", "cn", "jp", "tc"};;
+    std::vector<std::string> languages = {"xx", "en", "fr", "it", "de", "es", "ru", "mx", "br", "pl", "cn", "jp", "tc"};
+
     if (!langMap.empty())
-    {
         languages = split(langMap);
-    }
     else if (version == Version::H3)
-    {
         languages = {"xx", "en", "fr", "it", "de", "es", "ru", "cn", "tc", "jp"};
-    }
 
     uint32_t i = 0;
     while (buff.index != buff.size())
@@ -1297,10 +1263,10 @@ std::string Language::CLNG::Convert(Language::Version version, std::vector<char>
     }
     catch (json::exception err)
     {
-        fprintf(stderr, "[LANG//CLNG] JSON error:\n");
-        fprintf(stderr, "\t%s\n", err.what());
-        return "";
+        fprintf(stderr, "[LANG//CLNG] JSON error:\n"
+                        "\t%s\n", err.what());
     }
+    return "";
 }
 
 Language::Rebuilt Language::CLNG::Rebuild(Language::Version version, std::string jsonString)
@@ -1314,9 +1280,7 @@ Language::Rebuilt Language::CLNG::Rebuild(Language::Version version, std::string
         buffer buff;
 
         for (const auto &[language, value] : jSrc.at("languages").items())
-        {
             buff.write<bool>(value.get<bool>());
-        }
 
         out.file = buff.data();
         out.meta = generateMeta(jSrc.at("hash").get<std::string>(), out.file.size(), "CLNG", {});
@@ -1325,10 +1289,10 @@ Language::Rebuilt Language::CLNG::Rebuild(Language::Version version, std::string
     }
     catch (json::exception err)
     {
-        fprintf(stderr, "[LANG//CLNG] JSON error:\n");
-        fprintf(stderr, "\t%s\n", err.what());
-        return {};
+        fprintf(stderr, "[LANG//CLNG] JSON error:\n"
+                        "\t%s\n", err.what());
     }
+    return {};
     
 }
 #pragma endregion
@@ -1342,11 +1306,13 @@ Language::DLGE::Container::Container(buffer &buff)
     DefaultSwitchHash = buff.read<uint32_t>();
 
     uint32_t count = buff.read<uint32_t>();
+    Metadata data;
     for (uint32_t i = 0; i < count; i++)
     {
-        Metadata data = {
+        data = {
             buff.read<uint16_t>(),
-            buff.read<std::vector<uint32_t>>()};
+            buff.read<std::vector<uint32_t>>()
+        };
 
         metadata.push_back(data);
     }
@@ -1400,14 +1366,10 @@ std::string Language::DLGE::Convert(Language::Version version, std::vector<char>
         j.push_back({"langmap", langMap});
     }
     else if (version == Version::H2016)
-    {
         // Late versions of H2016 share the same langmap as H2, but without tc, so we remove it.
         languages.pop_back();
-    }
     else if (version == Version::H3)
-    {
         languages = {"xx", "en", "fr", "it", "de", "es", "ru", "cn", "tc", "jp"};
-    }
 
     j.push_back({"rootContainer", nullptr});
 
@@ -1419,7 +1381,7 @@ std::string Language::DLGE::Convert(Language::Version version, std::vector<char>
         j["CLNG"] = meta.at("hash_reference_data").at(buff.read<uint32_t>()).at("hash");
 
         // We setup these maps to store the various types of containers and the latest index for final construction later.
-        std::map<uint8_t, std::map<uint32_t, json>> containerMap = {
+        std::map<uint8_t, tsl::ordered_map<uint32_t, json>> containerMap = {
             {1, {}},
             {2, {}},
             {3, {}},
@@ -1435,12 +1397,7 @@ std::string Language::DLGE::Convert(Language::Version version, std::vector<char>
         // Weirdly, sequences reference by some "global id" for certain types so we store this here.
         uint32_t globalIndex = -1;
         std::unordered_map<uint32_t, uint32_t> globalMap = {};
-
-        size_t curIndex = buff.index;
-        buff.index = buff.size() - 2;
-        uint16_t rootNode = buff.read<uint16_t>();
-        buff.index = curIndex;
-
+        
         // Read everything but the root typedIndex as we read that above.
         while (buff.index != (buff.size() - 2))
         {
@@ -1454,13 +1411,10 @@ std::string Language::DLGE::Convert(Language::Version version, std::vector<char>
 
                 // H2016 has this at the start of every language in a wav file container, we check this later.
                 if (version != Version::H2016)
-                {
                     buff.read<uint32_t>();
-                }
 
                 json wav = json::object({
                     {"type", Type::eDEIT_WavFile},
-                    {"isRoot", false},
                     {"wavName", std::format("{:08X}", wavNameHash)},
                     {"weight", nullptr},
                     {"cases", nullptr},
@@ -1469,12 +1423,6 @@ std::string Language::DLGE::Convert(Language::Version version, std::vector<char>
                     {"defaultFfx", nullptr},
                     {"languages", json::object()}
                 });
-
-                if ((rootNode >> 12) == 0x01 && (rootNode & 0xFFF) == indexMap.at(0x01)) {
-                    wav.at("isRoot") = true;
-                } else {
-                    wav.erase("isRoot");
-                }
 
                 for (std::string const &language : languages)
                 {
@@ -1506,26 +1454,16 @@ std::string Language::DLGE::Convert(Language::Version version, std::vector<char>
                     }
 
                     if (buff.peek<uint32_t>() != 0)
-                    {
                         if (subtitleJson.is_null())
-                        {
                             subtitleJson = xteaDecrypt(buff.read<std::vector<char>>());
-                        }
                         else
-                        {
                             subtitleJson.push_back({"subtitle", xteaDecrypt(buff.read<std::vector<char>>())});
-                        }
-                    }
                     else
-                    {
                         // We do this as we only peeked the size.
                         buff.index += 4;
-                    }
 
                     if (!subtitleJson.is_null())
-                    {
                         wav.at("languages").push_back({language, subtitleJson});
-                    }
                 }
 
                 containerMap.at(0x01)[indexMap.at(0x01)++] = wav;
@@ -1537,18 +1475,11 @@ std::string Language::DLGE::Convert(Language::Version version, std::vector<char>
 
                 json cjson = json::object({
                     {"type", Type::eDEIT_RandomContainer},
-                    {"isRoot", false},
                     {"cases", nullptr},
                     {"containers", json::array()}
                 });
 
-                if ((rootNode >> 12) == 0x02 && (rootNode & 0xFFF) == indexMap.at(0x02)) {
-                    cjson.at("isRoot") = true;
-                } else {
-                    cjson.erase("isRoot");
-                }
-
-                for (auto &metadata : container.metadata)
+                for (const Metadata &metadata : container.metadata)
                 {
                     // Random containers will ONLY EVER CONTAIN references to wav files.
                     // They will also only ever contain one "SwitchHashes" entry with the weight. 
@@ -1569,13 +1500,9 @@ std::string Language::DLGE::Convert(Language::Version version, std::vector<char>
 
                     // Cannot use ternary here due to conflicting types.
                     if (hexPrecision) 
-                    {
                         containerMap.at(type).at(index).at("weight") = std::format("{:06X}", metadata.SwitchHashes[0]);
-                    }
                     else
-                    {
                         containerMap.at(type).at(index).at("weight") = (double)metadata.SwitchHashes[0] / (double)0xFFFFFF;
-                    }
 
                     cjson.at("containers").push_back(containerMap.at(type).at(index));
                     containerMap.at(type).erase(index);
@@ -1591,20 +1518,12 @@ std::string Language::DLGE::Convert(Language::Version version, std::vector<char>
 
                 json cjson = json::object({
                     {"type", Type::eDEIT_SwitchContainer},
-                    {"isRoot", false},
                     {"soundGroup", SwitchMap.has_key(container.SwitchGroupHash) ? SwitchMap.get_value(container.SwitchGroupHash) : std::format("{:08X}", container.SwitchGroupHash)},
                     {"default", SwitchMap.has_key(container.DefaultSwitchHash) ? SwitchMap.get_value(container.DefaultSwitchHash) : std::format("{:08X}", container.DefaultSwitchHash)},
                     {"containers", json::array()}
                 });
 
-                // Only one switch per DLGE, so we can do this.
-                if ((rootNode >> 12) == 0x03) {
-                    cjson.at("isRoot") = true;
-                } else {
-                    cjson.erase("isRoot");
-                }
-
-                for (auto &metadata : container.metadata) {
+                for (const Metadata &metadata : container.metadata) {
                     // Switch containers will ONLY EVER CONTAIN references to random containers. And there will only ever be 1 per DLGE.
                     // But, they may contain more than one entry (or no entries) in the "SwitchHashes" array.
                     // This has been verified across all games. This, again, makes sense when considering the purposes of each container.
@@ -1623,9 +1542,8 @@ std::string Language::DLGE::Convert(Language::Version version, std::vector<char>
                     containerMap.at(type).at(index).erase("weight");
 
                     json caseArray = json::array();
-                    for (auto &hash : metadata.SwitchHashes) {
+                    for (auto &hash : metadata.SwitchHashes)
                         caseArray.push_back(SwitchMap.has_key(hash) ? SwitchMap.get_value(hash) : std::format("{:08X}", hash));
-                    }
 
                     containerMap.at(type).at(index).at("cases") = caseArray;
                     cjson.at("containers").push_back(containerMap.at(type).at(index));
@@ -1646,18 +1564,10 @@ std::string Language::DLGE::Convert(Language::Version version, std::vector<char>
 
                 json cjson = json::object({
                     {"type", Type::eDEIT_SequenceContainer},
-                    {"isRoot", false},
                     {"containers", json::array()}
                 });
-
-                // Only one sequence per DLGE, so we can do this.
-                if ((rootNode >> 12) == 0x04) {
-                    cjson.at("isRoot") = true;
-                } else {
-                    cjson.erase("isRoot");
-                }
-
-                for (auto &metadata : container.metadata)
+                
+                for (const Metadata &metadata : container.metadata)
                 {
                     uint8_t type = metadata.typeIndex >> 12;
                     uint32_t index = (type == 0x02 || type == 0x03) ? globalMap.at(metadata.typeIndex & 0xFFF) : metadata.typeIndex & 0xFFF;
@@ -1678,13 +1588,9 @@ std::string Language::DLGE::Convert(Language::Version version, std::vector<char>
                     // We can do this as there is only one switch container per DLGE.
                     cjson.at("containers").push_back(type == 0x03 ? (--containerMap.at(type).end())->second : containerMap.at(type).at(index));
                     if (type == 0x03)
-                    {
                         containerMap.at(type).clear();
-                    }
                     else
-                    {
                         containerMap.at(type).erase(index);
-                    }
                 }
 
                 containerMap.at(0x04)[indexMap.at(0x04)++] = cjson;
@@ -1702,43 +1608,25 @@ std::string Language::DLGE::Convert(Language::Version version, std::vector<char>
             }
             }
         }
-
+        
         bool set = false;
         for (const auto [type, typedContainerMap] : containerMap) {
-            for (auto [index, container] : typedContainerMap) {
-                if (set)
-                {
-                    fprintf(stderr, "[LANG//DLGE] More than one container found in final construction. Report this!\n");
-                    return "";    
-                }
-
-                switch (type) {
-                    case 0x01:
-                        container.erase("weight");
-                    case 0x02:
-                        container.erase("cases");
-                }
-
-                if (container.at("isRoot"))
-                {
-                    set = true;
-                    container.erase("isRoot");
-                    j.at("rootContainer") = container;
-                }
-                else
-                {
-                    fprintf(stderr, "[LANG//DLGE] Non-root container found in final construction. Report this!\n");
-                    return "";
-                }
+            if(!typedContainerMap.size()) continue;
+            if(typedContainerMap.size() != 1 || set)
+            {
+                fprintf(stderr, "[LANG//DLGE] More than one container left over. Report this!\n");
+                return "";
             }
+            j.at("rootContainer") = typedContainerMap.rbegin()->second;
+            set = true;
         }
 
         return j.dump();
     }
     catch (json::exception err)
     {
-        fprintf(stderr, "[LANG//DLGE] JSON error:\n");
-        fprintf(stderr, "\t%s\n", err.what());
+        fprintf(stderr, "[LANG//DLGE] JSON error:\n"
+                        "\t%s\n", err.what());
         fprintf(stdout, "This could be due to your language maps not matching up to the number of languages in the file (older file?).\n");
         return "";
     }
@@ -1753,9 +1641,7 @@ void addDepend(
 )
 {
     if (depends.contains(hash))
-    {
         buff.write<uint32_t>(depends.find(hash) - depends.begin());
-    }
     else
     {
         buff.write<uint32_t>(depends.size());
@@ -1784,16 +1670,12 @@ bool processContainer(
             buff.write<uint32_t>(hexStringToNum(container.at("wavName").get<std::string>()));
 
             if (version != Language::Version::H2016)
-            {
                 buff.write<uint32_t>(0x00);
-            }
 
-            for (auto const &[language, index] : languages)
+            for (const auto &[language, index] : languages)
             {
                 if (version == Language::Version::H2016)
-                {
                     buff.write<uint32_t>(0x00);
-                }
 
                 if (defLocale == language)
                 {
@@ -1814,25 +1696,15 @@ bool processContainer(
                         );
                     }
                     else
-                    {
                         buff.write<uint64_t>(ULLONG_MAX);
-                    }
 
                     if (container.at("languages").contains(language))
-                    {
                         if (container.at("languages").at(language).size() == 0)
-                        {
                             buff.write<uint32_t>(0x00);
-                        }
                         else
-                        {
                             buff.write<std::vector<char>>(xteaEncrypt(container.at("languages").at(language).get<std::string>()));
-                        }
-                    }
                     else
-                    {
                         buff.write<uint32_t>(0x00);
-                    }
                 }
                 else
                 {
@@ -1862,13 +1734,9 @@ bool processContainer(
                         );
 
                         if (container.at("languages").at(language).contains("subtitle"))
-                        {
                             buff.write<std::vector<char>>(xteaEncrypt(container.at("languages").at(language).at("subtitle").get<std::string>()));
-                        }
                         else
-                        {
                             buff.write<uint32_t>(0x00);
-                        }
 
                         continue;
                     }
@@ -1876,13 +1744,9 @@ bool processContainer(
                     buff.write<uint64_t>(ULLONG_MAX);
 
                     if (container.at("languages").at(language).size() == 0)
-                    {
                         buff.write<uint32_t>(0x00);
-                    }
                     else
-                    {
                         buff.write<std::vector<char>>(xteaEncrypt(container.at("languages").at(language).get<std::string>()));
-                    }
                 }
             }
 
@@ -1935,10 +1799,8 @@ bool processContainer(
                     }
                 }
                 else
-                {
                     // It must be a double.
                     weight = round(childContainer.at("weight").get<double>() * 0xFFFFFF);
-                }
 
                 // We only ever have WavFiles in a random container.
                 rawContainer.addMetadata(
@@ -2077,9 +1939,7 @@ bool processContainer(
     }
 
     if (container.contains("isRoot"))
-    {
         buff.write<uint16_t>(((uint8_t)type << 12) | (indexMap.at((uint8_t)type == 0x01 ? 0x01 : 0x00) & 0xFFF));
-    }
 
     return true;
 }
@@ -2090,25 +1950,21 @@ Language::Rebuilt Language::DLGE::Rebuild(Language::Version version, std::string
     tsl::ordered_map<std::string, std::string> depends{};
 
     // We require it to be ordered. These are, like usual, the H2 languages.
-    std::vector<std::pair<std::string, uint32_t>> languages = {{"xx", 0}, {"en", 1}, {"fr", 2}, {"it", 3}, {"de", 4}, {"es", 5}, {"ru", 6}, {"mx", 7}, {"br", 8}, {"pl", 9}, {"cn", 10}, {"jp", 11}, {"tc", 12}};
+    std::vector<std::pair<std::string, uint32_t>> languages = {
+        {"xx", 0}, {"en", 1}, {"fr", 2}, {"it", 3}, {"de", 4}, {"es", 5}, {"ru", 6}, {"mx", 7}, {"br", 8}, {"pl", 9}, {"cn", 10}, {"jp", 11}, {"tc", 12}
+    };
     if (!langMap.empty())
     {
         languages.clear();
         std::vector<std::string> langs = split(langMap);
         for (int i = 0; i < langs.size(); i++)
-        {
             languages.push_back({ langs.at(i), i });
-        }
     }
     else if (version == Version::H2016)
-    {
         // Late versions of H2016 share the same langmap as H2, but without tc, so we remove it.
         languages.pop_back();
-    }
     else if (version == Version::H3)
-    {
         languages = {{"xx", 0}, {"en", 1}, {"fr", 2}, {"it", 3}, {"de", 4}, {"es", 5}, {"ru", 6}, {"cn", 7}, {"tc", 8}, {"jp", 9}};
-    }
 
     try
     {
@@ -2123,9 +1979,7 @@ Language::Rebuilt Language::DLGE::Rebuild(Language::Version version, std::string
             languages.clear();
             std::vector<std::string> langs = split(jSrc.at("langmap").get<std::string>());
             for (int i = 0; i < langs.size(); i++)
-            {
                 languages.push_back({ langs.at(i), i });
-            }
         }
         
         buff.write<uint32_t>(0x00);
@@ -2167,9 +2021,9 @@ Language::Rebuilt Language::DLGE::Rebuild(Language::Version version, std::string
     }
     catch (json::exception err)
     {
-        fprintf(stderr, "[LANG//DLGE] JSON error:\n");
-        fprintf(stderr, "\t%s\n", err.what());
-        return {};
+        fprintf(stderr, "[LANG//DLGE] JSON error:\n"
+                        "\t%s\n", err.what());
     }
+    return {};
 }
 #pragma endregion
