@@ -7,6 +7,10 @@ outline: deep
 This tool converts CLNG, DITL, DLGE, LOCR, and RTLV to JSON and vice-versa.
 It is a CLI tool, meaning there is no GUI and you must use a terminal i.e. PowerShell.
 
+:::warning
+ResourceLib is required for this tool. For more information, see the [installation](/general/installation#resourcelib) page.
+:::
+
 :::tip Formats
 Intricacies of the formats will **not** be discussed on this page, it will only go through usage of the tool.
 For more information on the formats, read the [HMLangauges](/libraries/hmlanguages) page.
