@@ -17,26 +17,10 @@
 
 #include "zip.hpp"
 #include "bimap.hpp"
+#include "buffer.hpp"
 
 using namespace TonyTools;
-
-#pragma region JSON Setup
 using json = nlohmann::ordered_json;
-
-namespace TonyTools {
-    namespace Language {
-        namespace DLGE {
-            NLOHMANN_JSON_SERIALIZE_ENUM(Type, {
-                {Type::eDEIT_Invalid, "Invalid"},
-                {Type::eDEIT_WavFile, "WavFile"},
-                {Type::eDEIT_RandomContainer, "Random"},
-                {Type::eDEIT_SwitchContainer, "Switch"},
-                {Type::eDEIT_SequenceContainer, "Sequence"}
-            });
-        }
-    }
-}
-#pragma endregion
 
 #pragma region Utility Functions
 bool is_valid_hash(std::string hash)
@@ -1298,55 +1282,88 @@ Language::Rebuilt Language::CLNG::Rebuild(Language::Version version, std::string
 #pragma endregion
 
 #pragma region DLGE
-// Class setup
-Language::DLGE::Container::Container(buffer &buff)
+struct DLGE_Metadata
 {
-    type = buff.read<uint8_t>();
-    SwitchGroupHash = buff.read<uint32_t>();
-    DefaultSwitchHash = buff.read<uint32_t>();
+    uint16_t typeIndex; // >> 12 for type -- & 0xFFF for index
+    // This is actually a u32 count, then X amount of u32s but our buffer
+    // stream reader, when reading a vector, reads a u32 of size first.
+    std::vector<uint32_t> SwitchHashes;
+};
 
-    uint32_t count = buff.read<uint32_t>();
-    Metadata data;
-    for (uint32_t i = 0; i < count; i++)
+enum class DLGE_Type : uint8_t
+{
+    eDEIT_WavFile = 0x01,
+    eDEIT_RandomContainer,
+    eDEIT_SwitchContainer,
+    eDEIT_SequenceContainer,
+    eDEIT_Invalid = 0x15
+};
+
+NLOHMANN_JSON_SERIALIZE_ENUM(DLGE_Type, {
+    {DLGE_Type::eDEIT_Invalid, "Invalid"},
+    {DLGE_Type::eDEIT_WavFile, "WavFile"},
+    {DLGE_Type::eDEIT_RandomContainer, "Random"},
+    {DLGE_Type::eDEIT_SwitchContainer, "Switch"},
+    {DLGE_Type::eDEIT_SequenceContainer, "Sequence"}
+});
+
+class DLGE_Container
+{
+public:
+    uint8_t type;
+    uint32_t SwitchGroupHash;
+    uint32_t DefaultSwitchHash;
+    std::vector<DLGE_Metadata> metadata;
+
+    DLGE_Container(buffer &buff) 
     {
-        data = {
-            buff.read<uint16_t>(),
-            buff.read<std::vector<uint32_t>>()
-        };
+        type = buff.read<uint8_t>();
+        SwitchGroupHash = buff.read<uint32_t>();
+        DefaultSwitchHash = buff.read<uint32_t>();
 
-        metadata.push_back(data);
-    }
-}
+        uint32_t count = buff.read<uint32_t>();
+        DLGE_Metadata data;
+        for (uint32_t i = 0; i < count; i++)
+        {
+            data = {
+                buff.read<uint16_t>(),
+                buff.read<std::vector<uint32_t>>()
+            };
 
-Language::DLGE::Container::Container(uint8_t pType, uint32_t sgh, uint32_t dsh)
-{
-    type = pType;
-    SwitchGroupHash = sgh;
-    DefaultSwitchHash = dsh;
-    metadata = {};
-}
+            metadata.push_back(data);
+        }
+    };
 
-void Language::DLGE::Container::addMetadata(uint16_t typeIndex, std::vector<uint32_t> entries)
-{
-    metadata.push_back({
-        typeIndex,
-        entries
-    });
-}
-
-void Language::DLGE::Container::write(buffer &buff)
-{
-    buff.write<uint8_t>(type);
-    buff.write<uint32_t>(SwitchGroupHash);
-    buff.write<uint32_t>(DefaultSwitchHash);
-    
-    buff.write<uint32_t>(metadata.size());
-    for (const Metadata &metadata : metadata)
+    DLGE_Container(uint8_t pType, uint32_t sgh, uint32_t dsh)
     {
-        buff.write<uint16_t>(metadata.typeIndex);
-        buff.write<std::vector<uint32_t>>(metadata.SwitchHashes);
-    }
-}
+        type = pType;
+        SwitchGroupHash = sgh;
+        DefaultSwitchHash = dsh;
+        metadata = {};
+    };
+
+    void addMetadata(uint16_t typeIndex, std::vector<uint32_t> entries)
+    {
+        metadata.push_back({
+            typeIndex,
+            entries
+        });
+    };
+
+    void write(buffer &buff)
+    {
+        buff.write<uint8_t>(type);
+        buff.write<uint32_t>(SwitchGroupHash);
+        buff.write<uint32_t>(DefaultSwitchHash);
+        
+        buff.write<uint32_t>(metadata.size());
+        for (const DLGE_Metadata &metadata : metadata)
+        {
+            buff.write<uint16_t>(metadata.typeIndex);
+            buff.write<std::vector<uint32_t>>(metadata.SwitchHashes);
+        }
+    };
+};
 
 std::string Language::DLGE::Convert(Language::Version version, std::vector<char> data, std::string metaJson, std::string defLocale, bool hexPrecision, std::string langMap)
 {
@@ -1414,7 +1431,7 @@ std::string Language::DLGE::Convert(Language::Version version, std::vector<char>
                     buff.read<uint32_t>();
 
                 json wav = json::object({
-                    {"type", Type::eDEIT_WavFile},
+                    {"type", DLGE_Type::eDEIT_WavFile},
                     {"wavName", std::format("{:08X}", wavNameHash)},
                     {"weight", nullptr},
                     {"cases", nullptr},
@@ -1471,15 +1488,15 @@ std::string Language::DLGE::Convert(Language::Version version, std::vector<char>
             }
             case 0x02: // eDEIT_RandomContainer
             {
-                Container container(buff);
+                DLGE_Container container(buff);
 
                 json cjson = json::object({
-                    {"type", Type::eDEIT_RandomContainer},
+                    {"type", DLGE_Type::eDEIT_RandomContainer},
                     {"cases", nullptr},
                     {"containers", json::array()}
                 });
 
-                for (const Metadata &metadata : container.metadata)
+                for (const DLGE_Metadata &metadata : container.metadata)
                 {
                     // Random containers will ONLY EVER CONTAIN references to wav files.
                     // They will also only ever contain one "SwitchHashes" entry with the weight. 
@@ -1514,16 +1531,24 @@ std::string Language::DLGE::Convert(Language::Version version, std::vector<char>
             }
             case 0x03: // eDEIT_SwitchContainer
             {
-                Container container(buff);
+                DLGE_Container container(buff);
 
                 json cjson = json::object({
-                    {"type", Type::eDEIT_SwitchContainer},
-                    {"soundGroup", SwitchMap.has_key(container.SwitchGroupHash) ? SwitchMap.get_value(container.SwitchGroupHash) : std::format("{:08X}", container.SwitchGroupHash)},
-                    {"default", SwitchMap.has_key(container.DefaultSwitchHash) ? SwitchMap.get_value(container.DefaultSwitchHash) : std::format("{:08X}", container.DefaultSwitchHash)},
+                    {"type", DLGE_Type::eDEIT_SwitchContainer},
+                    {
+                        "soundGroup", SwitchMap.has_key(container.SwitchGroupHash)
+                            ? SwitchMap.get_value(container.SwitchGroupHash)
+                            : std::format("{:08X}", container.SwitchGroupHash)
+                    },
+                    {
+                        "default", SwitchMap.has_key(container.DefaultSwitchHash)
+                            ? SwitchMap.get_value(container.DefaultSwitchHash)
+                            : std::format("{:08X}", container.DefaultSwitchHash)
+                    },
                     {"containers", json::array()}
                 });
 
-                for (const Metadata &metadata : container.metadata) {
+                for (const DLGE_Metadata &metadata : container.metadata) {
                     // Switch containers will ONLY EVER CONTAIN references to random containers. And there will only ever be 1 per DLGE.
                     // But, they may contain more than one entry (or no entries) in the "SwitchHashes" array.
                     // This has been verified across all games. This, again, makes sense when considering the purposes of each container.
@@ -1560,14 +1585,14 @@ std::string Language::DLGE::Convert(Language::Version version, std::vector<char>
                 // Unsure if this is a hard limitation, or if they've just not used any.
                 // Further testing required. (Although if it is a limitation, this is logical).
 
-                Container container(buff);
+                DLGE_Container container(buff);
 
                 json cjson = json::object({
-                    {"type", Type::eDEIT_SequenceContainer},
+                    {"type", DLGE_Type::eDEIT_SequenceContainer},
                     {"containers", json::array()}
                 });
                 
-                for (const Metadata &metadata : container.metadata)
+                for (const DLGE_Metadata &metadata : container.metadata)
                 {
                     uint8_t type = metadata.typeIndex >> 12;
                     uint32_t index = (type == 0x02 || type == 0x03) ? globalMap.at(metadata.typeIndex & 0xFFF) : metadata.typeIndex & 0xFFF;
@@ -1659,10 +1684,10 @@ bool processContainer(
     std::string defLocale
 )
 {
-    Language::DLGE::Type type = container.at("type").get<Language::DLGE::Type>();
+    DLGE_Type type = container.at("type").get<DLGE_Type>();
 
     switch (type) {
-        case Language::DLGE::Type::eDEIT_WavFile: {
+        case DLGE_Type::eDEIT_WavFile: {
             buff.write<uint8_t>(0x01);
 
             std::string soundTag = container.at("soundTag").get<std::string>();
@@ -1753,13 +1778,13 @@ bool processContainer(
             indexMap.at(0x01)++;
             break;
         }
-        case Language::DLGE::Type::eDEIT_RandomContainer: {
-            Language::DLGE::Container rawContainer(0x02, 0, 0);
+        case DLGE_Type::eDEIT_RandomContainer: {
+            DLGE_Container rawContainer(0x02, 0, 0);
 
             // We need to write the wav files first.
             for (const json &childContainer : container.at("containers"))
             {
-                if (childContainer.at("type").get<Language::DLGE::Type>() != Language::DLGE::Type::eDEIT_WavFile)
+                if (childContainer.at("type").get<DLGE_Type>() != DLGE_Type::eDEIT_WavFile)
                 {
                     fprintf(stderr, "[LANG//DLGE] Invalid type found in Random container!\n");
                     return false;
@@ -1816,7 +1841,7 @@ bool processContainer(
             indexMap.at(0x02)++;
             break;
         }
-        case Language::DLGE::Type::eDEIT_SwitchContainer: {
+        case DLGE_Type::eDEIT_SwitchContainer: {
             // This allows us to ensure that there's only one switch container per DLGE.
             if (indexMap.at(0x03) != -1)
             {
@@ -1832,7 +1857,7 @@ bool processContainer(
 
             std::string soundGroup = container.at("soundGroup").get<std::string>();
             std::string defGroup = container.at("default").get<std::string>();
-            Language::DLGE::Container rawContainer(
+            DLGE_Container rawContainer(
                 0x03,
                 SwitchMap.has_value(soundGroup) ? SwitchMap.get_key(soundGroup) : hexStringToNum(soundGroup),
                 SwitchMap.has_value(defGroup) ? SwitchMap.get_key(defGroup) : hexStringToNum(defGroup)
@@ -1840,9 +1865,9 @@ bool processContainer(
 
             for (const json &childContainer : container.at("containers"))
             {
-                Language::DLGE::Type cType = childContainer.at("type").get<Language::DLGE::Type>();
+                DLGE_Type cType = childContainer.at("type").get<DLGE_Type>();
 
-                if (cType != Language::DLGE::Type::eDEIT_WavFile && cType != Language::DLGE::Type::eDEIT_RandomContainer)
+                if (cType != DLGE_Type::eDEIT_WavFile && cType != DLGE_Type::eDEIT_RandomContainer)
                 {
                     fprintf(stderr, "[LANG//DLGE] Invalid type found in Switch container.\n");
                     return false;
@@ -1891,7 +1916,7 @@ bool processContainer(
             indexMap.at(0x03)++;
             break;
         }
-        case Language::DLGE::Type::eDEIT_SequenceContainer: {
+        case DLGE_Type::eDEIT_SequenceContainer: {
             // This allows us to ensure that there's only one sequence container per DLGE.
             if (indexMap.at(0x04) != -1)
             {
@@ -1899,11 +1924,11 @@ bool processContainer(
                 return false;
             }
 
-            Language::DLGE::Container rawContainer(0x04, 0, 0);
+            DLGE_Container rawContainer(0x04, 0, 0);
 
             for (const json &childContainer : container.at("containers"))
             {
-                Language::DLGE::Type cType = childContainer.at("type").get<Language::DLGE::Type>();
+                DLGE_Type cType = childContainer.at("type").get<DLGE_Type>();
 
                 if (!processContainer(
                     version,
@@ -1932,7 +1957,7 @@ bool processContainer(
             indexMap.at(0x04)++;
             break;
         }
-        case Language::DLGE::Type::eDEIT_Invalid: {
+        case DLGE_Type::eDEIT_Invalid: {
             fprintf(stderr, "[LANG//DLGE] Invalid type found in JSON.\n");
             return false;
         }
