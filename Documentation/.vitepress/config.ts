@@ -29,11 +29,11 @@ export default defineConfig({
                     { text: "HMTextureTools", link: "/tools/hmtexturetools" },
                     { text: "HMLanguageTools", link: "/tools/hmlanguagetools" },
                     { text: "HMAScrambler", link: "/tools/hmascrambler" },
-                    { text: "BOXCExporter", link: "/tools/boxcexporter" },
-                    { text: "JSONPatchCreator", link: "/tools/jsonpatchcreator" },
-                    { text: "MJBATesting", link: "/tools/mjbatesting" },
-                    { text: "SCDA", link: "/tools/scda" },
-                    { text: "VTXD", link: "/tools/vtxd" }
+                    //{ text: "BOXCExporter", link: "/tools/boxcexporter" },
+                    //{ text: "JSONPatchCreator", link: "/tools/jsonpatchcreator" },
+                    //{ text: "MJBATesting", link: "/tools/mjbatesting" },
+                    //{ text: "SCDA", link: "/tools/scda" },
+                    //{ text: "VTXD", link: "/tools/vtxd" }
                 ]
             }
         ],
