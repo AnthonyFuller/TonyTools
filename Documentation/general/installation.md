@@ -8,6 +8,17 @@ The latest download for the main set of tools (this is the one you probably want
 
 Development tools come with no support or guarantees for how they may work, but they can be downloaded [here](https://github.com/AnthonyFuller/TonyTools/releases/latest/download/TonyTools-Dev.zip).
 
+## ResourceLib
+
+Some tools and libraries require [ResourceLib](https://github.com/OrfeasZ/ZHMTools/releases/latest) from [ZHMTools](https://github.com/OrfeasZ/ZHMTools).
+
+[HMLanguages](/libraries/hmlanguages) requires ResourceLib either next to the executable it's been compiled into or on your PATH.
+This also extends to [HMLangaugeTools](/tools/hmlanguagetools).
+
+:::tip
+This does not apply to the Linux version of HMLanguageTools as ResourceLib is statically linked.
+:::
+
 ## Tools
 All tools are CLI, to install them, you can either:
 - Extract them to a directory that is on your PATH, so they can be used anywhere.
