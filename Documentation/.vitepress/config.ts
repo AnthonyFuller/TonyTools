@@ -43,12 +43,12 @@ export default defineConfig({
     },
     cleanUrls: true,
     // Sitemap setup
-    lastUpdated: true,
     transformHtml: (_, id, { pageData }) => {
         if (!/[\\/]404\.html$/.test(id))
             links.push({
                 url: pageData.relativePath.replace(/((^|\/)index)?\.md$/, '$2'),
-                lastmod: pageData.lastUpdated
+                changefreq: "weekly",
+                priority: 0.5
             })
     },
     buildEnd: async ({ outDir }) => {
