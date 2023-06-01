@@ -47,8 +47,8 @@ export default defineConfig({
         if (!/[\\/]404\.html$/.test(id))
             links.push({
                 url: pageData.relativePath.replace(/((^|\/)index)?\.md$/, '$2'),
-                changefreq: "weekly",
-                priority: 0.5
+                changefreq: pageData.params?.changefreq ?? "weekly",
+                priority: pageData.params?.priority ?? 0.5
             })
     },
     buildEnd: async ({ outDir }) => {
