@@ -181,8 +181,8 @@ std::vector<char> xteaEncrypt(std::string str)
 
     for (uint32_t i = 0; i < paddedSize / 8; i++)
     {
-        uint32_t* v0 = (uint32_t *)(data.data() + (i * 8));
-        uint32_t* v1 = (uint32_t *)(data.data() + (i * 8) + 4);
+        uint32_t* v0 = (uint32_t*)(data.data() + (i * 8));
+        uint32_t* v1 = (uint32_t*)(data.data() + (i * 8) + 4);
 
         uint32_t sum = 0;
 
