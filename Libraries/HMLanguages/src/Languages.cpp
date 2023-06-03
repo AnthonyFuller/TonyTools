@@ -1253,7 +1253,7 @@ std::string Language::CLNG::Convert(Language::Version version, std::vector<char>
     return "";
 }
 
-Language::Rebuilt Language::CLNG::Rebuild(Language::Version version, std::string jsonString)
+Language::Rebuilt Language::CLNG::Rebuild(std::string jsonString)
 {
     Language::Rebuilt out{};
 
@@ -1365,7 +1365,7 @@ public:
     };
 };
 
-std::string Language::DLGE::Convert(Language::Version version, std::vector<char> data, std::string metaJson, std::string defLocale, bool hexPrecision, std::string langMap)
+std::string Language::DLGE::Convert(Language::Version version, std::vector<char> data, std::string metaJson, std::string defaultLocale, bool hexPrecision, std::string langMap)
 {
     buffer buff(data);
 
@@ -1453,7 +1453,7 @@ std::string Language::DLGE::Convert(Language::Version version, std::vector<char>
 
                     if (wavIndex != ULONG_MAX && ffxIndex != ULONG_MAX)
                     {
-                        if (language == defLocale)
+                        if (language == defaultLocale)
                         {
                             wav.at("defaultWav") = meta.at("hash_reference_data").at(wavIndex).at("hash");
                             wav.at("defaultFfx") = meta.at("hash_reference_data").at(ffxIndex).at("hash");
@@ -1983,7 +1983,7 @@ bool processContainer(
     return true;
 }
 
-Language::Rebuilt Language::DLGE::Rebuild(Language::Version version, std::string jsonString, std::string defLocale, std::string langMap = "")
+Language::Rebuilt Language::DLGE::Rebuild(Language::Version version, std::string jsonString, std::string defaultLocale, std::string langMap)
 {
     Language::Rebuilt out{};
     tsl::ordered_map<std::string, std::string> depends{};
@@ -2046,7 +2046,7 @@ Language::Rebuilt Language::DLGE::Rebuild(Language::Version version, std::string
             indexMap,
             languages,
             depends,
-            defLocale
+            defaultLocale
         ))
         {
             fprintf(stderr, "[LANG//DLGE] Failed to process containers!\n");
