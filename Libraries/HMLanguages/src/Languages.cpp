@@ -1126,7 +1126,7 @@ Language::Rebuilt Language::LOCR::Rebuild(Language::Version version, std::string
 #pragma endregion
 
 #pragma region DITL
-std::string Language::DITL::Convert(Language::Version version, std::vector<char> data, std::string metaJson)
+std::string Language::DITL::Convert(std::vector<char> data, std::string metaJson)
 {
     buffer buff(data);
 
@@ -1169,7 +1169,7 @@ std::string Language::DITL::Convert(Language::Version version, std::vector<char>
     return "";
 }
 
-Language::Rebuilt Language::DITL::Rebuild(Language::Version version, std::string jsonString)
+Language::Rebuilt Language::DITL::Rebuild(std::string jsonString)
 {
     Language::Rebuilt out{};
     tsl::ordered_map<std::string, std::string> depends{};
@@ -1642,8 +1642,22 @@ std::string Language::DLGE::Convert(Language::Version version, std::vector<char>
                 fprintf(stderr, "[LANG//DLGE] More than one container left over. Report this!\n");
                 return "";
             }
+
             j.at("rootContainer") = typedContainerMap.rbegin()->second;
+
+            switch (type) {
+                case 0x01:
+                    j.at("rootContainer").erase("weight");
+                case 0x02:
+                    j.at("rootContainer").erase("cases");
+            }
             set = true;
+        }
+
+        if (!set)
+        {
+            fprintf(stderr, "[LANG//DLGE] No root container found. Report this!\n");
+            return "";
         }
 
         return j.dump();

@@ -10,11 +10,9 @@ namespace Language
 {
     enum class Version : uint8_t
     {
-        ALPHA = 0,
-        H2016 = 1,
-        H2 = 2,
-        H3 = 3,
-        NONE = 255
+        H2016 = 2,
+        H2,
+        H3
     };
 
     struct Rebuilt
@@ -31,8 +29,8 @@ namespace Language
 
     namespace DITL
     {
-        std::string Convert(Language::Version version, std::vector<char> data, std::string metaJson);
-        Rebuilt Rebuild(Language::Version version, std::string jsonString);
+        std::string Convert(std::vector<char> data, std::string metaJson);
+        Rebuilt Rebuild(std::string jsonString);
     }; // namespace DITL
 
     namespace DLGE
