@@ -215,7 +215,7 @@ int main(int argc, char *argv[])
 
         if (type == "CLNG")
         {
-            output = Language::CLNG::Rebuild(version, std::string(inputFileData.begin(), inputFileData.end()));
+            output = Language::CLNG::Rebuild(std::string(inputFileData.begin(), inputFileData.end()));
         }
         else if (type == "DITL")
         {
