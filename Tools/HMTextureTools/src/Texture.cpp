@@ -509,10 +509,11 @@ std::vector<char> Texture::PS4swizzle(std::vector<char> &data, Format format, ui
                 {
                     int destIndex = bytesPerPixel * (yOffset * width + xOffset);
 
-                    if (deswizzle)
-                        std::memcpy(&deswizzled.at(destIndex), &data.at(index), bytesPerPixel);
-                    else
-                        std::memcpy(&deswizzled.at(index), &data.at(destIndex), bytesPerPixel);
+                    std::memcpy(
+                        &deswizzled.at(deswizzle ? destIndex : index), 
+                        &data.at(deswizzle ? index : destIndex), 
+                        bytesPerPixel
+                    );
                 }
 
                 index += bytesPerPixel;
