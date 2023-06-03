@@ -130,7 +130,7 @@ int main(int argc, char *argv[])
 
     auto hexPrecision = program.get<bool>("--hexprecision");
 
-    Language::Version version = Language::Version::NONE;
+    Language::Version version;
     if (game == "H2016")
     {
         version = Language::Version::H2016;
@@ -174,7 +174,7 @@ int main(int argc, char *argv[])
         }
         else if (type == "DITL")
         {
-            output = Language::DITL::Convert(version, readFile(inputPath), std::string(metaFileData.begin(), metaFileData.end()));
+            output = Language::DITL::Convert(readFile(inputPath), std::string(metaFileData.begin(), metaFileData.end()));
         }
         else if (type == "DLGE")
         {
@@ -219,7 +219,7 @@ int main(int argc, char *argv[])
         }
         else if (type == "DITL")
         {
-            output = Language::DITL::Rebuild(version, std::string(inputFileData.begin(), inputFileData.end()));
+            output = Language::DITL::Rebuild(std::string(inputFileData.begin(), inputFileData.end()));
         }
         else if (type == "DLGE")
         {
