@@ -21,7 +21,7 @@ namespace Language
     };
 
     /**
-     * @brief Rebuilt data struct 
+     * @brief Rebuilt data struct containing raw file data and a .meta.json string.
      */
     struct Rebuilt
     {
