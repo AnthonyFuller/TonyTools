@@ -61,7 +61,7 @@ Not much is actually know about this file type, other than it corresponds to the
 
 #### JSON Representation
 
-[Schema](/schemas/clng.schema.json)
+[Schema](./schemas/clng.schema.json)
 ```json
 {
     "hash": "...",
@@ -101,11 +101,11 @@ TonyTools::Language::Rebuilt rebuild =
 ### DITL
 *aka **DialogSoundTemplateList***
 
-This format defines the soundtag to the corresponding [Wwise](#glossary) [Event]() (WWEV) by its hash/path. The soundtag names (keys of the `soundtags` object) are CRC32 hashed in the file. As the names of the soundtag are in the actual event file, we know all of them. In the unlikely event that one is unknown by the internal hash list in the library, they will be output as the hexadecimal representation of the CRC32 hash found in the file.
+This format defines the soundtag to the corresponding [Wwise](#glossary) [Event](#glossary) (WWEV) by its hash/path. The soundtag names (keys of the `soundtags` object) are CRC32 hashed in the file. As the names of the soundtag are in the actual event file, we know all of them. In the unlikely event that one is unknown by the internal hash list in the library, they will be output as the hexadecimal representation of the CRC32 hash found in the file.
 
 #### JSON Representation
 
-[Schema](/schemas/ditl.schema.json)
+[Schema](./schemas/ditl.schema.json)
 ```json
 {
     "hash": "...",
