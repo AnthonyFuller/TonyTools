@@ -6,7 +6,7 @@ on:
       - master
     tags:
       - v*
-    paths-ignore: ["Documentation/**/*.*"]
+    paths-ignore: ["Documentation/**/*.*", ".github/workflows/docs.yml"]
   pull_request:
     types: [opened, synchronize, reopened]
 
