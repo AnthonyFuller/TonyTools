@@ -57,7 +57,7 @@ But before we start, it is recommended to read the [glossary](#glossary) first t
 ### CLNG
 *aka **DialogCascadingLanguageDependencies***
 
-Not much is actually know about this file type, other than it corresponds to the current language map in the game version. HMLanguages can convert the file to an *assumed* representation (as the languages just have a `0x00` byte or a `0x01` type which is presumed to be a boolean).
+Not much is actually know about this file type, other than it corresponds to the current language map in the game version. HMLanguages can convert the file to an *assumed* representation (as the languages just have a `0x00` byte or a `0x01` byte which is presumed to be a boolean).
 
 #### JSON Representation
 
