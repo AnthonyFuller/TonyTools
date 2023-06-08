@@ -1,5 +1,6 @@
 ---
 outline: deep
+next: false
 ---
 
 # Third-Party Libraries
