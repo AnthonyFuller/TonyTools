@@ -1,0 +1,16 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+        "hash": {
+            "type": "string"
+        },
+        "soundtags": {
+            "type": "object",
+            "additionalProperties": {
+                "type": "string"
+            }
+        }
+    },
+    "required": ["hash", "soundtags"]
+}
