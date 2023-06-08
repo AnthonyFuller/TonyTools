@@ -9,6 +9,11 @@ export default defineConfig({
     title: "TonyTools",
     description: "Documentation hub for the TonyTools suite of libraries and tools.",
     themeConfig: {
+        logo: "/logo.png",
+        nav: [
+            { text: "Glacier Modding", link: "https://glaciermodding.org" },
+            { text: "Hitman Modding Resources", link: "https://hitman-resources.netlify.app" }
+        ],
         sidebar: [
             {
                 text: "General",
@@ -28,18 +33,25 @@ export default defineConfig({
                 items: [
                     { text: "HMTextureTools", link: "/tools/hmtexturetools" },
                     { text: "HMLanguageTools", link: "/tools/hmlanguagetools" },
-                    { text: "HMAScrambler", link: "/tools/hmascrambler" },
-                    //{ text: "BOXCExporter", link: "/tools/boxcexporter" },
-                    //{ text: "JSONPatchCreator", link: "/tools/jsonpatchcreator" },
-                    //{ text: "MJBATesting", link: "/tools/mjbatesting" },
-                    //{ text: "SCDA", link: "/tools/scda" },
-                    //{ text: "VTXD", link: "/tools/vtxd" }
+                    { text: "HMAScrambler", link: "/tools/hmascrambler" }
+                ]
+            },
+            {
+                text: "Dev Tools",
+                collapsed: true,
+                items: [
+                    { text: "BOXCExporter", link: "/tools/boxcexporter" },
+                    { text: "JSONPatchCreator", link: "/tools/jsonpatchcreator" },
+                    { text: "MJBATesting", link: "/tools/mjbatesting" },
+                    { text: "SCDA", link: "/tools/scda" },
+                    { text: "VTXD", link: "/tools/vtxd" }
                 ]
             }
         ],
         socialLinks: [
             { icon: "github", link: "https://github.com/AnthonyFuller/TonyTools" }
-        ]
+        ],
+        search: { provider: "local" }
     },
     cleanUrls: true,
     // Sitemap setup
