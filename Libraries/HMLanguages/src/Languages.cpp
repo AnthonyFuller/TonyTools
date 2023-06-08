@@ -841,6 +841,7 @@ std::string Language::RTLV::Convert(Language::Version version, std::vector<char>
         return "";
 
     json j = {
+        {"$schema", "https://tonytools.win/schemas/rtlv.schema.json"},
         {"hash", ""},
         {"videos", json::object()},
         {"subtitles", json::object()}
@@ -1001,6 +1002,7 @@ std::string Language::LOCR::Convert(Language::Version version, std::vector<char>
     }
 
     json j = {
+        {"$schema", "https://tonytools.win/schemas/locr.schema.json"},
         {"hash", ""},
         {"languages", json::object()}
     };
@@ -1131,6 +1133,7 @@ std::string Language::DITL::Convert(std::vector<char> data, std::string metaJson
     buffer buff(data);
 
     json j = {
+        {"$schema", "https://tonytools.win/schemas/ditl.schema.json"},
         {"hash", ""},
         {"soundtags", json::object()}
     };
@@ -1215,6 +1218,7 @@ std::string Language::CLNG::Convert(Language::Version version, std::vector<char>
     buffer buff(data);
 
     json j = {
+        {"$schema", "https://tonytools.win/schemas/clng.schema.json"},
         {"hash", ""},
         {"languages", json::object()}
     };
@@ -1370,6 +1374,7 @@ std::string Language::DLGE::Convert(Language::Version version, std::vector<char>
     buffer buff(data);
 
     json j = {
+        {"$schema", "https://tonytools.win/schemas/dlge.schema.json"},
         {"hash", ""},
         {"DITL", ""},
         {"CLNG", ""}
