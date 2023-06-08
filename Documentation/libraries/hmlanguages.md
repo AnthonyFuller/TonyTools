@@ -142,7 +142,7 @@ TonyTools::Language::Rebuilt rebuild =
 ### DLGE
 *aka **DialogEvent***
 
-Now, this format is **complex**, and that's putting it lightly. This is the longest section for a reason, so strap in, and make sure you know your [definitions](#glossary).
+Now, this format is **complex**, and that's putting it lightly. This ~~is~~ will be the longest section for a reason, so strap in, and make sure you know your [definitions](#glossary).
 
 This format, in its simplest terms, defines dialogue. These could include subtitles (optional), Wavs (WWES/M), and FaceFX animations (FXAS).
 
@@ -181,4 +181,4 @@ This section is currently a work in progress and will be improved upon in the fu
         You can use [this](https://github.com/glacier-modding/G2WwiseDataTool) tool to create them for the game.
     - Wavs/Wems - These terms will also be used synonymously. The game uses the wems for WWEM and WWES (functionally, the same file type, that being a wem. WWES
         is used in H3 for dialogue). Wems are generated from wavs using Wwise.
-- LINE - A file that contains a CRC32 hash of a text string e.g. `UI_LOCATION_PARIS_COUNTRY`.
+- LINE - A file that contains a CRC32 hash of a text string e.g. `UI_LOCATION_PARIS_COUNTRY`. LINE files themselves are used for referencing localised lines in bricks, they are not required if it's, for example, being used in UI.
