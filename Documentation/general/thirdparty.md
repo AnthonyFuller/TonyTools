@@ -5,7 +5,7 @@ next: false
 
 # Third-Party Libraries
 
-Various third-party libraries are used for my projects, and where the library allows, they have all been included using CMake's [FetchContent](https://cmake.org/cmake/help/latest/module/FetchContent.html) feature. A list of all third-party libraries used can be found below:
+Various open-source third-party libraries are used for my projects, and where the library allows, they have all been included using CMake's [FetchContent](https://cmake.org/cmake/help/latest/module/FetchContent.html) feature. A list of all third-party libraries used can be found below:
 
 - [argparse](https://github.com/p-ranav/argparse)
 - [DirectXTex](https://github.com/microsoft/DirectXTex)
@@ -15,3 +15,5 @@ Various third-party libraries are used for my projects, and where the library al
 - [nlohmann json](https://github.com/nlohmann/json)
 - [ordered-map](https://github.com/Tessil/ordered-map)
 - [ZHMTools](https://github.com/OrfeasZ/ZHMTools)
+
+I understand that a huge amount of work goes into maintaining these libraries, and all my thanks go to the contributors to all the above projects.
