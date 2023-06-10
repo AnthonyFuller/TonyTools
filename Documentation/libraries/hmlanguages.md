@@ -165,6 +165,7 @@ The JSON format allows for users to put the plain-text version e.g. `UI_LOCATION
 
 #### JSON Representation
 
+[Schema](./schemas/locr.schema.json)
 ```json
 {
     "hash": "...",
@@ -209,6 +210,7 @@ This format defines videos (for different languages, `en` is the default for all
 
 #### JSON Representation
 
+[Schema](./schemas/rtlv.schema.json)
 ```json
 {
     "hash": "...",
