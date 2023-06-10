@@ -61,7 +61,7 @@ Not much is actually know about this file type, other than it corresponds to the
 
 #### JSON Representation
 
-[Schema](./schemas/clng.schema.json)
+[Schema](/schemas/clng.schema.json)
 ```json
 {
     "hash": "...",
@@ -105,7 +105,7 @@ This format defines the soundtag to the corresponding [Wwise](#glossary) [Event]
 
 #### JSON Representation
 
-[Schema](./schemas/ditl.schema.json)
+[Schema](/schemas/ditl.schema.json)
 ```json
 {
     "hash": "...",
@@ -165,7 +165,7 @@ The JSON format allows for users to put the plain-text version e.g. `UI_LOCATION
 
 #### JSON Representation
 
-[Schema](./schemas/locr.schema.json)
+[Schema](/schemas/locr.schema.json)
 ```json
 {
     "hash": "...",
@@ -210,7 +210,7 @@ This format defines videos (for different languages, `en` is the default for all
 
 #### JSON Representation
 
-[Schema](./schemas/rtlv.schema.json)
+[Schema](/schemas/rtlv.schema.json)
 ```json
 {
     "hash": "...",
