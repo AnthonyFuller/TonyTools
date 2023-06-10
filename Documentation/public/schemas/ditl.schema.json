@@ -12,5 +12,6 @@
             }
         }
     },
-    "required": ["hash", "soundtags"]
+    "required": ["hash", "soundtags"],
+    "additionalProperties": false
 }

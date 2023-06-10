@@ -15,5 +15,6 @@
             "additionalProperties": false
         }
     },
-    "required": ["hash", "languages"]
+    "required": ["hash", "languages"],
+    "additionalProperties": false
 }

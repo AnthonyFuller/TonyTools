@@ -24,5 +24,6 @@
             "additionalProperties": false
         }
     },
-    "required": ["hash", "videos", "subtitles"]
+    "required": ["hash", "videos", "subtitles"],
+    "additionalProperties": false
 }
