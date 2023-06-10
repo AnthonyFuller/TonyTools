@@ -157,11 +157,27 @@ This section is currently a work in progress and will be improved upon in the fu
 
 The classic (and possibly the most popular) localization format from the World of Assassination trilogy.
 
-This format defines a [LINE](#glossary) hash to a string per language. A language map **is required** as per the [table](#language-maps) whether that be from the version or user supplied.
+This format defines a [LINE](#glossary) hash to a string per language. A language map **is required** as per the [table](#language-maps) whether that be from the version or user supplied. Currently, there is no hash list for these (one is planned for far in the future), so they are all output as CRC32 hashes in hexadecimal.
 
-:::warning
-This section is currently a work in progress and will be improved upon in the future.
-:::
+The JSON format allows for users to put the plain-text version e.g. `UI_LOCATION_PARIS_COUNTRY` instead of the hash, these will be hashed upon rebuilding.
+
+#### JSON Representation
+
+```json
+{
+    "hash": "...",
+    "languages": {
+        "xx": {
+            "UI_MY_SUIT_NAME": "**Placeholder** My Suit"
+        },
+        "en": {
+            "UI_MY_SUIT_NAME": "My Epic Suit",
+            "DEADBEEF": "..." // Example for a hash in hexadecimal
+        },
+        ...
+    }
+}
+```
 
 ---
 
