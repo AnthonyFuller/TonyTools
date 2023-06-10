@@ -166,6 +166,7 @@ This section is currently a work in progress and will be improved upon in the fu
 ---
 
 ### RTLV
+*aka **RuntimeLocalizedVideo***
 
 :::warning
 This section is currently a work in progress and will be improved upon in the future.
@@ -173,12 +174,12 @@ This section is currently a work in progress and will be improved upon in the fu
 
 ## Glossary
 
-- Hash/path - These terms will be used synonymously, they mean the (truncated) MD5 hash of files, or their full path (if known).
-- Soundtag - Used in [DLGE](#dlge), defined in [DITL](#ditl). The way a piece of dialogue will be played i.e. in-world, handler, etc.
-- Wwise - Refers to [Audiokinetic Wwise](https://www.audiokinetic.com/en/products/wwise/), the audio middleware used in the Hitman WoA trilogy.
-    - Event - Refers to Wwise Events, read more on them [here](https://www.audiokinetic.com/en/library/edge/?source=WwiseFundamentalApproach&id=understanding_events).
+- **Hash/path** - These terms will be used synonymously, they mean the (truncated) MD5 hash of files, or their full path (if known).
+- **Soundtag** - Used in [DLGE](#dlge), defined in [DITL](#ditl). The way a piece of dialogue will be played i.e. in-world, handler, etc.
+- **Wwise** - Refers to [Audiokinetic Wwise](https://www.audiokinetic.com/en/products/wwise/), the audio middleware used in the Hitman WoA trilogy.
+    - **Event** - Refers to Wwise Events, read more on them [here](https://www.audiokinetic.com/en/library/edge/?source=WwiseFundamentalApproach&id=understanding_events).
         Soundtags specifically use ["Dynamic Dialogue" events](https://www.audiokinetic.com/en/library/edge/?source=Help&id=understanding_dynamic_dialogue_system).
         You can use [this](https://github.com/glacier-modding/G2WwiseDataTool) tool to create them for the game.
-    - Wavs/Wems - These terms will also be used synonymously. The game uses the wems for WWEM and WWES (functionally, the same file type, that being a wem. WWES
+    - **Wavs/Wems** - These terms will also be used synonymously. The game uses the wems for WWEM and WWES (functionally, the same file type, that being a wem. WWES
         is used in H3 for dialogue). Wems are generated from wavs using Wwise.
-- LINE - A file that contains a CRC32 hash of a text string e.g. `UI_LOCATION_PARIS_COUNTRY`. LINE files themselves are used for referencing localised lines in bricks, they are not required if it's, for example, being used in UI.
+- **LINE** - A file that contains a CRC32 hash of a text string e.g. `UI_LOCATION_PARIS_COUNTRY`. LINE files themselves are used for referencing localised lines in bricks, they are not required if it's, for example, being used in UI.
