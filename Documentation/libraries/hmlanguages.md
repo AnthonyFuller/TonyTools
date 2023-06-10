@@ -179,6 +179,25 @@ The JSON format allows for users to put the plain-text version e.g. `UI_LOCATION
 }
 ```
 
+#### API
+
+```cpp
+// LOCR + meta.json -> JSON
+std::string json = TonyTools::Language::LOCR::Convert(
+    Language::Version version,      // game version
+    std::vector<char> data,         // raw LOCR data
+    std::string metaJson,           // .meta.json string
+    std::string langMap = ""        // optional language map
+);
+
+// JSON -> LOCR + meta.json
+TonyTools::Language::Rebuilt rebuild =
+    TonyTools::Langauge::LOCR::Rebuild(
+        Language::Version version,  // game version
+        std::string jsonString      // HML JSON string
+    );
+```
+
 ---
 
 ### RTLV
