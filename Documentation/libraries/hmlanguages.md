@@ -216,7 +216,7 @@ This format defines videos (for different languages, `en` is the default for all
     "hash": "...",
     "videos": {
         "en": "...",
-        "jp": "..." // Optional, only used in H2016
+        "jp": "..." // Only used in H2016
     },
     "subtitles": {
         "xx": "...",
