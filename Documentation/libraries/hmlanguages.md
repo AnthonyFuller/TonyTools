@@ -157,7 +157,9 @@ This section is currently a work in progress and will be improved upon in the fu
 
 The classic (and possibly the most popular) localization format from the World of Assassination trilogy.
 
-This format defines a [LINE](#glossary) hash to a string per language. A language map **is required** as per the [table](#language-maps) whether that be from the version or user supplied. Currently, there is no hash list for these (one is planned for far in the future), so they are all output as CRC32 hashes in hexadecimal.
+This format defines a [LINE](#glossary) hash to a string per language.
+Currently, there is no hash list for these (one is planned for far in the future), so they are all output as CRC32 hashes in hexadecimal.
+A language map **is required** for convert as per the [table](#language-maps) whether that be from the version or user supplied.
 
 The JSON format allows for users to put the plain-text version e.g. `UI_LOCATION_PARIS_COUNTRY` instead of the hash, these will be hashed upon rebuilding.
 
@@ -203,9 +205,51 @@ TonyTools::Language::Rebuilt rebuild =
 ### RTLV
 *aka **RuntimeLocalizedVideo***
 
+This format defines videos (for different languages, `en` is the default for all languages unless explicitly defined otherwise) and subtitles per language.
+
+#### JSON Representation
+
+```json
+{
+    "hash": "...",
+    "videos": {
+        "en": "...",
+        "jp": "..." // Optional, only used in H2016
+    },
+    "subtitles": {
+        "xx": "...",
+        "en": "...",
+        ...
+    }
+}
+```
+
+#### API
+
 :::warning
-This section is currently a work in progress and will be improved upon in the future.
+The game version is important here!
+
+For convert, it is used to pass to ResourceLib.
+
+For rebuild, it is not only used to pass to ResourceLib but also for language map resolution.
 :::
+
+```cpp
+// RTLV + meta.json -> JSON
+std::string json = TonyTools::Language::RTLV::Convert(
+    Language::Version version,      // game version
+    std::vector<char> data,         // raw RTLV json
+    std::string metaJson            // .meta.json string
+);
+
+// JSON -> RTLV + meta.json
+TonyTools::Language::Rebuilt rebuild =
+    TonyTools::Langauge::RTLV::Rebuild(
+        Language::Version version,  // game version
+        std::string jsonString,     // HML JSON string
+        std::string langMap = ""    // optional language map
+    );
+```
 
 ## Glossary
 
