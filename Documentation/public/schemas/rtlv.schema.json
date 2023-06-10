@@ -1,0 +1,28 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+        "hash": {
+            "type": "string"
+        },
+        "videos": {
+            "type": "object",
+            "patternProperties": {
+                "^[a-z]{2}$": {
+                    "type": "string"
+                }
+            },
+            "additionalProperties": false
+        },
+        "subtitles": {
+            "type": "object",
+            "patternProperties": {
+                "^[a-z]{2}$": {
+                    "type": "string"
+                }
+            },
+            "additionalProperties": false
+        }
+    },
+    "required": ["hash", "videos", "subtitles"]
+}
