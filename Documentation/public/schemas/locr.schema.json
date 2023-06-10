@@ -1,0 +1,22 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+        "hash": {
+            "type": "string"
+        },
+        "languages": {
+            "type": "object",
+            "patternProperties": {
+                "^[a-z]{2}$": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                }
+            },
+            "additionalProperties": false
+        }
+    },
+    "required": ["hash", "languages"]
+}
