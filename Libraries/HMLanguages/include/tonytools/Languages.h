@@ -136,7 +136,7 @@ namespace Language
          * @param metaJson The .meta.json file (from RPKG Tool) as a string.
          * @return std::string HMLanguages RTLV JSON representation of the input file.
          */
-        std::string Convert(Version version, std::vector<char> data, std::string metaJson);
+        std::string Convert(Language::Version version, std::vector<char> data, std::string metaJson);
 
         /**
          * @brief Rebuilds a HMLanguages RTLV JSON representation to a raw RTLV file + .meta.json.
@@ -146,7 +146,7 @@ namespace Language
          * @param langMap Optional language map, will resolve from version if not supplied. [Default: ""]
          * @return Rebuilt struct containing the raw file + .meta.json string.
          */
-        Rebuilt Rebuild(Version version, std::string jsonString, std::string langMap = "");
+        Rebuilt Rebuild(Language::Version version, std::string jsonString, std::string langMap = "");
     } // namespace RTLV
 } // namespace Language
 } // namespace TonyTools
