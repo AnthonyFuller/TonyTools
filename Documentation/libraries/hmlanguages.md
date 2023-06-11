@@ -101,7 +101,7 @@ TonyTools::Language::Rebuilt rebuild =
 ### DITL
 *aka **DialogSoundTemplateList***
 
-This format defines the soundtag to the corresponding [Wwise](#glossary) [Event](#glossary) (WWEV) by its hash/path. The soundtag names (keys of the `soundtags` object) are CRC32 hashed in the file. As the names of the soundtag are in the actual event file, we know all of them. In the unlikely event that one is unknown by the internal hash list in the library, they will be output as the hexadecimal representation of the CRC32 hash found in the file.
+This format defines the [soundtag](#glossary) to the corresponding [Wwise](#glossary) [Event](#glossary) (WWEV) by its hash/path. The soundtag names (keys of the `soundtags` object) are CRC32 hashed in the file. As the names of the soundtag are in the actual event file, we know all of them. In the unlikely event that one is unknown by the internal hash list in the library, they will be output as the hexadecimal representation of the CRC32 hash found in the file.
 
 #### JSON Representation
 
@@ -144,7 +144,7 @@ TonyTools::Language::Rebuilt rebuild =
 
 Now, this format is **complex**, and that's putting it lightly. This ~~is~~ will be the longest section for a reason, so strap in, and make sure you know your [definitions](#glossary).
 
-This format, in its simplest terms, defines dialogue. These could include subtitles (optional), Wavs (WWES/M), and FaceFX animations (FXAS).
+This format, in its simplest terms, defines dialogue. These could include subtitles (optional), [Wavs (WWES/M)](#glossary), and FaceFX animations (FXAS).
 
 :::warning
 This section is currently a work in progress and will be improved upon in the future.
