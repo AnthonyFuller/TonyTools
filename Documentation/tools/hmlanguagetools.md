@@ -13,7 +13,7 @@ ResourceLib is required for this tool. For more information, see the [installati
 
 :::tip Formats
 Intricacies of the formats will **not** be discussed on this page, it will only go through usage of the tool.
-For more information on the formats, read the [HMLangauges](/libraries/hmlanguages) page.
+For more information on the formats, read the [HMLanguages](/libraries/hmlanguages) page.
 :::
 
 ## Quickstart
