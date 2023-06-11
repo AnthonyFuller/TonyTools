@@ -22,7 +22,21 @@ HMLanguages uses something called a "language map" (langmap for short) when conv
 
 The first table below shows how each file type uses the language map, the second table shows the default language map for each version alongside a description of their source.
 
-**INSERT TABLES HERE**
+*Figure 1: Table of file types and their usage of language maps*
+| File Type 	| Language Map Usage                                                                                                	|
+|-----------	|-------------------------------------------------------------------------------------------------------------------	|
+| CLNG      	| Used for `convert` only to get the keys for the `languages` object.                                               	|
+| DITL      	| Not used.                                                                                                         	|
+| DLGE      	| Used for `convert` and `rebuild` to know how many languages are in the file. They have to be **exactly correct**. 	|
+| LOCR      	| Used for `convert` only to get the keys for the `languages` object.                                               	|
+| RTLV      	| Used for `rebuild` only to get the depends index for videos.                                                      	|
+
+*Figure 2: Table of game versions and their default language maps*
+| Version 	| Default Language Map                   	| Notes                                              	|
+|---------	|----------------------------------------	|----------------------------------------------------	|
+| H2016   	| xx,en,fr,it,de,es,ru,mx,br,pl,cn,jp    	| Late H2016, earlier language files may have less.  	|
+| H2      	| xx,en,fr,it,de,es,ru,mx,br,pl,cn,jp,tc 	| N/A                                                	|
+| H3      	| xx,en,fr,it,de,es,ru,cn,tc,jp          	| Late H3, earlier versions use `xx,en,fr,it,de,es`. 	|
 
 ## API
 
