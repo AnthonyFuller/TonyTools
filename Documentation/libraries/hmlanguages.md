@@ -11,6 +11,9 @@ On how to add the library to your project, see the [installation](/general/insta
 
 The entire library can be included in a file through `#include <TonyTools/Languages.h>`.
 
+There is a [tool](/tools/hmlanguagetools) which implements this library in full. The [source](https://github.com/AnthonyFuller/TonyTools/blob/master/Tools/HMLanguageTools)
+can be used as a reference implementation.
+
 This page will go into detail about the formats, naming conventions used by the tool, and more. Technical details, such as structure of the raw files, will be in collapsible sections.
 
 ## Language Maps
