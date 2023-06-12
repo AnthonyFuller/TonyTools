@@ -38,7 +38,7 @@ The first table below shows how each file type uses the language map, the second
 | H2      	| `xx,en,fr,it,de,es,ru,mx,br,pl,cn,jp,tc` 	| N/A                                                	|
 | H3      	| `xx,en,fr,it,de,es,ru,cn,tc,jp`          	| Late H3, earlier versions use `xx,en,fr,it,de,es`. 	|
 
-## API
+## API Overview
 
 HMLanguages exposes a C++ API to allow conversion and rebuilding of file types, the individual functions will be laid out for the specific file types in the formats section below, but here, we shall go over two important constructs.
 
@@ -57,6 +57,49 @@ enum class Version : uint8_t
     H3
 };
 ```
+
+### Return Values
+
+When using functions that convert a raw file + `.meta.json` to a HML JSON string, they return `std::string`.
+
+If the library fails to convert a file, an error will be output to `stderr` and the function will return an empty string.
+
+This can be checked like so:
+
+```cpp
+std::string converted = ...;
+
+if (converted.empty())
+    // do something
+```
+
+---
+
+When using functions that rebuild a HML JSON string to the raw file + `.meta.json`, they return a struct that can be seen below:
+
+```cpp
+// This is in the TonyTools::Language namespace
+struct Rebuilt
+{
+    std::vector<char> file; // contains the raw file bytes
+    std::string meta;       // contains the JSON string of the .meta.json
+};
+```
+
+If the library fails to rebuild a file, an error will be output to `stderr` and an empty struct will be returned.
+
+This can be checked like so:
+
+```cpp
+TonyTools::Language::Rebuilt rebuilt = ...;
+
+if (rebuilt.file.empty() || rebuilt.meta.empty())
+    // do something
+```
+
+:::tip Note
+There are currently long-term plans to use custom exceptions instead of just returning an empty struct so then the burden of error messages is on the program using the library.
+:::
 
 ## Formats
 
