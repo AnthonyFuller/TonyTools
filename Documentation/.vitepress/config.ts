@@ -51,7 +51,14 @@ export default defineConfig({
         socialLinks: [
             { icon: "github", link: "https://github.com/AnthonyFuller/TonyTools" }
         ],
-        search: { provider: "local" }
+        search: {
+            provider: "algolia",
+            options: {
+                appId: "QP9T39ARJM",
+                apiKey: "4cb3a30158f05ef58bd70da03683dbc2",
+                indexName: "tonytools"
+            }
+        }
     },
     cleanUrls: true,
     // Sitemap setup
