@@ -9,7 +9,7 @@ export default defineConfig({
     title: "TonyTools",
     description: "Documentation hub for the TonyTools suite of libraries and tools.",
     themeConfig: {
-        logo: "/logo.png",
+        logo: "/images/logo.png",
         nav: [
             { text: "Glacier Modding", link: "https://glaciermodding.org" },
             { text: "Hitman Modding Resources", link: "https://hitman-resources.netlify.app" }
