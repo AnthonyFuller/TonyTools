@@ -1440,7 +1440,7 @@ std::string Language::DLGE::Convert(Language::Version version, std::vector<char>
                     {"wavName", std::format("{:08X}", wavNameHash)},
                     {"weight", nullptr},
                     {"cases", nullptr},
-                    {"soundTag", TagMap.has_key(soundTagHash) ? TagMap.get_value(soundTagHash) : std::format("{:X}", soundTagHash)},
+                    {"soundtag", TagMap.has_key(soundTagHash) ? TagMap.get_value(soundTagHash) : std::format("{:X}", soundTagHash)},
                     {"defaultWav", nullptr},
                     {"defaultFfx", nullptr},
                     {"languages", json::object()}
@@ -1541,7 +1541,7 @@ std::string Language::DLGE::Convert(Language::Version version, std::vector<char>
                 json cjson = json::object({
                     {"type", DLGE_Type::eDEIT_SwitchContainer},
                     {
-                        "soundGroup", SwitchMap.has_key(container.SwitchGroupHash)
+                        "switchKey", SwitchMap.has_key(container.SwitchGroupHash)
                             ? SwitchMap.get_value(container.SwitchGroupHash)
                             : std::format("{:08X}", container.SwitchGroupHash)
                     },
@@ -1709,7 +1709,7 @@ bool processContainer(
         case DLGE_Type::eDEIT_WavFile: {
             buff.write<uint8_t>(0x01);
 
-            std::string soundTag = container.at("soundTag").get<std::string>();
+            std::string soundTag = container.at("soundtag").get<std::string>();
             buff.write<uint32_t>(TagMap.has_value(soundTag) ? TagMap.get_key(soundTag) : hexStringToNum(soundTag));
             buff.write<uint32_t>(hexStringToNum(container.at("wavName").get<std::string>()));
 
@@ -1868,17 +1868,17 @@ bool processContainer(
                 return false;
             }
 
-            if (!container.contains("soundGroup") || !container.contains("default"))
+            if (!container.contains("switchKey") || !container.contains("default"))
             {
-                fprintf(stderr, "[LANG//DLGE] Switch container is missing \"soundGroup\" or \"default\" property.\n");
+                fprintf(stderr, "[LANG//DLGE] Switch container is missing \"switchKey\" or \"default\" property.\n");
                 return false;
             }
 
-            std::string soundGroup = container.at("soundGroup").get<std::string>();
+            std::string switchKey = container.at("switchKey").get<std::string>();
             std::string defGroup = container.at("default").get<std::string>();
             DLGE_Container rawContainer(
                 0x03,
-                SwitchMap.has_value(soundGroup) ? SwitchMap.get_key(soundGroup) : hexStringToNum(soundGroup),
+                SwitchMap.has_value(switchKey) ? SwitchMap.get_key(switchKey) : hexStringToNum(switchKey),
                 SwitchMap.has_value(defGroup) ? SwitchMap.get_key(defGroup) : hexStringToNum(defGroup)
             );
 
