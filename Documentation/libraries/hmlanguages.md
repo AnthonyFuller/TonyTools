@@ -4,6 +4,13 @@ prev: false
 next: false
 ---
 
+<script setup lang="ts">
+// Allows us to change images based on theme.
+import { useData } from 'vitepress'
+
+const { isDark } = useData()
+</script>
+
 # HMLanguages
 
 This library allows you to convert between CLNG, DITL, DLGE, LOCR, and RTLV to JSON and vice-versa.  
@@ -22,7 +29,6 @@ HMLanguages uses something called a "language map" (langmap for short) when conv
 
 The first table below shows how each file type uses the language map, the second table shows the default language map for each version alongside a description of their source.
 
-*Figure 1: Table of file types and their usage of language maps*
 | File Type 	| Language Map Usage                                                                                                	|
 |-----------	|-------------------------------------------------------------------------------------------------------------------	|
 | CLNG      	| Used for `convert` only to get the keys for the `languages` object.                                               	|
@@ -31,12 +37,15 @@ The first table below shows how each file type uses the language map, the second
 | LOCR      	| Used for `convert` only to get the keys for the `languages` object.                                               	|
 | RTLV      	| Used for `rebuild` only to get the depends index for videos.                                                      	|
 
-*Figure 2: Table of game versions and their default language maps*
+<p style="text-align: center; font-style: italic;">Figure 1: Table of file types and their usage of language maps</p>
+
 | Version 	| Default Language Map                   	| Notes                                              	|
 |---------	|----------------------------------------	|----------------------------------------------------	|
 | H2016   	| `xx,en,fr,it,de,es,ru,mx,br,pl,cn,jp`    	| Late H2016, earlier language files may have less.  	|
 | H2      	| `xx,en,fr,it,de,es,ru,mx,br,pl,cn,jp,tc` 	| N/A                                                	|
 | H3      	| `xx,en,fr,it,de,es,ru,cn,tc,jp`          	| Late H3, earlier versions use `xx,en,fr,it,de,es`. 	|
+
+<p style="text-align: center; font-style: italic;">Figure 2: Table of game versions and their default language maps</p>
 
 ## API Overview
 
@@ -205,6 +214,23 @@ TonyTools::Language::Rebuilt rebuild =
 Now, this format is **complex**, and that's putting it lightly. This ~~is~~ will be the longest section for a reason, so strap in, and make sure you know your [definitions](#glossary).
 
 This format, in its simplest terms, defines dialogue. These could include subtitles (optional), [Wavs (WWES/M)](#glossary), and FaceFX animations (FXAS).
+
+Going more in-depth, this format comprises different containers. The 4 container types are: **WavFile**, **Random**, **Switch**, and **Sequence**.
+
+An overview of them can be found in the table below, we go more in-depth in the following section.
+
+:::info
+File table not found.
+:::
+
+<p style="text-align: center; font-style: italic;">Figure 3: Table of DLGE containers and a brief description of them</p>
+
+A basic diagram (showcasing all containers) can be seen below.
+
+<img v-if="isDark" src="/images/dlge/dark-tree.svg" />
+<img v-else src="/images/dlge/light-tree.svg" />
+
+<p style="text-align: center; font-style: italic;">Figure 4: Tree diagram showing how DLGE containers are connected together (read from left to right)</p>
 
 :::warning
 This section is currently a work in progress and will be improved upon in the future.
