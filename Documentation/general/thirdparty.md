@@ -16,4 +16,4 @@ Various open-source third-party libraries are used for my projects, and where th
 - [ordered-map](https://github.com/Tessil/ordered-map)
 - [ZHMTools](https://github.com/OrfeasZ/ZHMTools)
 
-I understand that a huge amount of work goes into maintaining these libraries, and all my thanks go to the contributors to all the above projects.
+I understand that a huge amount of work goes into maintaining these libraries, and all my thanks go to the contributors of all the above projects.
