@@ -219,8 +219,17 @@ Going more in-depth, this format comprises different containers. The 4 container
 
 An overview of them can be found in the table below, we go more in-depth in the following section.
 
-:::info
-File table not found.
+| Container Name 	| Description                                                                                                                                    	|
+|----------------	|------------------------------------------------------------------------------------------------------------------------------------------------	|
+| WavFile        	| The "leaf" of the tree. Defines (optional) subtitles, wavs, FaceFX animations, and soundtags.                                                  	|
+| Random         	| Contains WavFiles with an added random "weight" (0 to 1). Randomly chooses one oif the contained WavFiles.                                     	|
+| Switch         	| Works like programming switch cases. Contains Random containers and WavFiles with added "cases" array. Has a "sound group" and "default" case. 	|
+| Sequence       	| Can contain all the containers (apart from itself). Goes through the child containers **in-order**.                                            	|
+
+:::info Note
+You can only have one Switch container per DLGE as a child or the root.
+
+The same applies to Sequence containers, but this should always be the root as using it elsewhere makes no sense.
 :::
 
 <p style="text-align: center; font-style: italic;">Figure 3: Table of DLGE containers and a brief description of them</p>
