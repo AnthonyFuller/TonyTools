@@ -219,18 +219,13 @@ Going more in-depth, this format comprises different containers. The 4 container
 
 An overview of them can be found in the table below, we go more in-depth in the following section.
 
+{#dlge-container-table}
 | Container Name 	| Description                                                                                                                                    	|
 |----------------	|------------------------------------------------------------------------------------------------------------------------------------------------	|
 | WavFile        	| The "leaf" of the tree. Defines (optional) subtitles, wavs, FaceFX animations, and soundtags.                                                  	|
-| Random         	| Contains WavFiles with an added random "weight" (0 to 1). Randomly chooses one oif the contained WavFiles.                                     	|
+| Random         	| Contains WavFiles with an added random "weight" (0 to 1). Randomly chooses one of the contained WavFiles.                                     	|
 | Switch         	| Works like programming switch cases. Contains Random containers and WavFiles with added "cases" array. Has a "sound group" and "default" case. 	|
 | Sequence       	| Can contain all the containers (apart from itself). Goes through the child containers **in-order**.                                            	|
-
-:::info Note
-You can only have one Switch container per DLGE as a child or the root.
-
-The same applies to Sequence containers, but this should always be the root as using it elsewhere makes no sense.
-:::
 
 <p style="text-align: center; font-style: italic;">Figure 3: Table of DLGE containers and a brief description of them</p>
 
@@ -240,6 +235,16 @@ A basic diagram (showcasing all containers) can be seen below.
 <img v-else src="/images/dlge/light-tree.svg" />
 
 <p style="text-align: center; font-style: italic;">Figure 4: Tree diagram showing how DLGE containers are connected together (read from left to right)</p>
+
+#### Containers
+
+This section will go into more depth regarding the containers including their individual JSON representations before going onto the main format representatio.
+
+##### WavFile
+
+The simplest container, no fancy logic attached to this one.
+
+As said in the [table](#dlge-container-table) above, 
 
 :::warning
 This section is currently a work in progress and will be improved upon in the future.
