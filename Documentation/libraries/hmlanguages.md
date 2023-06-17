@@ -231,6 +231,8 @@ An overview of them can be found in the table below, we go more in-depth in the 
 
 A basic diagram (showcasing all containers) can be seen below.
 
+{#dlge-container-tree}
+
 <img v-if="isDark" src="/images/dlge/dark-tree.svg" />
 <img v-else src="/images/dlge/light-tree.svg" />
 
@@ -238,13 +240,37 @@ A basic diagram (showcasing all containers) can be seen below.
 
 #### Containers
 
-This section will go into more depth regarding the containers including their individual JSON representations before going onto the main format representatio.
+This section will go into more depth regarding the containers including their individual JSON representations before going onto the main format representation.
 
 ##### WavFile
+*The simplest container.*
 
-The simplest container, no fancy logic attached to this one.
+As said in the [table](#dlge-container-table) above, they are the "leaf" of the DLGE tree. Unless a container is empty (which is allowed), this is what all containers boil down to.
 
-As said in the [table](#dlge-container-table) above, 
+They are very simple containers and can mostly be explained through the JSON representation seen below.
+All fields are required unless otherwise specified.
+
+```json
+{
+    "type": "WavFile",        // important, cannot differ from this
+    "wavName": "...",         // CRC32 of the "wav name", retrieved from the
+                              //    path, otherwise it is the hash in hex
+    "soundtag": "...",        // soundtag name (or hash in hex)
+    "defaultWav": "...",      // the path of the "default" wav (usually english)
+    "defaultFfx": "...",      // like defaultWav, but for the FaceFX animation
+    "languages": {            // this can be empty or be missing languages
+                              //   (i.e. xx)
+        "en": "...",          // subtitle for this language
+        ...
+        "jp": {               // this is optional, IOI use this in H2016
+            "wav": "...",     // required, the path of the wav for thislanguage
+            "ffx": "...",     // required, the path of the FaceFX animation for
+                              //   this language
+            "subtitle": "..." // optional, subtitle for this language
+        }
+    }
+}
+```
 
 :::warning
 This section is currently a work in progress and will be improved upon in the future.
