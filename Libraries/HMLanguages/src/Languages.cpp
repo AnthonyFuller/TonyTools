@@ -1438,8 +1438,8 @@ std::string Language::DLGE::Convert(Language::Version version, std::vector<char>
                 json wav = json::object({
                     {"type", DLGE_Type::eDEIT_WavFile},
                     {"wavName", std::format("{:08X}", wavNameHash)},
-                    {"weight", nullptr},
                     {"cases", nullptr},
+                    {"weight", nullptr},
                     {"soundtag", TagMap.has_key(soundTagHash) ? TagMap.get_value(soundTagHash) : std::format("{:X}", soundTagHash)},
                     {"defaultWav", nullptr},
                     {"defaultFfx", nullptr},
