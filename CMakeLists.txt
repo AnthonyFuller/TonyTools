@@ -66,7 +66,7 @@ add_subdirectory("Third-Party")
 set(ZHM_BUILD_TOOLS OFF)
 FetchContent_Declare(zhmtools
     GIT_REPOSITORY  https://github.com/OrfeasZ/ZHMTools.git
-    GIT_TAG         v3.2.1
+    GIT_TAG         dbc3407d917e563903b329dee44feb7569b1bb87
 )
 
 # nlohmann json
