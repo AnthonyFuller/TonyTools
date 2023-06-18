@@ -327,7 +327,7 @@ This container's JSON representation can be seen below with both decimal and hex
 }
 ```
 
-:::note IOI Moment
+:::info IOI Moment
 Sometimes IOI just use these containers in a Switch container with a single WavFile inside and give it a weight of 1 (and sometimes they're empty).
 
 It's unclear as to why but HMLanguages allows WavFiles to be referenced inside Switch containers.
