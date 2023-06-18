@@ -275,6 +275,11 @@ All fields are required unless otherwise specified.
 }
 ```
 
+:::info Note
+The `cases` and `weight` properties are only required if the WavFile itself is a child of their respective containers (Switch and Random).
+Otherwise, they will be ignored.
+:::
+
 :::warning
 This section is currently a work in progress and will be improved upon in the future.
 :::
