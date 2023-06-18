@@ -243,7 +243,7 @@ A basic diagram (showcasing all containers) can be seen below.
 This section will go into more depth regarding the containers including their individual JSON representations before going onto the main format representation.
 
 ##### WavFile
-*The simplest container.*
+*The simplest container, no fancy logic behind this one.*
 
 As said in the [table](#dlge-container-table) above, they are the "leaf" of the DLGE tree. Unless a container is empty (which is allowed), this is what all containers boil down to.
 
@@ -276,9 +276,56 @@ All fields are required unless otherwise specified.
 ```
 
 :::info Note
-The `cases` and `weight` properties are only required if the WavFile itself is a child of their respective containers (Switch and Random).
-Otherwise, they will be ignored.
+The `cases` and `weight` properties are only required if the WavFile itself is a child of their respective containers ([Switch](#switch) and [Random](#random)).
+Otherwise, they will be ignored. A WavFile can never actually have the two.
 :::
+
+##### Random
+*Not actually that Random.*
+
+The second-simplest container, they contain WavFiles with the added `weight` property as shown above and one is picked, at random, with respect to this weight.
+
+The only extra thing you really need to know about how [weighting](https://en.wikipedia.org/wiki/Weighting) works in relation to randomness.
+If a WavFile has a higher weight, it means that it is more likely to be chosen when the Random container is invoked.
+These weight values should only ever add up to `1`, the library currently does not check this for you.
+
+HMLanguages gives you two options for representation of the weight value:
+1. Decimal, this means it is a number between `0` and `1` (inclusive).
+2. Hexadecimal string, a hex number between `000000` and `FFFFFF` (inclusive).
+
+The default is decimal, and during convert, a bool needs to be set. When rebuilding, the tool can easily distinguish the two, so the bool is not required.
+
+To convert between these two representations, you can just divide the hex weight value by `FFFFFF` this obviously implies that `000000` is 0, and `FFFFFF` is 1.
+
+Converting weights as hex allows for more precision, but decimal is easier for most people to read. For example, for something that will occur with a 1 in 4 chance, `0.24999995529651375` will be output instead of `0.25` as it doesn't perfectly divide since `FFFFFF` is an odd number.
+
+This container's JSON representation can be seen below with both decimal and hexadecimal weights.
+
+```json
+{
+    "type": "Random",
+    "containers": [
+        {
+            "type": "WavFile",
+            ...
+            "weight": 0.25,
+            ...
+        },
+        {
+            "type": "WavFile",
+            ...
+            "weight": "3FFFFF", // this is 0.25
+            ...
+        }
+        {
+            "type": "WavFile",
+            ...
+            "weight": 0.5,
+            ...
+        }
+    ]
+}
+```
 
 :::warning
 This section is currently a work in progress and will be improved upon in the future.
