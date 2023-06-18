@@ -255,6 +255,9 @@ All fields are required unless otherwise specified.
     "type": "WavFile",        // important, cannot differ from this
     "wavName": "...",         // CRC32 of the "wav name", retrieved from the
                               //    path, otherwise it is the hash in hex
+    "cases": [...],           // array of switch cases, see the Switch section
+    "weight": ...,            // a decimal (or hexadecimal string) random weight
+                              //    see the Random section
     "soundtag": "...",        // soundtag name (or hash in hex)
     "defaultWav": "...",      // the path of the "default" wav (usually english)
     "defaultFfx": "...",      // like defaultWav, but for the FaceFX animation
