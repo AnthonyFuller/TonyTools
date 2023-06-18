@@ -283,7 +283,7 @@ Otherwise, they will be ignored. A WavFile can never actually have the two.
 ##### Random
 *Not actually that Random.*
 
-The second-simplest container, they contain WavFiles with the added `weight` property as shown above and one is picked, at random, with respect to this weight.
+The second-simplest container, they only ever contain WavFiles with the added `weight` property as shown above and one is picked, at random, with respect to this weight.
 
 The only extra thing you really need to know about how [weighting](https://en.wikipedia.org/wiki/Weighting) works in relation to randomness.
 If a WavFile has a higher weight, it means that it is more likely to be chosen when the Random container is invoked.
@@ -297,7 +297,7 @@ The default is decimal, and during convert, a bool needs to be set. When rebuild
 
 To convert between these two representations, you can just divide the hex weight value by `FFFFFF` this obviously implies that `000000` is 0, and `FFFFFF` is 1.
 
-Converting weights as hex allows for more precision, but decimal is easier for most people to read. For example, for something that will occur with a 1 in 4 chance, `0.24999995529651375` will be output instead of `0.25` as it doesn't perfectly divide since `FFFFFF` is an odd number.
+Converting weights as hex allows for more precision, but decimal is easier for most people to read. For example, for something that will occur with a 1 in 4 chance, `0.24999995529651375` (`3FFFFF`) will be output instead of `0.25` as it doesn't perfectly divide since `FFFFFF` is an odd number.
 
 This container's JSON representation can be seen below with both decimal and hexadecimal weights.
 
@@ -314,7 +314,7 @@ This container's JSON representation can be seen below with both decimal and hex
         {
             "type": "WavFile",
             ...
-            "weight": "3FFFFF", // this is 0.25
+            "weight": "3FFFFF", // this is a 1 in 4 chance
             ...
         }
         {
@@ -326,6 +326,12 @@ This container's JSON representation can be seen below with both decimal and hex
     ]
 }
 ```
+
+:::note IOI Moment
+Sometimes IOI just use these containers in a Switch container with a single WavFile inside and give it a weight of 1 (and sometimes they're empty).
+
+It's unclear as to why but HMLanguages allows WavFiles to be referenced inside Switch containers.
+:::
 
 :::warning
 This section is currently a work in progress and will be improved upon in the future.
