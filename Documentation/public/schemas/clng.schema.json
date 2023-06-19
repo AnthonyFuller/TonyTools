@@ -2,6 +2,7 @@
 	"$schema": "http://json-schema.org/draft-07/schema#",
     "$id": "https://tonytools.win/schemas/clng.schema.json",
     "type": "object",
+    "description": "A HMLanguages (TonyTools) CLNG JSON file.",
     "properties": {
         "$schema": {
             "type": "string",

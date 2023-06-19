@@ -1,24 +1,36 @@
 {
 	"$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "https://tonytools.win/schemas/rtlv.schema.json",
     "type": "object",
+    "description": "A HMLanguages (TonyTools) RTLV JSON file.",
     "properties": {
+        "$schema": {
+            "type": "string",
+            "format": "uri",
+            "description": "The schema URL, if you're seeing this you probably already know what it is."
+        },
         "hash": {
-            "type": "string"
+            "type": "string",
+            "description": "The hash or path (if available) of the final output file."
         },
         "videos": {
             "type": "object",
+            "description": "An object of languages to a video hash/path.",
             "patternProperties": {
                 "^[a-z]{2}$": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "The video (GFXV) hash/path."
                 }
             },
             "additionalProperties": false
         },
         "subtitles": {
             "type": "object",
+            "description": "An object of languages to their subtitles.",
             "patternProperties": {
                 "^[a-z]{2}$": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "The subtitles for this language."
                 }
             },
             "additionalProperties": false

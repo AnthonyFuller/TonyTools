@@ -1,17 +1,28 @@
 {
 	"$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "https://tonytools.win/schemas/locr.schema.json",
     "type": "object",
+    "description": "A HMLanguages (TonyTools) LOCR JSON file.",
     "properties": {
+        "$schema": {
+            "type": "string",
+            "format": "uri",
+            "description": "The schema URL, if you're seeing this you probably already know what it is."
+        },
         "hash": {
-            "type": "string"
+            "type": "string",
+            "description": "The hash or path (if available) of the final output file."
         },
         "languages": {
             "type": "object",
+            "description": "Object of all the languages that should be in the final LOCR.",
             "patternProperties": {
                 "^[a-z]{2}$": {
                     "type": "object",
+                    "description": "An object of LINE hashes (or strings) to their translated string for this language.",
                     "additionalProperties": {
-                        "type": "string"
+                        "type": "string",
+                        "description": "The translated line for this language."
                     }
                 }
             },
