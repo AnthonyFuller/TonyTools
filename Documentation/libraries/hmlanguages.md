@@ -127,7 +127,7 @@ But before we start, it is recommended to read the [glossary](#glossary) first t
 
 Not much is actually know about this file type, other than it corresponds to the current language map in the game version. HMLanguages can convert the file to an *assumed* representation (as the languages just have a `0x00` byte or a `0x01` byte which is presumed to be a boolean).
 
-#### JSON Representation
+#### JSON Representation {#clng-json}
 
 [Schema](/schemas/clng.schema.json)
 ```json
@@ -142,7 +142,7 @@ Not much is actually know about this file type, other than it corresponds to the
 }
 ```
 
-#### API
+#### API {#clng-api}
 
 :::tip An Outlier
 CLNG is a format which does not require anything extra other than the HML JSON string to rebuild. This is because the language map is always stored in the file itself.
@@ -171,7 +171,7 @@ TonyTools::Language::Rebuilt rebuild =
 
 This format defines the [soundtag](#glossary) to the corresponding [Wwise](#glossary) [Event](#glossary) (WWEV) by its hash/path. The soundtag names (keys of the `soundtags` object) are CRC32 hashed in the file. As the names of the soundtag are in the actual event file, we know all of them. In the unlikely event that one is unknown by the internal hash list in the library, they will be output as the hexadecimal representation of the CRC32 hash found in the file.
 
-#### JSON Representation
+#### JSON Representation {#ditl-json}
 
 [Schema](/schemas/ditl.schema.json)
 ```json
@@ -185,7 +185,7 @@ This format defines the [soundtag](#glossary) to the corresponding [Wwise](#glos
 }
 ```
 
-#### API
+#### API {#ditl-api}
 
 :::tip An Outlier
 DITL is the one format that doesn't require version to be specified for convert or rebuild! This is due to language maps not being used and there is no version specific quirks to the format.
@@ -427,7 +427,7 @@ You can see the JSON representation below:
 
 And that's that! You now know about all the individual containers in the DLGE format. Now onto the main format representation and then the API!
 
-#### JSON Representation
+#### JSON Representation {#dlge-json}
 
 This will be *heavily* simplified as we go into more depth in the previous sections.
 
@@ -459,7 +459,7 @@ This layout is meant to mimic the one you saw right at the start of this section
 }
 ```
 
-#### API
+#### API {#dlge-api}
 
 ```cpp
 // DLGE + meta.json -> DLGE
@@ -500,7 +500,7 @@ A language map **is required** for convert as per the [table](#language-maps) wh
 
 The JSON format allows for users to put the plain-text version e.g. `UI_LOCATION_PARIS_COUNTRY` instead of the hash, these will be hashed upon rebuilding.
 
-#### JSON Representation
+#### JSON Representation {#locr-json}
 
 [Schema](/schemas/locr.schema.json)
 ```json
@@ -519,7 +519,7 @@ The JSON format allows for users to put the plain-text version e.g. `UI_LOCATION
 }
 ```
 
-#### API
+#### API {#locr-api}
 
 ```cpp
 // LOCR + meta.json -> JSON
@@ -545,7 +545,7 @@ TonyTools::Language::Rebuilt rebuild =
 
 This format defines videos (for different languages, `en` is the default for all languages unless explicitly defined otherwise) and subtitles per language.
 
-#### JSON Representation
+#### JSON Representation {#rtlv-json}
 
 [Schema](/schemas/rtlv.schema.json)
 ```json
@@ -563,7 +563,7 @@ This format defines videos (for different languages, `en` is the default for all
 }
 ```
 
-#### API
+#### API {#rtlv-api}
 
 :::warning
 The game version is important here!
