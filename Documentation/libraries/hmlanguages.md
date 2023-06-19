@@ -256,7 +256,7 @@ All fields are required unless otherwise specified.
     "wavName": "...",         // CRC32 of the "wav name", retrieved from the
                               //    path, otherwise it is the hash in hex
     "cases": [...],           // array of switch cases, see the Switch section
-    "weight": ...,            // a decimal (or hexadecimal string) random weight
+    "weight": ...,            // a decimal (or hexadecimal string) random weight,
                               //    see the Random section
     "soundtag": "...",        // soundtag name (or hash in hex)
     "defaultWav": "...",      // the path of the "default" wav (usually english)
@@ -304,6 +304,8 @@ This container's JSON representation can be seen below with both decimal and hex
 ```json
 {
     "type": "Random",
+    "cases": [...],             // this only occurs when it is
+                                //   a child of a Switch container
     "containers": [
         {
             "type": "WavFile",
@@ -330,8 +332,66 @@ This container's JSON representation can be seen below with both decimal and hex
 :::info IOI Moment
 Sometimes IOI just use these containers in a Switch container with a single WavFile inside and give it a weight of 1 (and sometimes they're empty).
 
-It's unclear as to why but HMLanguages allows WavFiles to be referenced inside Switch containers.
+It's unclear as to why they do this, but HMLanguages allows WavFiles to be referenced inside Switch containers.
 :::
+
+##### Switch
+*No, you can't turn it off and on again.*
+
+Switch containers, as previously mentioned, work like switch cases from many programming languages with a slight difference.
+
+First, Hitman uses a "switch key" to reference switches, the game will also pass a "case value" to this.
+
+There are a few standard ones for these built into the engine itself, but we can also create our own.
+An exhaustive list (of the switch keys at least) can be seen below of the switches used in the game (as of June 2023):
+- `AI_NPC_ID` - `DIALOGUE_NPC_*` i.e. `DIALOGUE_NPC_DAHLIA`
+    - Used for body identification lines.
+- `AI_HMLastKnownDisguise` - `DIALOGUE_BADDSG_*` i.e. `DIALOGUE_BADDSG_GOTY_CLOWN`
+    - A bit obvious but used for when an NPC is reporting what HM is wearing to a guard.
+- `AI_Sentry_ItemRequest` - `INVITE`, `TICKET`, `VIPTICKET`
+    - Used for when asking HM for an item (this list is exhaustive).
+- `AI_HMArm` - `DIALOGUE_*` i.e. `DIALOGUE_SNIPER`
+    - Used for when an NPC is reporting what illegal item HM was using to a guard.
+- `AI_HMLastKnownGtag` - loads of variations i.e. `Dungeon`, `Laundry`
+    - Used for when an NPC is reporting where HM was to a guard.
+- `AI_PQ` - `AI_PQ47EntAck` and `AI_PQNPCEntAck`
+    - Used for when HM or an NPC is detected in a "private group".
+- There are a few Evergreen ones which are added differently to these as they aren't in-engine, we will go into these now.
+
+It is possible to add custom switch keys and groups to the game via use of WSWB (aka DSWB) and WSWT. The WSWT file is empty, and used when invoking them from an entity.
+The WSWB contains all the switch cases and the key itself. These are mostly used when the game needs to change what is said depending on other variables i.e. tells, looks, location, etc.
+
+You can create these manually using [ResourceTool](https://github.com/OrfeasZ/ZHMTools) or using [G2WwiseDataTool](https://github.com/glacier-modding/G2WwiseDataTool) when integrated into a Wwise project.
+
+Switch containers also contain a `default` property, which points to one of the cases (it sometimes doesn't even exist in any of the cases, we call that an "IOI moment"), normally this is a fallback line and will be used if a Switch container gets passed a case it does not have explicit handling for.
+
+This container's JSON representation can be seen below:
+
+```json
+{
+    "type": "Switch",
+    "switchKey": "AI_Sentry_ItemRequest",
+    "default": "INVITE",
+    "containers": [
+        {
+            "type": "Random",
+            "cases": [
+                "INVITE"        // although this is an array, it's perfectly
+                                //   fine (and normal) to just have one
+            ],
+            ...
+        },
+        {
+            "type": "WavFile",
+            "cases": [
+                "TICKET",       // but you can have more than one
+                "VIPTICKET"
+            ],
+            ...
+        }
+    ]
+}
+```
 
 :::warning
 This section is currently a work in progress and will be improved upon in the future.
