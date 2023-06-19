@@ -15,11 +15,10 @@
         },
         "videos": {
             "type": "object",
-            "description": "An object of languages to a video hash/path.",
+            "description": "An object of languages to a video (GFXV) hash/path.",
             "patternProperties": {
                 "^[a-z]{2}$": {
-                    "type": "string",
-                    "description": "The video (GFXV) hash/path."
+                    "type": "string"
                 }
             },
             "additionalProperties": false
@@ -29,8 +28,7 @@
             "description": "An object of languages to their subtitles.",
             "patternProperties": {
                 "^[a-z]{2}$": {
-                    "type": "string",
-                    "description": "The subtitles for this language."
+                    "type": "string"
                 }
             },
             "additionalProperties": false

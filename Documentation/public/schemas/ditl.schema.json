@@ -15,10 +15,9 @@
         },
         "soundtags": {
             "type": "object",
-            "description": "An object of soundtags names (or hashes) to their event hash/path.",
+            "description": "An object of soundtags names (or hashes) to their Wwise event hash/path.",
             "additionalProperties": {
-                "type": "string",
-                "description": "The Wwise event hash/path for the soundtag."
+                "type": "string"
             }
         }
     },

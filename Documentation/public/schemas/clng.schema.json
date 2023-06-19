@@ -15,7 +15,7 @@
         },
         "languages": {
             "type": "object",
-            "description": "Object of all the languages that should be in the final CLNG.",
+            "description": "An bject of all the languages that should be in the final CLNG.",
             "patternProperties": {
                 "^[a-z]{2}$": {
                     "type": "boolean",

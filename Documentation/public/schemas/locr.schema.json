@@ -15,14 +15,13 @@
         },
         "languages": {
             "type": "object",
-            "description": "Object of all the languages that should be in the final LOCR.",
+            "description": "An object of all the languages that should be in the final LOCR.",
             "patternProperties": {
                 "^[a-z]{2}$": {
                     "type": "object",
                     "description": "An object of LINE hashes (or strings) to their translated string for this language.",
                     "additionalProperties": {
-                        "type": "string",
-                        "description": "The translated line for this language."
+                        "type": "string"
                     }
                 }
             },
