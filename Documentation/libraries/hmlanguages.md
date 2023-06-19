@@ -402,7 +402,7 @@ Sequence containers are the one container that can house all other containers.
 
 They're actually quite simple. Whatever order the containers are in, is the order that they will be played out.
 
-These will **always** be the root container.
+If used, these will **always** be the root container.
 
 You can see the JSON representation below:
 
