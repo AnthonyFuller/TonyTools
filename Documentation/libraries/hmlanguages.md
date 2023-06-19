@@ -18,10 +18,9 @@ On how to add the library to your project, see the [installation](/general/insta
 
 The entire library can be included in a file through `#include <TonyTools/Languages.h>`.
 
-There is a [tool](/tools/hmlanguagetools) which implements this library in full. The [source](https://github.com/AnthonyFuller/TonyTools/blob/master/Tools/HMLanguageTools)
-can be used as a reference implementation.
+There is a [tool](/tools/hmlanguagetools) which implements this library in full. The [source](https://github.com/AnthonyFuller/TonyTools/blob/master/Tools/HMLanguageTools) can be used as a reference implementation.
 
-This page will go into detail about the formats, naming conventions used by the tool, and more. Technical details, such as structure of the raw files, will be in collapsible sections.
+This page will go into detail about the formats, naming conventions used by the tool, and more. Technical details, such as structure of the raw files, will be in collapsible sections (but these have yet to be added).
 
 ## Language Maps
 
@@ -211,7 +210,7 @@ TonyTools::Language::Rebuilt rebuild =
 ### DLGE
 *aka **DialogEvent***
 
-Now, this format is **complex**, and that's putting it lightly. This ~~is~~ will be the longest section for a reason, so strap in, and make sure you know your [definitions](#glossary).
+Now, this format is **complex**, and that's putting it lightly. This is the longest section for a reason, so strap in, and make sure you know your [definitions](#glossary).
 
 This format, in its simplest terms, defines dialogue. These could include subtitles (optional), [Wavs (WWES/M)](#glossary), and FaceFX animations (FXAS).
 
@@ -256,7 +255,7 @@ All fields are required unless otherwise specified.
     "wavName": "...",         // CRC32 of the "wav name", retrieved from the
                               //    path, otherwise it is the hash in hex
     "cases": [...],           // array of switch cases, see the Switch section
-    "weight": ...,            // a decimal (or hexadecimal string) random weight,
+    "weight": ...,            // a decimal (or hexadecimal string) random weight
                               //    see the Random section
     "soundtag": "...",        // soundtag name (or hash in hex)
     "defaultWav": "...",      // the path of the "default" wav (usually english)
@@ -426,9 +425,67 @@ You can see the JSON representation below:
 }
 ```
 
-:::warning
-This section is currently a work in progress and will be improved upon in the future.
-:::
+And that's that! You now know about all the individual containers in the DLGE format. Now onto the main format representation and then the API!
+
+#### JSON Representation
+
+This will be *heavily* simplified as we go into more depth in the previous sections.
+
+This layout is meant to mimic the one you saw right at the start of this section with the [tree](#dlge-container-tree).
+
+```json
+{
+    "hash": "...",
+    "DITL": "...",      // the hash where soundtags will be resolved
+    "CLNG": "...",      // the hash for the CLNG file, the default one
+                        //   in chunk0 should really be used
+    "rootContainer": {
+        "type": "Sequence",
+        "containers": [
+            {
+                "type": "Random",
+                ...
+            },
+            {
+                "type": "Switch",
+                ...
+            },
+            {
+                "type": "WavFile",
+                ...
+            }
+        ]
+    }
+}
+```
+
+#### API
+
+```cpp
+// DLGE + meta.json -> DLGE
+std::string json = TonyTools::Language::DLGE::Convert(
+    Language::Version version,              // game version
+    std::vector<char> data,                 // raw DLGE data
+    std::string metaJson,                   // .meta.json string
+    std::string defaultLocale = "en",       // optional default locale
+    bool hexPrecision = false,              // should random weights be
+                                            //   output as hex?
+    std::string langMap = ""                // optional language map
+                                            //   (must be exact!)
+);
+
+// JSON -> DLGE + meta.json
+TonyTools::Language::Rebuilt rebuild =
+    TonyTools::Langauge::DLGE::Rebuild(
+        Language::Version version,          // game version
+        std::string jsonString,             // HML JSON string
+        std::string defaultLocale = "en",   // optional default locale
+        std::string langMap = ""            // optional language map
+                                            //   (must be exact!)
+    );
+```
+
+And we're all done, take a breather, go get a drink, and revel in the fact that you know all about a specific file type from a niche game!
 
 ---
 
