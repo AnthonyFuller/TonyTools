@@ -344,6 +344,7 @@ First, Hitman uses a "switch key" to reference switches, the game will also pass
 
 There are a few standard ones for these built into the engine itself, but we can also create our own.
 An exhaustive list (of the switch keys at least) can be seen below of the switches used in the game (as of June 2023):
+:::details Switches
 - `AI_NPC_ID` - `DIALOGUE_NPC_*` i.e. `DIALOGUE_NPC_DAHLIA`
     - Used for body identification lines.
 - `AI_HMLastKnownDisguise` - `DIALOGUE_BADDSG_*` i.e. `DIALOGUE_BADDSG_GOTY_CLOWN`
@@ -357,8 +358,9 @@ An exhaustive list (of the switch keys at least) can be seen below of the switch
 - `AI_PQ` - `AI_PQ47EntAck` and `AI_PQNPCEntAck`
     - Used for when HM or an NPC is detected in a "private group".
 - There are a few Evergreen ones which are added differently to these as they aren't in-engine, we will go into these now.
+:::
 
-It is possible to add custom switch keys and groups to the game via use of WSWB (aka DSWB) and WSWT. The WSWT file is empty, and used when invoking them from an entity.
+It is possible to add custom switch keys and groups to the game via use of [WSWB](#glossary) (aka [DSWB](#glossary)) and [WSWT](#glossary). The WSWT file is empty, and used when invoking them from an entity.
 The WSWB contains all the switch cases and the key itself. These are mostly used when the game needs to change what is said depending on other variables i.e. tells, looks, location, etc.
 
 You can create these manually using [ResourceTool](https://github.com/OrfeasZ/ZHMTools) or using [G2WwiseDataTool](https://github.com/glacier-modding/G2WwiseDataTool) when integrated into a Wwise project.
@@ -510,4 +512,6 @@ TonyTools::Language::Rebuilt rebuild =
         You can use [this](https://github.com/glacier-modding/G2WwiseDataTool) tool to create them for the game.
     - **Wavs/Wems** - These terms will also be used synonymously. The game uses the wems for WWEM and WWES (functionally the same file type, that being a wem. WWES
         is used in H3 for dialogue). Wems are generated from wavs using Wwise.
+    - **WSWT** - Wwise Audio Switch Template, empty file used for the template reference of switch cases.
+    - **WSWB/DSWB** - Wwise Audio Switch Blueprint, used for referencing switch cases as events inside entities and contains the actual switch data, explained in more depth in the [Switch section](#switch) of DLGE.
 - **LINE** - A file that contains a CRC32 hash of a text string e.g. `UI_LOCATION_PARIS_COUNTRY`. LINE files themselves are used for referencing localised lines in bricks, they are not required if it's, for example, being used in UI.
