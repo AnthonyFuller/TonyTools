@@ -400,7 +400,7 @@ This container's JSON representation can be seen below:
 
 Sequence containers are the one container that can house all other containers.
 
-They're actually quite simple, whatever order the containers are in are the order that they will be played.
+They're actually quite simple. Whatever order the containers are in, is the order that they will be played out.
 
 These will **always** be the root container.
 
