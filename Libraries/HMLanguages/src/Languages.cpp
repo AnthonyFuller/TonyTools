@@ -197,17 +197,22 @@ std::vector<char> xteaEncrypt(std::string str)
     return data;
 }
 
-std::string getWavName(std::string path, std::string hash)
+std::string getWavName(std::string path, std::string ffxPath, std::string hash)
 {
     if (is_valid_hash(path))
         return hash;
 
     std::regex r{R"([^\/]*(?=\.wav))"};
+    std::regex ffxR{R"([^\/]*(?=\.animset))"};
     std::smatch m;
     std::regex_search(path, m, r);
 
     if (m.size() != 1)
-        return hash;
+    {
+        std::regex_search(ffxPath, m, ffxR);
+        if (m.size() != 1)
+            return hash;
+    }
 
     CRC32 crc32;
 
@@ -860,7 +865,7 @@ std::string Language::RTLV::Convert(Language::Version version, std::vector<char>
         }
 
         for (const auto &[lang, id] : c9::zip(jConv.at("AudioLanguages"), jConv.at("VideoRidsPerAudioLanguage")))
-            j["videos"][lang] = std::format("{:08X}{:08X}", id.at("m_IDHigh").get<uint32_t>(), id.at("m_IDLow").get<uint32_t>());
+            j.at("videos").push_back({lang, std::format("{:08X}{:08X}", id.at("m_IDHigh").get<uint32_t>(), id.at("m_IDLow").get<uint32_t>())});
 
         if (jConv.at("SubtitleLanguages").size() != jConv.at("SubtitleMarkupsPerLanguage").size())
         {
@@ -869,10 +874,10 @@ std::string Language::RTLV::Convert(Language::Version version, std::vector<char>
         }
 
         for (const auto &[lang, text] : c9::zip(jConv.at("SubtitleLanguages"), jConv.at("SubtitleMarkupsPerLanguage")))
-            j["subtitles"][lang] = text;
+            j.at("subtitles").push_back({lang, text});
 
         json meta = json::parse(metaJson);
-        j["hash"] = meta["hash_path"].is_null() ? meta.at("hash_value") : meta.at("hash_path");
+        j.at("hash") = meta["hash_path"].is_null() ? meta.at("hash_value") : meta.at("hash_path");
 
         return j.dump();
     }
@@ -1464,7 +1469,7 @@ std::string Language::DLGE::Convert(Language::Version version, std::vector<char>
                             wav.at("defaultFfx") = meta.at("hash_reference_data").at(ffxIndex).at("hash");
 
                             // As we are most likely to have the english (default locale unless specified) hash, we get the wav hash from here.
-                            wav.at("wavName") = getWavName(wav.at("defaultWav"), std::format("{:08X}", wavNameHash));
+                            wav.at("wavName") = getWavName(wav.at("defaultWav"), wav.at("defaultFfx"), std::format("{:08X}", wavNameHash));
                         }
                         else
                         {
