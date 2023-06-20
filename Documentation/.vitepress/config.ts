@@ -8,6 +8,7 @@ const links: any = []
 export default defineConfig({
     title: "TonyTools",
     description: "Documentation hub for the TonyTools suite of libraries and tools.",
+    srcExclude: ["**/README.md"],
     themeConfig: {
         logo: "/images/logo.png",
         nav: [
