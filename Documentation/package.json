@@ -10,6 +10,6 @@
     "license": "MIT",
     "devDependencies": {
         "sitemap": "^7.1.1",
-        "vitepress": "^1.0.0-beta.2"
+        "vitepress": "^1.0.0-beta.3"
     }
 }
