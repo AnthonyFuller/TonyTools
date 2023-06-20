@@ -1,0 +1,35 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "https://tonytools.win/schemas/dlge.schema.json",
+    "type": "object",
+    "title": "DialogEvent",
+    "description": "A HMLanguages (TonyTools) DLGE JSON file.",
+    "properties": {
+        "$schema": {
+            "type": "string",
+            "format": "uri",
+            "description": "The schema URL, if you're seeing this you probably already know what it is."
+        },
+        "hash": {
+            "type": "string",
+            "title": "Hash",
+            "description": "The hash or path (if available) of the final output file."
+        },
+        "DITL": {
+            "type": "string",
+            "title": "DialogSoundTemplateList",
+            "description": "The hash or path (if available) of the DITL file to use for soundtags."
+        },
+        "CLNG": {
+            "type": "string",
+            "title": "DialogCascadingLanguageDependencies",
+            "description": "The hash or path (if available) of the CLNG file to use."
+        },
+        "rootContainer": {
+            "title": "Root Container",
+            "description": "The root container of the DLGE file, "
+        }
+    },
+    "required": ["hash", "DITL", "CLNG", "rootContainer"],
+    "additionalProperties": false
+}
