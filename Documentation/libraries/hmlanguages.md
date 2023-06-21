@@ -22,6 +22,10 @@ There is a [tool](/tools/hmlanguagetools) which implements this library in full.
 
 This page will go into detail about the formats, naming conventions used by the tool, and more. Technical details, such as structure of the raw files, will be in collapsible sections (but these have yet to be added).
 
+:::warning
+ResourceLib is required for this library. For more information, see the [installation](/general/installation#resourcelib) page.
+:::
+
 ## Language Maps
 
 HMLanguages uses something called a "language map" (langmap for short) when converting and rebuilding files. These aren't always required to be explicitly defined by the user, and most of the time can be left to the default ones. They're used for outputting files, and for some files don't need to be exact.
@@ -105,7 +109,7 @@ if (rebuilt.file.empty() || rebuilt.meta.empty())
     // do something
 ```
 
-:::tip Note
+:::info Note
 There are currently long-term plans to use custom exceptions instead of just returning an empty struct so then the burden of error messages is on the program using the library.
 :::
 
