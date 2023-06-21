@@ -26,10 +26,86 @@
             "description": "The hash or path (if available) of the CLNG file to use."
         },
         "rootContainer": {
+            "$ref": "#/definitions/WavFile",
             "title": "Root Container",
             "description": "The root container of the DLGE file, "
         }
     },
     "required": ["hash", "DITL", "CLNG", "rootContainer"],
-    "additionalProperties": false
+    "additionalProperties": false,
+    "definitions": {
+        "TypeEnum": {
+            "enum": ["WavFile", "Random", "Switch", "Sequence"]
+        },
+        "WavFile": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "const": "WavFile",
+                    "title": "Container Type",
+                    "description": "The type of this container."
+                },
+                "wavName": {
+                    "type": "string",
+                    "title": "Wav Name",
+                    "description": "The name of the wav file (or hash if unavailable) for this container."
+                },
+                "soundtag": {
+                    "type": "string",
+                    "title": "Soundtag",
+                    "description": "The soundtag name (or hash if unavailable) for this container."
+                },
+                "defaultWav": {
+                    "type": "string",
+                    "title": "Default Wav",
+                    "description": "The default wav hash or path (if available) for this container."
+                },
+                "defaultFfx": {
+                    "type": "string",
+                    "title": "Default FaceFX Animation",
+                    "description": "The default FaceFX animation hash or path (if available) for this container."
+                },
+                "languages": {
+                    "type": "object",
+                    "patternProperties": {
+                        "^[a-z]{2}$": {
+                            "oneOf": [
+                                {
+                                    "type": "string",
+                                    "title": "Subtitle",
+                                    "description": "The subtitle for this language."
+                                },
+                                {
+                                    "type": "object",
+                                    "title": "Custom Wav and FaceFX",
+                                    "description": "The wav and FaceFX animation (plus optional subtitle) for this language.",
+                                    "properties": {
+                                        "wav": {
+                                            "type": "string",
+                                            "title": "Wav File",
+                                            "description": "The wav hash or path (if available) for this language."
+                                        },
+                                        "ffx": {
+                                            "type": "string",
+                                            "title": "FaceFX File",
+                                            "description": "The FaceFX animation hash or path (if available) for this language."
+                                        },
+                                        "subtitle": {
+                                            "type": "string",
+                                            "title": "Subtitle",
+                                            "description": "The subtitle for this language."
+                                        }
+                                    },
+                                    "required": ["wav", "ffx"],
+                                    "additionalProperties": false
+                                }
+                            ]
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "required": ["type", "wavName", "soundtag", "defaultWav", "defaultFfx", "languages"]
+        }
+    }
 }
