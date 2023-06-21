@@ -26,20 +26,29 @@
             "description": "The hash or path (if available) of the CLNG file to use."
         },
         "rootContainer": {
-            "oneOf": [
-                { "$ref": "#/definitions/WavFile" },
-                { "$ref": "#/definitions/Random" }
-            ],
+            "$ref": "#/definitions/Container",
             "title": "Root Container",
             "description": "The root container of the DLGE file.",
+            "properties": {
+                "type": {
+                    "$ref": "#/definitions/Types"
+                }
+            },
+            "required": ["type"],
             "additionalProperties": false
         }
     },
     "required": ["hash", "DITL", "CLNG", "rootContainer"],
     "additionalProperties": false,
     "definitions": {
-        "TypeEnum": {
+        "Types": {
             "enum": ["WavFile", "Random", "Switch", "Sequence"]
+        },
+        "Container": {
+            "anyOf": [
+                { "$ref": "#/definitions/WavFile" },
+                { "$ref": "#/definitions/Random" }
+            ]
         },
         "WavFile": {
             "type": "object",
@@ -144,9 +153,8 @@
                                 "required": ["weight"]
                             }
                         ],
-                        "additionalProperties": false
-                    },
-                    "additionalItems": false
+                        "additionalItems": false
+                    }
                 }
             }
         }
