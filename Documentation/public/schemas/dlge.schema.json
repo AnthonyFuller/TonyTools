@@ -47,13 +47,15 @@
         "Container": {
             "anyOf": [
                 { "$ref": "#/$defs/WavFile" },
-                { "$ref": "#/$defs/Random" }
+                { "$ref": "#/$defs/Random" },
+                { "$ref": "#/$defs/Switch" },
+                { "$ref": "#/$defs/Sequence" }
             ]
         },
         "WavFile": {
             "type": "object",
             "title": "WavFile Container",
-            "description": "A WavFile container.",
+            "description": "A WavFile container, defines a whole bunch of things.",
             "properties": {
                 "type": {
                     "const": "WavFile",
@@ -127,7 +129,7 @@
         "Random": {
             "type": "object",
             "title": "Random Container",
-            "description": "A Random container.",
+            "description": "A Random container, picks one of the wav files randomly with respect to their weight.",
             "properties": {
                 "type": {
                     "const": "Random",
@@ -147,7 +149,9 @@
                                 "type": "object",
                                 "properties": {
                                     "weight": {
-                                        "type": ["number", "string"]
+                                        "type": ["number", "string"],
+                                        "title": "Random Weight",
+                                        "description": "How often this specific line should be chosen (0 to 1, inclusive). Strings will be parsed as hex."
                                     }
                                 },
                                 "required": ["weight"]
@@ -157,7 +161,86 @@
                         "unevaluatedProperties": false
                     }
                 }
-            }
+            },
+            "required": ["type", "containers"]
+        },
+        "Switch": {
+            "type": "object",
+            "title": "Switch Container",
+            "description": "A Switch container, jumps to one of the child containers depending on the case value passed to it.",
+            "properties": {
+                "type": {
+                    "const": "Switch",
+                    "title": "Container Type",
+                    "description": "The type of this container."
+                },
+                "switchKey": {
+                    "type": "string",
+                    "title": "Switch Key",
+                    "description": "The key for this Switch container, this is what the game looks for."
+                },
+                "default": {
+                    "type": "string",
+                    "title": "Default",
+                    "description": "The default case. This is used if a case is not explicitly handled."
+                },
+                "containers": {
+                    "type": "array",
+                    "title": "Containers",
+                    "description": "The child containers for this container.",
+                    "items": {
+                        "allOf": [
+                            {
+                                "anyOf": [
+                                    { "$ref": "#/$defs/WavFile" },
+                                    { "$ref": "#/$defs/Random" }
+                                ]
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "cases": {
+                                        "type": "array",
+                                        "title": "Cases",
+                                        "description": "Which cases this container should handle."
+                                    }
+                                },
+                                "required": ["cases"]
+                            }
+                        ],
+                        "additionalItems": false,
+                        "unevaluatedProperties": false
+                    }
+                }
+            },
+            "required": ["type", "switchKey", "default", "containers"] 
+        },
+        "Sequence": {
+            "type": "object",
+            "title": "Sequence Container",
+            "description": "A Sequence container, \"executes\" all child containers in order.",
+            "properties": {
+                "type": {
+                    "const": "Sequence",
+                    "title": "Container Type",
+                    "description": "The type of this container."
+                },
+                "containers": {
+                    "type": "array",
+                    "title": "Containers",
+                    "description": "The child containers for this container.",
+                    "items": {
+                        "anyOf": [
+                            { "$ref": "#/$defs/WavFile" },
+                            { "$ref": "#/$defs/Random" },
+                            { "$ref": "#/$defs/Switch" }
+                        ],
+                        "additionalItems": false,
+                        "unevaluatedProperties": false
+                    }
+                }
+            },
+            "required": ["type", "containers"]
         }
     }
 }
