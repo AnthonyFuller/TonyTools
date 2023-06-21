@@ -26,7 +26,10 @@
             "description": "The hash or path (if available) of the CLNG file to use."
         },
         "rootContainer": {
-            "$ref": "#/definitions/WavFile",
+            "oneOf": [
+                { "$ref": "#/definitions/WavFile" },
+                { "$ref": "#/definitions/Random" }
+            ],
             "title": "Root Container",
             "description": "The root container of the DLGE file, "
         }
