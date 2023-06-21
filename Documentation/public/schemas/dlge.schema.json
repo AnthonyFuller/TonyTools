@@ -202,7 +202,11 @@
                                     "cases": {
                                         "type": "array",
                                         "title": "Cases",
-                                        "description": "Which cases this container should handle."
+                                        "description": "Which cases this container should handle.",
+                                        "items": {
+                                            "type": "string",
+                                            "additionalItems": false
+                                        }
                                     }
                                 },
                                 "required": ["cases"]
