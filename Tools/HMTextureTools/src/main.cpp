@@ -8,7 +8,7 @@
 #include "Global.h"
 #include "Texture.h"
 
-argparse::ArgumentParser program("HMTextureTools", "v1.5.5");
+argparse::ArgumentParser program("HMTextureTools", "v1.6.0");
 
 void toUppercase(std::string &inputstr)
 {
