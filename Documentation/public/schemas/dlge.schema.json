@@ -39,6 +39,8 @@
         },
         "WavFile": {
             "type": "object",
+            "title": "WavFile Container",
+            "description": "A WavFile container.",
             "properties": {
                 "type": {
                     "const": "WavFile",
@@ -56,17 +58,19 @@
                     "description": "The soundtag name (or hash if unavailable) for this container."
                 },
                 "defaultWav": {
-                    "type": "string",
+                    "type": ["string", "null"],
                     "title": "Default Wav",
                     "description": "The default wav hash or path (if available) for this container."
                 },
                 "defaultFfx": {
-                    "type": "string",
+                    "type": ["string", "null"],
                     "title": "Default FaceFX Animation",
                     "description": "The default FaceFX animation hash or path (if available) for this container."
                 },
                 "languages": {
                     "type": "object",
+                    "title": "Languages",
+                    "description": "The languages for this container.",
                     "patternProperties": {
                         "^[a-z]{2}$": {
                             "oneOf": [
@@ -105,7 +109,43 @@
                     "additionalProperties": false
                 }
             },
-            "required": ["type", "wavName", "soundtag", "defaultWav", "defaultFfx", "languages"]
+            "required": ["type", "wavName", "soundtag", "defaultWav", "defaultFfx", "languages"],
+            "additionalProperties": false
+        },
+        "Random": {
+            "type": "object",
+            "title": "Random Container",
+            "description": "A Random container.",
+            "properties": {
+                "type": {
+                    "const": "Random",
+                    "title": "Container Type",
+                    "description": "The type of this container."
+                },
+                "containers": {
+                    "type": "array",
+                    "title": "Containers",
+                    "description": "The child containers for this container.",
+                    "items": {
+                        "allOf": [
+                            {
+                                "$ref": "#/definitions/WavFile"
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "weight": {
+                                        "type": ["number", "string"]
+                                    }
+                                },
+                                "required": ["weight"],
+                                "additionalProperties": false
+                            }
+                        ]
+                    },
+                    "additionalItems": false
+                }
+            }
         }
     }
 }
