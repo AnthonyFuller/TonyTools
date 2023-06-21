@@ -31,7 +31,8 @@
                 { "$ref": "#/definitions/Random" }
             ],
             "title": "Root Container",
-            "description": "The root container of the DLGE file, "
+            "description": "The root container of the DLGE file.",
+            "additionalProperties": false
         }
     },
     "required": ["hash", "DITL", "CLNG", "rootContainer"],
@@ -112,8 +113,7 @@
                     "additionalProperties": false
                 }
             },
-            "required": ["type", "wavName", "soundtag", "defaultWav", "defaultFfx", "languages"],
-            "additionalProperties": false
+            "required": ["type", "wavName", "soundtag", "defaultWav", "defaultFfx", "languages"]
         },
         "Random": {
             "type": "object",
@@ -141,10 +141,10 @@
                                         "type": ["number", "string"]
                                     }
                                 },
-                                "required": ["weight"],
-                                "additionalProperties": false
+                                "required": ["weight"]
                             }
-                        ]
+                        ],
+                        "additionalProperties": false
                     },
                     "additionalItems": false
                 }
