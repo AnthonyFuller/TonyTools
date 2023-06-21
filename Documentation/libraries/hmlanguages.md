@@ -438,7 +438,6 @@ This will be *heavily* simplified as we go into more depth in the previous secti
 This layout is meant to mimic the one you saw right at the start of this section with the [tree](#dlge-container-tree).
 
 [Schema](/schemas/dlge.schema.json)
-
 ```json
 {
     "hash": "...",
