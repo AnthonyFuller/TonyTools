@@ -13,6 +13,11 @@
             "type": "string",
             "description": "The hash or path (if available) of the final output file."
         },
+        "langmap": {
+            "type": "string",
+            "title": "Language Map",
+            "description": "Optional language map for if it differs from the default. Overrides any other language map."
+        },
         "videos": {
             "type": "object",
             "description": "An object of languages to a video (GFXV) hash/path.",
