@@ -1,5 +1,5 @@
 {
-	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "https://tonytools.win/schemas/dlge.schema.json",
     "type": "object",
     "title": "DialogEvent",
@@ -26,12 +26,12 @@
             "description": "The hash or path (if available) of the CLNG file to use."
         },
         "rootContainer": {
-            "$ref": "#/definitions/Container",
+            "$ref": "#/$defs/Container",
             "title": "Root Container",
             "description": "The root container of the DLGE file.",
             "properties": {
                 "type": {
-                    "$ref": "#/definitions/Types"
+                    "$ref": "#/$defs/Types"
                 }
             },
             "required": ["type"],
@@ -40,14 +40,14 @@
     },
     "required": ["hash", "DITL", "CLNG", "rootContainer"],
     "additionalProperties": false,
-    "definitions": {
+    "$defs": {
         "Types": {
             "enum": ["WavFile", "Random", "Switch", "Sequence"]
         },
         "Container": {
             "anyOf": [
-                { "$ref": "#/definitions/WavFile" },
-                { "$ref": "#/definitions/Random" }
+                { "$ref": "#/$defs/WavFile" },
+                { "$ref": "#/$defs/Random" }
             ]
         },
         "WavFile": {
@@ -141,7 +141,7 @@
                     "items": {
                         "allOf": [
                             {
-                                "$ref": "#/definitions/WavFile"
+                                "$ref": "#/$defs/WavFile"
                             },
                             {
                                 "type": "object",
