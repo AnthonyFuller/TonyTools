@@ -25,6 +25,11 @@
             "title": "DialogCascadingLanguageDependencies",
             "description": "The hash or path (if available) of the CLNG file to use."
         },
+        "langmap": {
+            "type": "string",
+            "title": "Language Map",
+            "description": "Optional language map for if it differs from the default. Overrides any other language map."
+        },
         "rootContainer": {
             "type": "object",
             "$ref": "#/$defs/Container",
@@ -141,28 +146,25 @@
                     "type": "array",
                     "title": "Containers",
                     "description": "The child containers for this container.",
-                    "prefixItems": [
-                        {
-                            "allOf": [
-                                {
-                                    "$ref": "#/$defs/WavFile"
+                    "items": {
+                        "allOf": [
+                            {
+                                "$ref": "#/$defs/WavFile"
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "weight": {
+                                        "type": ["number", "string"],
+                                        "title": "Random Weight",
+                                        "description": "How often this specific line should be chosen (0 to 1, inclusive). Strings will be parsed as hex."
+                                    }
                                 },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "weight": {
-                                            "type": ["number", "string"],
-                                            "title": "Random Weight",
-                                            "description": "How often this specific line should be chosen (0 to 1, inclusive). Strings will be parsed as hex."
-                                        }
-                                    },
-                                    "required": ["weight"]
-                                }
-                            ],
-                            "unevaluatedProperties": false
-                        }
-                    ],
-                    "items": false
+                                "required": ["weight"]
+                            }
+                        ],
+                        "unevaluatedProperties": false
+                    }
                 }
             },
             "required": ["type", "containers"]
@@ -191,35 +193,29 @@
                     "type": "array",
                     "title": "Containers",
                     "description": "The child containers for this container.",
-                    "prefixItems": [
-                        {
-                            "allOf": [
-                                {
-                                    "anyOf": [
-                                        { "$ref": "#/$defs/WavFile" },
-                                        { "$ref": "#/$defs/Random" }
-                                    ]
+                    "items": {
+                        "allOf": [
+                            {
+                                "anyOf": [
+                                    { "$ref": "#/$defs/WavFile" },
+                                    { "$ref": "#/$defs/Random" }
+                                ]
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "cases": {
+                                        "type": "array",
+                                        "title": "Cases",
+                                        "description": "Which cases this container should handle.",
+                                        "items": { "type": "string" }
+                                    }
                                 },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "cases": {
-                                            "type": "array",
-                                            "title": "Cases",
-                                            "description": "Which cases this container should handle.",
-                                            "prefixItems": [
-                                                { "type": "string" }
-                                            ],
-                                            "items": false
-                                        }
-                                    },
-                                    "required": ["cases"]
-                                }
-                            ],
-                            "unevaluatedProperties": false
-                        }
-                    ],
-                    "items": false
+                                "required": ["cases"]
+                            }
+                        ],
+                        "unevaluatedProperties": false
+                    }
                 }
             },
             "required": ["type", "switchKey", "default", "containers"] 
@@ -238,17 +234,14 @@
                     "type": "array",
                     "title": "Containers",
                     "description": "The child containers for this container.",
-                    "prefixItems": [
-                        {
-                            "anyOf": [
-                                { "$ref": "#/$defs/WavFile" },
-                                { "$ref": "#/$defs/Random" },
-                                { "$ref": "#/$defs/Switch" }
-                            ],
-                            "unevaluatedProperties": false
-                        }
-                    ],
-                    "items": false
+                    "items": {
+                        "anyOf": [
+                            { "$ref": "#/$defs/WavFile" },
+                            { "$ref": "#/$defs/Random" },
+                            { "$ref": "#/$defs/Switch" }
+                        ],
+                        "unevaluatedProperties": false
+                    }
                 }
             },
             "required": ["type", "containers"]
