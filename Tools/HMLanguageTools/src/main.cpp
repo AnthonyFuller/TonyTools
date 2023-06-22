@@ -12,7 +12,7 @@ using namespace TonyTools;
 #define LOG(x) std::cout << x << std::endl
 #define LOG_AND_EXIT(x) std::cout << x << std::endl; std::exit(0)
 
-argparse::ArgumentParser program("HMLanguageTools", "v1.6.1");
+argparse::ArgumentParser program("HMLanguageTools", "v1.6.2");
 
 void toUppercase(std::string &inputstr)
 {
