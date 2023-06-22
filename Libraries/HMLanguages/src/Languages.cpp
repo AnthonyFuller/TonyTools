@@ -202,13 +202,14 @@ std::string getWavName(std::string path, std::string ffxPath, std::string hash)
     if (is_valid_hash(path))
         return hash;
 
-    std::regex r{R"([^\/]*(?=\.(wav|animset)))"};
+    std::regex r{R"([^\/]*(?=\.wav))"};
+    std::regex ffxR{R"([^\/]*(?=\.animset))"};
     std::smatch m;
     std::regex_search(path, m, r);
 
     if (m.size() != 1)
     {
-        std::regex_search(ffxPath, m, r);
+        std::regex_search(ffxPath, m, ffxR);
         if (m.size() != 1)
             return hash;
     }
