@@ -149,7 +149,7 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    std::string metaPath = inputPath + ".meta.json ";
+    std::string metaPath = (mode == "convert" ? inputPath : outPath) + ".meta.json ";
     if (program.is_used("--metapath"))
         metaPath = program.get<std::string>("--metapath");
     else
