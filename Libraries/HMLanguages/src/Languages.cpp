@@ -950,20 +950,15 @@ Language::Rebuilt Language::RTLV::Rebuild(Language::Version version, std::string
 
             j.at("AudioLanguages").push_back(lang);
 
-            video = video.get<std::string>();
-            if (!is_valid_hash(video))
-                video = computeHash(video);
+            std::string vidHash = video.get<std::string>();
+            if (!is_valid_hash(vidHash))
+                vidHash = computeHash(vidHash);
 
-            uint64_t id = std::strtoull(video.get<std::string>().c_str(), nullptr, 16);
-            if (!std::all_of(video.begin(), video.end(), ::isxdigit))
-            {
-                fprintf(stderr, "[LANG//RTLV] Could not convert hash for video[\"%s\"] to integer!", lang.c_str());
-                return {};
-            }
+            uint64_t id = std::strtoull(vidHash.c_str(), nullptr, 16);
 
             j.at("VideoRidsPerAudioLanguage").push_back(json::object({{"m_IDHigh", id >> 32}, {"m_IDLow", id & ULONG_MAX}}));
 
-            depends[video] = std::format("{:2X}", 0x80 + languages[lang]);
+            depends[vidHash] = std::format("{:2X}", 0x80 + languages[lang]);
         }
 
         for (const auto &[lang, text] : jSrc.at("subtitles").items())
