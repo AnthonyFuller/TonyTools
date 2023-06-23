@@ -1097,7 +1097,9 @@ std::string Language::LOCR::Convert(Language::Version version, std::vector<char>
     catch (json::exception err)
     {
         fprintf(stderr, "[LANG//LOCR] JSON error:\n"
-                        "\t%s\n", err.what());
+                        "\t%s%s\n", err.what(),
+                        version == Version::H2016
+                        ? "\nIf this is an older H2016 LOCR file, this may be due to a symmetric cipher being used." : "");
     }
     return "";
 }
