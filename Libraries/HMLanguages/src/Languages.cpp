@@ -197,6 +197,32 @@ std::vector<char> xteaEncrypt(std::string str)
     return data;
 }
 
+std::vector<char> symmetricEncrypt(std::string str)
+{
+    std::vector<char> data(str.begin(), str.end());
+
+    for (char &value : data)
+    {
+        value ^= 226;
+        value = (value & 0x81) | (value & 2) << 1 | (value & 4) << 2 | (value & 8) << 3 | (value & 0x10) >> 3 |
+           (value & 0x20) >> 2 | (value & 0x40) >> 1;
+    }
+
+    return data;
+}
+
+std::string symmetricDecrypt(std::vector<char> data)
+{
+    for (char &value : data)
+    {
+        value = (value & 1) | (value & 2) << 3 | (value & 4) >> 1 | (value & 8) << 2 | (value & 16) >> 2 | (value & 32) << 1 |
+            (value & 64) >> 3 | (value & 128);
+        value ^= 226;
+    }
+    
+    return std::string(data.begin(), data.end());
+}
+
 std::string getWavName(std::string path, std::string ffxPath, std::string hash)
 {
     if (is_valid_hash(path))
@@ -990,7 +1016,7 @@ Language::Rebuilt Language::RTLV::Rebuild(Language::Version version, std::string
 #pragma endregion
 
 #pragma region LOCR
-std::string Language::LOCR::Convert(Language::Version version, std::vector<char> data, std::string metaJson, std::string langMap)
+std::string Language::LOCR::Convert(Language::Version version, std::vector<char> data, std::string metaJson, std::string langMap, bool symmetric)
 {
     buffer buff(data);
 
@@ -1004,8 +1030,12 @@ std::string Language::LOCR::Convert(Language::Version version, std::vector<char>
     json j = {
         {"$schema", "https://tonytools.win/schemas/locr.schema.json"},
         {"hash", ""},
+        {"symmetric", true},
         {"languages", json::object()}
     };
+
+    if (!symmetric || version != Version::H2016)
+        j.erase("symmetric");
 
     uint32_t numLanguages = (buff.read<uint32_t>() - isLOCRv2) / 4;
     buff.index -= 4;
@@ -1042,7 +1072,9 @@ std::string Language::LOCR::Convert(Language::Version version, std::vector<char>
         for (int k = 0; k < numStrings; k++)
         {
             uint32_t hash = buff.read<uint32_t>();
-            std::string str = xteaDecrypt(buff.read<std::vector<char>>());
+            std::string str = (symmetric && version == Version::H2016)
+                                ? symmetricDecrypt(buff.read<std::vector<char>>())
+                                : xteaDecrypt(buff.read<std::vector<char>>());
             buff.index += 1;
 
             j.at("languages").at(languages.at(i)).push_back({std::format("{:X}", hash), str});
@@ -1070,7 +1102,7 @@ std::string Language::LOCR::Convert(Language::Version version, std::vector<char>
     return "";
 }
 
-Language::Rebuilt Language::LOCR::Rebuild(Language::Version version, std::string jsonString)
+Language::Rebuilt Language::LOCR::Rebuild(Language::Version version, std::string jsonString, bool symmetric)
 {
     Language::Rebuilt out{};
 
@@ -1079,6 +1111,9 @@ Language::Rebuilt Language::LOCR::Rebuild(Language::Version version, std::string
         json jSrc = json::parse(jsonString);
 
         buffer buff;
+
+        if (!jSrc["symmetric"].is_null() && jSrc["symmetric"].get<bool>() && version == Version::H2016)
+            symmetric = true;
 
         if (version != Version::H2016)
             buff.write<char>('\0');
@@ -1108,7 +1143,10 @@ Language::Rebuilt Language::LOCR::Rebuild(Language::Version version, std::string
             for (const auto &[strHash, string] : strings.items())
             {
                 buff.write<uint32_t>(hexStringToNum(strHash));
-                buff.write<std::vector<char>>(xteaEncrypt(string.get<std::string>()));
+                buff.write<std::vector<char>>((symmetric && version == Version::H2016)
+                                                ? symmetricEncrypt(string.get<std::string>())
+                                                : xteaEncrypt(string.get<std::string>())
+                                            );
                 buff.write<char>('\0');
             }
         }

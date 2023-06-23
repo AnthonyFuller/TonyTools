@@ -112,18 +112,20 @@ namespace Language
          * @param data The raw LOCR data.
          * @param metaJson The .meta.json file (from RPKG Tool) as a string.
          * @param langMap Optional language map, will resolve from version if not supplied. [Default: ""]
+         * @param symmetric Optional flag for if a symmetric cipher should be used. [Default: false]
          * @return std::string HMLanguages LOCR JSON representation of the input file.
          */
-        std::string Convert(Language::Version version, std::vector<char> data, std::string metaJson, std::string langMap = "");
+        std::string Convert(Language::Version version, std::vector<char> data, std::string metaJson, std::string langMap = "", bool symmetric = false);
 
         /**
          * @brief Rebuilds a HMLanguages LOCR JSON representation to a raw LOCR file + .meta.json.
          * 
          * @param version The game version the LOCR is from, used for version specific quirks.
          * @param jsonString The HMLanguages LOCR JSON.
+         * @param symmetric Optional flag for if a symmetric cipher should be used. [Default: false]
          * @return Rebuilt struct containing the raw file + .meta.json string.
          */
-        Rebuilt Rebuild(Language::Version version, std::string jsonString);
+        Rebuilt Rebuild(Language::Version version, std::string jsonString, bool symmetric = false);
     } // namespace LOCR
 
     namespace RTLV

@@ -100,6 +100,11 @@ int main(int argc, char *argv[])
         .help("should random weights be output as their hex variants, used for DLGE convert only")
         .default_value(false)
         .implicit_value(true);
+
+    program.add_argument("--symmetric")
+        .help("if a symmetric cipher should be used, early H2016 LOCR only.")
+        .default_value(false)
+        .implicit_value(true);
     ///////////////////
 
     try
@@ -129,6 +134,8 @@ int main(int argc, char *argv[])
     auto defLocale = program.get<std::string>("--defaultlocale");
 
     auto hexPrecision = program.get<bool>("--hexprecision");
+
+    auto symmetric = program.get<bool>("--symmetric");
 
     Language::Version version;
     if (game == "H2016")
@@ -185,7 +192,7 @@ int main(int argc, char *argv[])
         else if (type == "LOCR")
         {
             output = Language::LOCR::Convert(version, readFile(inputPath), std::string(metaFileData.begin(), metaFileData.end()),
-                program.is_used("--langmap") ? program.get<std::string>("--langmap") : ""
+                program.is_used("--langmap") ? program.get<std::string>("--langmap") : "", symmetric
             );
         }
         else if (type == "RTLV")
@@ -229,7 +236,7 @@ int main(int argc, char *argv[])
         }
         else if (type == "LOCR")
         {
-            output = Language::LOCR::Rebuild(version, std::string(inputFileData.begin(), inputFileData.end()));
+            output = Language::LOCR::Rebuild(version, std::string(inputFileData.begin(), inputFileData.end()), symmetric);
         }
         else if (type == "RTLV")
         {
