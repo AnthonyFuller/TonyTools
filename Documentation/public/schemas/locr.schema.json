@@ -13,6 +13,11 @@
             "type": "string",
             "description": "The hash or path (if available) of the final output file."
         },
+        "symmetric": {
+            "type": "boolean",
+            "title": "Symmetric Flag",
+            "description": "Whether or not a symmetric cipher should be used (only applies to H2016)."
+        },
         "languages": {
             "type": "object",
             "description": "An object of all the languages that should be in the final LOCR.",
