@@ -505,6 +505,10 @@ A language map **is required** for convert as per the [table](#language-maps) wh
 
 The JSON format allows for users to put the plain-text version e.g. `UI_LOCATION_PARIS_COUNTRY` instead of the hash, these will be hashed upon rebuilding.
 
+:::info Note
+For early H2016 LOCR files, the tool may fail to convert by default. This is due to a different cipher being used. You can fix this by passing `true` for the final parameter ([see below](#locr-api)).
+:::
+
 #### JSON Representation {#locr-json}
 
 [Schema](/schemas/locr.schema.json)
@@ -532,14 +536,18 @@ std::string json = TonyTools::Language::LOCR::Convert(
     Language::Version version,      // game version
     std::vector<char> data,         // raw LOCR data
     std::string metaJson,           // .meta.json string
-    std::string langMap = ""        // optional language map
+    std::string langMap = "",       // optional language map
+    bool symmetric = false          // whether a symmetric cipher should
+                                    //   be used 
 );
 
 // JSON -> LOCR + meta.json
 TonyTools::Language::Rebuilt rebuild =
     TonyTools::Langauge::LOCR::Rebuild(
         Language::Version version,  // game version
-        std::string jsonString      // HML JSON string
+        std::string jsonString,     // HML JSON string
+        bool symmetric = false      // whether a symmetric cipher should
+                                    //   be used
     );
 ```
 

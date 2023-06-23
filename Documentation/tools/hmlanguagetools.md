@@ -25,6 +25,10 @@ HMLanguageTools convert <game> <type> <input file path> <output file path>
 The above command assumes that the `.meta.JSON` file is located at `<input file path>.meta.JSON`, to specify it, add the `--metapath <meta file path>` option.  
 If converting DLGE, and you want more accuracy for the random container weights, add the `--hexprecision` option when converting. It is not required for rebuilding.
 
+:::info Note
+For early H2016 LOCR files it may fail to convert. This is due to a different cipher being used, you can add the `--symmetric` flag to fix this.
+:::
+
 Rebuilding any JSON to a raw file + .meta.JSON:
 ```
 HMLanguageTools rebuild <game> <type> <input json path> <output file path>
@@ -45,7 +49,8 @@ More information on language maps can be found on the [HMLanguages](/libraries/h
 
 ```
 usage: HMLanguageTools [--metapath path] [--langmap map]
-[--defaultlocale locale] [--hexprecision] mode game type input_path output_path
+    [--defaultlocale locale] [--hexprecision] [--symmetric]
+    mode game type input_path output_path
 
 positional arguments:
     mode            the mode to use: convert or rebuild.
@@ -65,4 +70,5 @@ optional arguments:
     --hexprecision  use this option if random weights should be output as their
                         hex variants allowing for greater precision,
                         used for DLGE convert only
+    --symmetric     if a symmetric cipher should be used, early H2016 LOCR only.
 ```
