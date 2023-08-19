@@ -82,7 +82,7 @@ FetchContent_Declare(tessil
 )
 
 if(TONYTOOLS_BUILD_TOOLS)
-    FetchContent_MakeAvailable(zhmtools directxtex libmorton lz4 argparse json tessil)
+    FetchContent_MakeAvailable(directxtex libmorton lz4 argparse zhmtools json tessil)
 else()
     FetchContent_MakeAvailable(zhmtools json tessil)
 endif()
@@ -97,6 +97,8 @@ if(TONYTOOLS_BUILD_TOOLS)
     add_subdirectory("Tools/VTXD")
     add_subdirectory("Tools/SCDA")
     add_subdirectory("Tools/JSONPatchCreator")
+    #add_subdirectory("Tools/GFXFzip")
+    add_subdirectory("Tools/MATE")
 endif()
 
 add_subdirectory("Libraries/HMLanguages")
