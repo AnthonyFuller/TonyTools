@@ -66,33 +66,8 @@ jobs:
           _build/MATE.exe
 
   create_release:
-    name: Create release
+    name: Create Release
     needs: [build_windows]
-    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Get version
-      id: get_version
-      run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
-    
-    - name: Create release
-      id: release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ steps.get_version.outputs.VERSION }}
-        release_name: "TonyTools ${{ steps.get_version.outputs.VERSION }}"
-        draft: true
-        prerelease: ${{ contains(github.ref, '-pre') }}
-
-    outputs:
-      upload_url: ${{ steps.release.outputs.upload_url }}
-
-  upload_release_asset:
-    name: Upload release asset
-    needs: [create_release]
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-latest
 
@@ -123,22 +98,13 @@ jobs:
         cd TonyTools-Dev
         zip -r TonyTools-Dev.zip *
 
-    - name: Upload main release asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Create release
+      uses: softprops/action-gh-release@v1
       with:
-        upload_url: ${{ needs.create_release.outputs.upload_url }}
-        asset_path: TonyTools/TonyTools.zip
-        asset_name: "TonyTools.zip"
-        asset_content_type: application/zip
-
-    - name: Upload dev release asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ needs.create_release.outputs.upload_url }}
-        asset_path: TonyTools-Dev/TonyTools-Dev.zip
-        asset_name: "TonyTools-Dev.zip"
-        asset_content_type: application/zip
+        prerelease: ${{ contains(github.ref, '-pre') }}
+        tag_name: ${{ steps.get_version.outputs.VERSION }}
+        name: "TonyTools ${{ steps.get_version.outputs.VERSION }}"
+        draft: true
+        files: |
+          TonyTools/TonyTools.zip
+          TonyTools-Dev/TonyTools-Dev.zip
