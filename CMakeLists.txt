@@ -54,6 +54,12 @@ if(TONYTOOLS_BUILD_TOOLS)
         GIT_REPOSITORY  https://github.com/p-ranav/argparse.git
         GIT_TAG         v2.9
     )
+
+    # bit7z
+    FetchContent_Declare(bit7z
+        GIT_REPOSITORY  https://github.com/rikyoz/bit7z
+        GIT_TAG         94c3c76aa562803ec6686514b410ddf2cd8e4067
+    )
 endif()
 
 # Currently, only the following external libraries are required for libraries
@@ -82,7 +88,7 @@ FetchContent_Declare(tessil
 )
 
 if(TONYTOOLS_BUILD_TOOLS)
-    FetchContent_MakeAvailable(directxtex libmorton lz4 argparse zhmtools json tessil)
+    FetchContent_MakeAvailable(directxtex libmorton lz4 argparse zhmtools json tessil bit7z)
 else()
     FetchContent_MakeAvailable(zhmtools json tessil)
 endif()
@@ -97,7 +103,7 @@ if(TONYTOOLS_BUILD_TOOLS)
     add_subdirectory("Tools/VTXD")
     add_subdirectory("Tools/SCDA")
     add_subdirectory("Tools/JSONPatchCreator")
-    #add_subdirectory("Tools/GFXFzip")
+    add_subdirectory("Tools/GFXFzip")
     add_subdirectory("Tools/MATE")
 endif()
 
