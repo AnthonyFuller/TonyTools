@@ -865,11 +865,17 @@ std::string Language::RTLV::Convert(Language::Version version, std::vector<char>
 {
     ResourceConverter *converter = getConverter(version, "RTLV");
     if (!converter)
+    {
+        fprintf(stderr, "[LANG//RTLV] Could not get converter!\n");
         return "";
+    }
 
     JsonString *converted = converter->FromMemoryToJsonString(data.data(), data.size());
     if (!converted)
+    {
+        fprintf(stderr, "[LANG//RTLV] Could not convert RTLV to ResourceLib JSON!\n");
         return "";
+    }
 
     json j = {
         {"$schema", "https://tonytools.win/schemas/rtlv.schema.json"},
@@ -882,7 +888,6 @@ std::string Language::RTLV::Convert(Language::Version version, std::vector<char>
     {
         json jConv = json::parse(converted->JsonData);
         converter->FreeJsonString(converted);
-        converted = nullptr;
 
         if (jConv.at("AudioLanguages").size() != jConv.at("VideoRidsPerAudioLanguage").size())
         {
@@ -907,7 +912,7 @@ std::string Language::RTLV::Convert(Language::Version version, std::vector<char>
 
         return j.dump();
     }
-    catch (json::exception err)
+    catch (const json::exception& err)
     {
         if (converted)
             converter->FreeJsonString(converted);
@@ -915,6 +920,7 @@ std::string Language::RTLV::Convert(Language::Version version, std::vector<char>
         fprintf(stderr, "[LANG//RTLV] JSON error:\n"
                         "\t%s\n", err.what());
     }
+
     return "";
 }
 
@@ -922,7 +928,10 @@ Language::Rebuilt Language::RTLV::Rebuild(Language::Version version, std::string
 {
     ResourceGenerator *generator = getGenerator(version, "RTLV");
     if (!generator)
+    {
+        fprintf(stderr, "[LANG//RTLV] Could not get generator!\n");
         return {};
+    }
 
     Language::Rebuilt out{};
     tsl::ordered_map<std::string, std::string> depends{};
@@ -996,7 +1005,10 @@ Language::Rebuilt Language::RTLV::Rebuild(Language::Version version, std::string
         std::string rlJson = j.dump();
         ResourceMem *generated = generator->FromJsonStringToResourceMem(rlJson.c_str(), rlJson.size(), false);
         if (!generated)
+        {
+            fprintf(stderr, "[LANG//RTLV] Could not convert ResourceLib JSON to RTLV!\n");
             return {};
+        }
 
         out.file.resize(generated->DataSize);
         std::memcpy(out.file.data(), generated->ResourceData, generated->DataSize);
@@ -1006,11 +1018,12 @@ Language::Rebuilt Language::RTLV::Rebuild(Language::Version version, std::string
 
         return out;
     }
-    catch (json::exception err)
+    catch (const json::exception& err)
     {
         fprintf(stderr, "[LANG//RTLV] JSON error:\n"
                         "\t%s\n", err.what());
     }
+
     return {};
 }
 #pragma endregion
@@ -1094,13 +1107,14 @@ std::string Language::LOCR::Convert(Language::Version version, std::vector<char>
 
         return j.dump();
     }
-    catch (json::exception err)
+    catch (const json::exception& err)
     {
         fprintf(stderr, "[LANG//LOCR] JSON error:\n"
                         "\t%s%s\n", err.what(),
                         version == Version::H2016
                         ? "\nIf this is an older H2016 LOCR file, this may be due to a symmetric cipher being used." : "");
     }
+
     return "";
 }
 
@@ -1158,11 +1172,12 @@ Language::Rebuilt Language::LOCR::Rebuild(Language::Version version, std::string
 
         return out;
     }
-    catch (json::exception err)
+    catch (const json::exception& err)
     {
         fprintf(stderr, "[LANG//LOCR] JSON error:\n"
                         "\t%s\n", err.what());
     }
+
     return {};
 }
 #pragma endregion
@@ -1204,11 +1219,12 @@ std::string Language::DITL::Convert(std::vector<char> data, std::string metaJson
 
         return j.dump();
     }
-    catch (json::exception err)
+    catch (const json::exception& err)
     {
         fprintf(stderr, "[LANG//DITL] JSON error:\n"
                         "\t%s\n", err.what());
     }
+
     return "";
 }
 
@@ -1243,11 +1259,12 @@ Language::Rebuilt Language::DITL::Rebuild(std::string jsonString)
 
         return out;
     }
-    catch (json::exception err)
+    catch (const json::exception& err)
     {
         fprintf(stderr, "[LANG//DITL] JSON error:\n"
                         "\t%s\n", err.what());
     }
+
     return {};
 }
 #pragma endregion
@@ -1289,11 +1306,12 @@ std::string Language::CLNG::Convert(Language::Version version, std::vector<char>
 
         return j.dump();
     }
-    catch (json::exception err)
+    catch (const json::exception& err)
     {
         fprintf(stderr, "[LANG//CLNG] JSON error:\n"
                         "\t%s\n", err.what());
     }
+
     return "";
 }
 
@@ -1315,11 +1333,12 @@ Language::Rebuilt Language::CLNG::Rebuild(std::string jsonString)
 
         return out;
     }
-    catch (json::exception err)
+    catch (const json::exception& err)
     {
         fprintf(stderr, "[LANG//CLNG] JSON error:\n"
                         "\t%s\n", err.what());
     }
+    
     return {};
     
 }
@@ -1707,13 +1726,14 @@ std::string Language::DLGE::Convert(Language::Version version, std::vector<char>
 
         return j.dump();
     }
-    catch (json::exception err)
+    catch (const json::exception& err)
     {
         fprintf(stderr, "[LANG//DLGE] JSON error:\n"
                         "\t%s\n", err.what());
         fprintf(stdout, "This could be due to your language maps not matching up to the number of languages in the file (older file?).\n");
-        return "";
     }
+
+    return "";
 }
 
 // Avoids code duplication
@@ -2103,11 +2123,12 @@ Language::Rebuilt Language::DLGE::Rebuild(Language::Version version, std::string
 
         return out;
     }
-    catch (json::exception err)
+    catch (const json::exception& err)
     {
         fprintf(stderr, "[LANG//DLGE] JSON error:\n"
                         "\t%s\n", err.what());
     }
+
     return {};
 }
 #pragma endregion
