@@ -51,6 +51,7 @@ jobs:
           _build/HMTextureTools.exe
           _build/HMAScrambler.exe
           _build/HMLanguageTools.exe
+          _build/GFXFzip.exe
 
     - name: Upload build artifact [Dev]
       uses: actions/upload-artifact@v3
@@ -62,6 +63,7 @@ jobs:
           _build/SCDA.exe
           _build/JSONPatchCreator.exe
           _build/BOXCExporter.exe
+          _build/MATE.exe
 
   create_release:
     name: Create release
