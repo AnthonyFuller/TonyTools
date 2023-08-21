@@ -32,6 +32,7 @@ export default defineConfig({
             {
                 text: "Tools",
                 items: [
+                    { text: "GFXFzip", link: "/tools/gfxfzip" },
                     { text: "HMTextureTools", link: "/tools/hmtexturetools" },
                     { text: "HMLanguageTools", link: "/tools/hmlanguagetools" },
                     { text: "HMAScrambler", link: "/tools/hmascrambler" }
@@ -43,6 +44,7 @@ export default defineConfig({
                 items: [
                     { text: "BOXCExporter", link: "/tools/boxcexporter" },
                     { text: "JSONPatchCreator", link: "/tools/jsonpatchcreator" },
+                    { text: "MATE", link: "/tools/mate" },
                     { text: "MJBATesting", link: "/tools/mjbatesting" },
                     { text: "SCDA", link: "/tools/scda" },
                     { text: "VTXD", link: "/tools/vtxd" }
