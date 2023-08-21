@@ -12,6 +12,12 @@ It is a CLI tool, meaning there is no GUI and you must use a terminal i.e. Power
 Currently, this tool only works on Windows by default due to the usage of DirectXTex, it can run in Wine, but may be finicky to get working or may not work at all.
 :::
 
+:::warning Improper Viewing
+Some image editors/viewers do not show the proper texture e.g. Paint.NET due to what is suspected to be improper handling of the alpha channels.
+
+Photoshop (or another editor that properly supports alpha channels) is recommended.
+:::
+
 ## Quickstart
 
 ### Hitman 3
