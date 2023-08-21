@@ -13,11 +13,17 @@ Development tools come with no support or guarantees for how they may work, but 
 Some tools and libraries require [ResourceLib](https://github.com/OrfeasZ/ZHMTools/releases/latest) from [ZHMTools](https://github.com/OrfeasZ/ZHMTools).
 
 [HMLanguages](/libraries/hmlanguages) requires ResourceLib either next to the executable it's been compiled into or on your PATH.
-This also extends to [HMLangaugeTools](/tools/hmlanguagetools).
+This also extends to [HMLangaugeTools](/tools/hmlanguagetools) and [GFXFzip](/tools/gfxfzip).
 
 :::tip
 This does not apply to the Linux version of HMLanguageTools as ResourceLib is statically linked.
 :::
+
+## 7zip
+
+Some tools and libraries require [7zip](https://www.7-zip.org/), more specifically, it's shared library (DLL).
+
+[GFXFzip](/tools/gfxfzip) requires this shared library either next to the executable or on your PATH.
 
 ## Tools
 All tools are CLI, to install them, you can either:
