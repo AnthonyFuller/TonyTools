@@ -4,7 +4,7 @@ outline: deep
 
 # HMLanguageTools
 
-This tool converts CLNG, DITL, DLGE, LOCR, and RTLV to JSON and vice-versa.
+This tool converts CLNG, DITL, DLGE, LOCR, and RTLV to JSON and vice-versa.  
 It is a CLI tool, meaning there is no GUI and you must use a terminal i.e. PowerShell.
 
 :::warning

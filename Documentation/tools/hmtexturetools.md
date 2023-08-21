@@ -5,7 +5,7 @@ prev: false
 
 # HMTextureTools
 
-This tool converts TEXT/D formats from Hitman: World of Assassination games and Hitman: Absolution to TGA, and vice-versa.
+This tool converts TEXT/D formats from Hitman: World of Assassination games and Hitman: Absolution to TGA, and vice-versa.  
 It is a CLI tool, meaning there is no GUI and you must use a terminal i.e. PowerShell.
 
 :::warning Windows Only
