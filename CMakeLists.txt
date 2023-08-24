@@ -3,6 +3,8 @@ include(FetchContent)
 
 project(TonyTools)
 
+set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
+set(CMAKE_POLICY_DEFAULT_CMP0135 NEW)
 cmake_policy(SET CMP0077 NEW)
 cmake_policy(SET CMP0135 NEW)
 
@@ -72,7 +74,7 @@ add_subdirectory("Third-Party")
 set(ZHM_BUILD_TOOLS OFF)
 FetchContent_Declare(zhmtools
     GIT_REPOSITORY  https://github.com/OrfeasZ/ZHMTools.git
-    GIT_TAG         dbc3407d917e563903b329dee44feb7569b1bb87
+    GIT_TAG         v3.4.1
 )
 
 # nlohmann json
