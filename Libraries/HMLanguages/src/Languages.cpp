@@ -1090,7 +1090,7 @@ std::string Language::LOCR::Convert(Language::Version version, std::vector<char>
                                 : xteaDecrypt(buff.read<std::vector<char>>());
             buff.index += 1;
 
-            j.at("languages").at(languages.at(i)).push_back({std::format("{:X}", hash), str});
+            j.at("languages").at(languages.at(i)).push_back({std::format("{:08X}", hash), str});
         }
     }
 
@@ -1499,7 +1499,7 @@ std::string Language::DLGE::Convert(Language::Version version, std::vector<char>
                     {"wavName", std::format("{:08X}", wavNameHash)},
                     {"cases", nullptr},
                     {"weight", nullptr},
-                    {"soundtag", TagMap.has_key(soundTagHash) ? TagMap.get_value(soundTagHash) : std::format("{:X}", soundTagHash)},
+                    {"soundtag", TagMap.has_key(soundTagHash) ? TagMap.get_value(soundTagHash) : std::format("{:08X}", soundTagHash)},
                     {"defaultWav", nullptr},
                     {"defaultFfx", nullptr},
                     {"languages", json::object()}
