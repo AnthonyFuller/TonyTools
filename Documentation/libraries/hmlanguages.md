@@ -50,6 +50,49 @@ The first table below shows how each file type uses the language map, the second
 
 <p style="text-align: center; font-style: italic;">Figure 2: Table of game versions and their default language maps</p>
 
+## Hash List
+
+Work has been started on various hash lists that can be optionally loaded by the library. It provides:
+- DLGE [soundtags](#glossary) and [switch cases](#switch).
+- [LINE](#glossary) hashes
+
+A custom binary format is used to store these, more information on this can be seen below.
+
+### Format {#hash-list-format}
+
+The format is quite simple and can be described by a couple structures.
+
+```cpp
+// This is the main file
+struct PackagedHashList {
+    uint32_t            magic;      // 0x484D4C41 'ALMH'
+    uint32_t            version;    // Hash list version
+    PackagedSection     soundtags;  // Soundtags
+    PackagedSection     cases;      // Switch cases
+    PackagedSection     lines;      // LINE hashes
+}
+
+struct PackagedSection {
+    uint32_t    size;       // Compressed size
+    uint32_t    dSize;      // Decompressed size
+    uint32_t    checksum;   // Decompressed data CRC32 checksum
+    uint8_t     data[size]; // LZ4 compressed data
+}
+
+// The decompressed data
+struct HashListSection {
+    uint32_t        nEntries;           // Number of entries
+    HashListEntry   entries[nEntries];  // The actual entries
+}
+
+// We store the hash so we don't have to calculate this
+// when loading the hash list for speed.
+struct HashListEntry {
+    uint32_t    hash;   // The CRC32 hash
+    const char* string; // The original string (null terminated)
+}
+```
+
 ## API Overview
 
 HMLanguages exposes a C++ API to allow conversion and rebuilding of file types, the individual functions will be laid out for the specific file types in the formats section below, but here, we shall go over two important constructs.
