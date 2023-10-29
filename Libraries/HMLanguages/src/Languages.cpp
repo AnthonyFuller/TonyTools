@@ -225,7 +225,7 @@ std::string symmetricDecrypt(std::vector<char> data)
 
 std::string getWavName(std::string path, std::string ffxPath, std::string hash)
 {
-    if (is_valid_hash(path))
+    if (is_valid_hash(path) && is_valid_hash(ffxPath))
         return hash;
 
     std::regex r{R"([^\/]*(?=\.wav))"};
