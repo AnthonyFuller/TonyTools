@@ -67,20 +67,11 @@ The format is quite simple and can be described by a couple structures.
 struct PackagedHashList {
     uint32_t            magic;      // 0x484D4C41 'ALMH'
     uint32_t            version;    // Hash list version
-    PackagedSection     soundtags;  // Soundtags
-    PackagedSection     cases;      // Switch cases
-    PackagedSection     lines;      // LINE hashes
+    HashListSection     soundtags;  // Soundtags
+    HashListSection     cases;      // Switch cases
+    HashListSection     lines;      // LINE hashes
 }
 
-// The LZ4 compressed data includes a checksum at the end
-// (as per LZ4 frame spec)
-struct PackagedSection {
-    uint32_t    size;       // Compressed size
-    uint32_t    dSize;      // Decompressed size
-    uint8_t     data[size]; // LZ4 compressed data
-}
-
-// The decompressed data
 struct HashListSection {
     uint32_t        nEntries;           // Number of entries
     HashListEntry   entries[nEntries];  // The actual entries
