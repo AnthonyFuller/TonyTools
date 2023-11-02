@@ -72,10 +72,11 @@ struct PackagedHashList {
     PackagedSection     lines;      // LINE hashes
 }
 
+// The LZ4 compressed data includes a checksum at the end
+// (as per LZ4 frame spec)
 struct PackagedSection {
     uint32_t    size;       // Compressed size
     uint32_t    dSize;      // Decompressed size
-    uint32_t    checksum;   // Decompressed data CRC32 checksum
     uint8_t     data[size]; // LZ4 compressed data
 }
 
