@@ -64,9 +64,10 @@ The format is quite simple and can be described by a couple structures.
 
 ```cpp
 // This is the main file
-struct PackagedHashList {
+struct HashList {
     uint32_t            magic;      // 0x484D4C41 'ALMH'
     uint32_t            version;    // Hash list version
+    uint32_t            checksum;   // CRC32 checksum of the rest of the data
     HashListSection     soundtags;  // Soundtags
     HashListSection     cases;      // Switch cases
     HashListSection     lines;      // LINE hashes
