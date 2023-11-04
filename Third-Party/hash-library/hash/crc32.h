@@ -48,7 +48,7 @@ public:
   CRC32();
 
   /// compute CRC32 of a memory block
-  std::string operator()(const void* data, size_t numBytes);
+  uint32_t operator()(const void* data, size_t numBytes);
   /// compute CRC32 of a string, excluding final zero
   uint32_t operator()(const std::string& text);
 

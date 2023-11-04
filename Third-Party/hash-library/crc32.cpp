@@ -414,11 +414,11 @@ void CRC32::getHash(unsigned char buffer[CRC32::HashBytes])
 
 
 /// compute CRC32 of a memory block
-std::string CRC32::operator()(const void* data, size_t numBytes)
+uint32_t CRC32::operator()(const void* data, size_t numBytes)
 {
   reset();
   add(data, numBytes);
-  return getHash();
+  return m_hash;
 }
 
 
