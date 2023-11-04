@@ -7,7 +7,7 @@
 #include <argparse/argparse.hpp>
 #include <TonyTools/Languages.h>
 
-using namespace TonyTools;
+using namespace TonyTools::Language;
 
 #define LOG(x) std::cout << x << std::endl
 #define LOG_AND_EXIT(x) std::cout << x << std::endl; std::exit(0)
@@ -62,6 +62,12 @@ void writeFile(std::string path, const char* ptr, size_t size)
 
 int main(int argc, char *argv[])
 {
+    if (std::filesystem::exists("hash_list.hmla")) {
+        HashList::Load(readFile("hash_list.hmla"));
+    } else {
+        LOG("[WARN] Hash list not found next to exe! It will not be loaded.");
+    }
+
     // Define arguments
     program.add_argument("mode")
         .help("the mode to use: convert or rebuild")
@@ -137,18 +143,18 @@ int main(int argc, char *argv[])
 
     auto symmetric = program.get<bool>("--symmetric");
 
-    Language::Version version;
+    Version version;
     if (game == "H2016")
     {
-        version = Language::Version::H2016;
+        version = Version::H2016;
     }
     else if (game == "H2")
     {
-        version = Language::Version::H2;
+        version = Version::H2;
     }
     else if (game == "H3")
     {
-        version = Language::Version::H3;
+        version = Version::H3;
     }
     else
     {
@@ -175,29 +181,29 @@ int main(int argc, char *argv[])
 
         if (type == "CLNG")
         {
-            output = Language::CLNG::Convert(version, readFile(inputPath), std::string(metaFileData.begin(), metaFileData.end()),
+            output = CLNG::Convert(version, readFile(inputPath), std::string(metaFileData.begin(), metaFileData.end()),
                 program.is_used("--langmap") ? program.get<std::string>("--langmap") : ""
             );
         }
         else if (type == "DITL")
         {
-            output = Language::DITL::Convert(readFile(inputPath), std::string(metaFileData.begin(), metaFileData.end()));
+            output = DITL::Convert(readFile(inputPath), std::string(metaFileData.begin(), metaFileData.end()));
         }
         else if (type == "DLGE")
         {
-            output = Language::DLGE::Convert(version, readFile(inputPath), std::string(metaFileData.begin(), metaFileData.end()),
+            output = DLGE::Convert(version, readFile(inputPath), std::string(metaFileData.begin(), metaFileData.end()),
                 defLocale, hexPrecision, program.is_used("--langmap") ? program.get<std::string>("--langmap") : ""
             );
         }
         else if (type == "LOCR")
         {
-            output = Language::LOCR::Convert(version, readFile(inputPath), std::string(metaFileData.begin(), metaFileData.end()),
+            output = LOCR::Convert(version, readFile(inputPath), std::string(metaFileData.begin(), metaFileData.end()),
                 program.is_used("--langmap") ? program.get<std::string>("--langmap") : "", symmetric
             );
         }
         else if (type == "RTLV")
         {
-            output = Language::RTLV::Convert(version, readFile(inputPath), std::string(metaFileData.begin(), metaFileData.end()));
+            output = RTLV::Convert(version, readFile(inputPath), std::string(metaFileData.begin(), metaFileData.end()));
         }
         else
         {
@@ -218,29 +224,29 @@ int main(int argc, char *argv[])
     else if (mode == "rebuild")
     {
         std::vector<char> inputFileData = readFile(inputPath);
-        Language::Rebuilt output{};
+        Rebuilt output{};
 
         if (type == "CLNG")
         {
-            output = Language::CLNG::Rebuild(std::string(inputFileData.begin(), inputFileData.end()));
+            output = CLNG::Rebuild(std::string(inputFileData.begin(), inputFileData.end()));
         }
         else if (type == "DITL")
         {
-            output = Language::DITL::Rebuild(std::string(inputFileData.begin(), inputFileData.end()));
+            output = DITL::Rebuild(std::string(inputFileData.begin(), inputFileData.end()));
         }
         else if (type == "DLGE")
         {
-            output = Language::DLGE::Rebuild(version, std::string(inputFileData.begin(), inputFileData.end()), defLocale,
+            output = DLGE::Rebuild(version, std::string(inputFileData.begin(), inputFileData.end()), defLocale,
                 program.is_used("--langmap") ? program.get<std::string>("--langmap") : ""
             );
         }
         else if (type == "LOCR")
         {
-            output = Language::LOCR::Rebuild(version, std::string(inputFileData.begin(), inputFileData.end()), symmetric);
+            output = LOCR::Rebuild(version, std::string(inputFileData.begin(), inputFileData.end()), symmetric);
         }
         else if (type == "RTLV")
         {
-            output = Language::RTLV::Rebuild(version, std::string(inputFileData.begin(), inputFileData.end()),
+            output = RTLV::Rebuild(version, std::string(inputFileData.begin(), inputFileData.end()),
                 program.is_used("--langmap") ? program.get<std::string>("--langmap") : ""
             );
         }
