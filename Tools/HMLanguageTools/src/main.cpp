@@ -89,7 +89,7 @@ int main(int argc, char *argv[])
 {
     std::string HLPath = (GetExeDirectory() / "hash_list.hmla").string();
     if (std::filesystem::exists(HLPath)) {
-        HashList::Load(readFile("hash_list.hmla"));
+        HashList::Load(readFile(HLPath));
     } else {
         LOG("[WARN] Hash list not found next to exe! It will not be loaded.");
     }
