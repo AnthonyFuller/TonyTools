@@ -11,7 +11,7 @@
 
 namespace fs = std::filesystem;
 
-argparse::ArgumentParser program("GFXFzip", "v1.7.1");
+argparse::ArgumentParser program("GFXFzip", "v1.7.2");
 
 void toUppercase(std::string &inputstr)
 {
