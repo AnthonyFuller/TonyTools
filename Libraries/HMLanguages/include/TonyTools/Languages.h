@@ -29,6 +29,46 @@ namespace Language
         std::string meta;
     };
 
+    namespace HashList
+    {
+        /**
+         * @brief Current status of the hash list, tells the version and if it is loaded.
+         */
+        struct Status {
+            bool loaded;
+            uint32_t version;
+        };
+
+        /**
+         * @brief Load the hash list from a vector.
+         * 
+         * @param data A vector of the hash list file data.
+         * @return bool representing if loading was successful.
+         */
+        bool Load(std::vector<char> data);
+
+        /**
+         * @brief Load the hash list from a pointer.
+         * 
+         * @param ptr Pointer to the start of the data.
+         * @param size Size of the data.
+         * @return bool representing if loading was successful. 
+         */
+        bool Load(const char* ptr, uint32_t size);
+
+        /**
+         * @brief Clear the currently loaded hash list.
+         */
+        void Clear();
+
+        /**
+         * @brief Get the status of the hash list.
+         * 
+         * @return Status struct of the current status of the hash list.
+         */
+        Status GetStatus();
+    } // namespace HashList
+
     namespace CLNG
     {
         /**
@@ -49,7 +89,7 @@ namespace Language
          * @return Rebuilt struct containing the raw file + .meta.json string. 
          */
         Rebuilt Rebuild(std::string jsonString);
-    }; // namespace CLNG
+    } // namespace CLNG
 
     namespace DITL
     {
@@ -69,7 +109,7 @@ namespace Language
          * @return Rebuilt struct containing the raw file + .meta.json string.
          */
         Rebuilt Rebuild(std::string jsonString);
-    }; // namespace DITL
+    } // namespace DITL
 
     namespace DLGE
     {

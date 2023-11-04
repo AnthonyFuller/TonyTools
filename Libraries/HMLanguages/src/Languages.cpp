@@ -19,7 +19,7 @@
 #include "bimap.hpp"
 #include "buffer.hpp"
 
-using namespace TonyTools;
+using namespace TonyTools::Language;
 using json = nlohmann::ordered_json;
 
 #pragma region Utility Functions
@@ -63,11 +63,11 @@ std::string generateMeta(std::string hash, uint32_t size, std::string type, tsl:
     return j.dump();
 }
 
-ResourceConverter* getConverter(Language::Version version, const char *resourceType)
+ResourceConverter* getConverter(Version version, const char *resourceType)
 {
     switch (version)
     {
-    case Language::Version::H2016:
+    case Version::H2016:
     {
         if (!HM2016_IsResourceTypeSupported(resourceType))
         {
@@ -77,7 +77,7 @@ ResourceConverter* getConverter(Language::Version version, const char *resourceT
 
         return HM2016_GetConverterForResource(resourceType);
     };
-    case Language::Version::H2:
+    case Version::H2:
     {
         if (!HM2_IsResourceTypeSupported(resourceType))
         {
@@ -87,7 +87,7 @@ ResourceConverter* getConverter(Language::Version version, const char *resourceT
 
         return HM2_GetConverterForResource(resourceType);
     };
-    case Language::Version::H3:
+    case Version::H3:
     {
         if (!HM3_IsResourceTypeSupported(resourceType))
         {
@@ -102,11 +102,11 @@ ResourceConverter* getConverter(Language::Version version, const char *resourceT
     }
 }
 
-ResourceGenerator* getGenerator(Language::Version version, const char *resourceType)
+ResourceGenerator* getGenerator(Version version, const char *resourceType)
 {
     switch (version)
     {
-    case Language::Version::H2016:
+    case Version::H2016:
     {
         if (!HM2016_IsResourceTypeSupported(resourceType))
         {
@@ -116,7 +116,7 @@ ResourceGenerator* getGenerator(Language::Version version, const char *resourceT
 
         return HM2016_GetGeneratorForResource(resourceType);
     };
-    case Language::Version::H2:
+    case Version::H2:
     {
         if (!HM2_IsResourceTypeSupported(resourceType))
         {
@@ -126,7 +126,7 @@ ResourceGenerator* getGenerator(Language::Version version, const char *resourceT
 
         return HM2_GetGeneratorForResource(resourceType);
     };
-    case Language::Version::H3:
+    case Version::H3:
     {
         if (!HM3_IsResourceTypeSupported(resourceType))
         {
@@ -259,15 +259,80 @@ uint32_t hexStringToNum(std::string string)
 }
 #pragma endregion
 
-#pragma region Switch and Tag Maps
-// Thanks to Notex for compiling this list
-const stde::bimap<uint32_t, std::string> TagMap = {};
+#pragma region Hash List
+static stde::bimap<uint32_t, std::string> TagMap = {};
+static stde::bimap<uint32_t, std::string> SwitchMap = {};
+static stde::bimap<uint32_t, std::string> LineMap = {};
+static HashList::Status HashListStatus = { false, (uint32_t)-1 };
 
-const stde::bimap<uint32_t, std::string> SwitchMap = {};
+HashList::Status HashList::GetStatus() { return HashListStatus; }
+
+void HashList::Clear() {
+    TagMap.clear();
+    SwitchMap.clear();
+    LineMap.clear();
+    HashListStatus = { false, (uint32_t)-1 };
+}
+
+bool HashList::Load(std::vector<char> data) {
+    buffer buff(data);
+
+    Clear();
+
+    // Magic
+    if (buff.read<uint32_t>() != 'ALMH')
+        return false;
+
+    // Version
+    HashListStatus.version = buff.read<uint32_t>();
+
+    // Checksum
+    uint32_t checksum = buff.read<uint32_t>();
+    CRC32 crc32;
+    if (checksum != crc32(buff.data().data() + buff.index, buff.size() - buff.index)) {
+        HashListStatus.version = -1;
+        return false;
+    }
+
+    // Soundtags
+    uint32_t nSoundtags = buff.read<uint32_t>();
+    for (uint32_t i = 0; i < nSoundtags; i++) {
+        uint32_t hash = buff.read<uint32_t>();
+        std::string value = buff.read<std::string>();
+        TagMap.insert(hash, value);
+    }
+
+    uint32_t nSwitches = buff.read<uint32_t>();
+    for (uint32_t i = 0; i < nSwitches; i++) {
+        uint32_t hash = buff.read<uint32_t>();
+        std::string value = buff.read<std::string>();
+        SwitchMap.insert(hash, value);
+    }
+
+    uint32_t nLines = buff.read<uint32_t>();
+    for (uint32_t i = 0; i < nLines; i++) {
+        uint32_t hash = buff.read<uint32_t>();
+        std::string value = buff.read<std::string>();
+        LineMap.insert(hash, value);
+    }
+
+    if (buff.index != buff.size()) {
+        Clear();
+        return false;
+    }
+
+    HashListStatus.loaded = true;
+
+    return true;
+}
+
+bool HashList::Load(const char* ptr, uint32_t size) {
+    return Load(std::vector<char>(ptr, ptr + size));
+}
 #pragma endregion
 
 #pragma region RTLV
-std::string Language::RTLV::Convert(Language::Version version, std::vector<char> data, std::string metaJson)
+std::string RTLV::Convert(Version version, std::vector<char> data, std::string metaJson)
 {
     ResourceConverter *converter = getConverter(version, "RTLV");
     if (!converter)
@@ -330,7 +395,7 @@ std::string Language::RTLV::Convert(Language::Version version, std::vector<char>
     return "";
 }
 
-Language::Rebuilt Language::RTLV::Rebuild(Language::Version version, std::string jsonString, std::string langMap)
+Rebuilt RTLV::Rebuild(Version version, std::string jsonString, std::string langMap)
 {
     ResourceGenerator *generator = getGenerator(version, "RTLV");
     if (!generator)
@@ -339,7 +404,7 @@ Language::Rebuilt Language::RTLV::Rebuild(Language::Version version, std::string
         return {};
     }
 
-    Language::Rebuilt out{};
+    Rebuilt out{};
     tsl::ordered_map<std::string, std::string> depends{};
 
     std::unordered_map<std::string, uint32_t> languages;
@@ -435,7 +500,7 @@ Language::Rebuilt Language::RTLV::Rebuild(Language::Version version, std::string
 #pragma endregion
 
 #pragma region LOCR
-std::string Language::LOCR::Convert(Language::Version version, std::vector<char> data, std::string metaJson, std::string langMap, bool symmetric)
+std::string LOCR::Convert(Version version, std::vector<char> data, std::string metaJson, std::string langMap, bool symmetric)
 {
     buffer buff(data);
 
@@ -524,9 +589,9 @@ std::string Language::LOCR::Convert(Language::Version version, std::vector<char>
     return "";
 }
 
-Language::Rebuilt Language::LOCR::Rebuild(Language::Version version, std::string jsonString, bool symmetric)
+Rebuilt LOCR::Rebuild(Version version, std::string jsonString, bool symmetric)
 {
-    Language::Rebuilt out{};
+    Rebuilt out{};
 
     try
     {
@@ -589,7 +654,7 @@ Language::Rebuilt Language::LOCR::Rebuild(Language::Version version, std::string
 #pragma endregion
 
 #pragma region DITL
-std::string Language::DITL::Convert(std::vector<char> data, std::string metaJson)
+std::string DITL::Convert(std::vector<char> data, std::string metaJson)
 {
     buffer buff(data);
 
@@ -634,9 +699,9 @@ std::string Language::DITL::Convert(std::vector<char> data, std::string metaJson
     return "";
 }
 
-Language::Rebuilt Language::DITL::Rebuild(std::string jsonString)
+Rebuilt DITL::Rebuild(std::string jsonString)
 {
-    Language::Rebuilt out{};
+    Rebuilt out{};
     tsl::ordered_map<std::string, std::string> depends{};
 
     try
@@ -676,7 +741,7 @@ Language::Rebuilt Language::DITL::Rebuild(std::string jsonString)
 #pragma endregion
 
 #pragma region CLNG
-std::string Language::CLNG::Convert(Language::Version version, std::vector<char> data, std::string metaJson, std::string langMap)
+std::string CLNG::Convert(Version version, std::vector<char> data, std::string metaJson, std::string langMap)
 {
     buffer buff(data);
 
@@ -721,9 +786,9 @@ std::string Language::CLNG::Convert(Language::Version version, std::vector<char>
     return "";
 }
 
-Language::Rebuilt Language::CLNG::Rebuild(std::string jsonString)
+Rebuilt CLNG::Rebuild(std::string jsonString)
 {
-    Language::Rebuilt out{};
+    Rebuilt out{};
 
     try
     {
@@ -834,7 +899,7 @@ public:
     };
 };
 
-std::string Language::DLGE::Convert(Language::Version version, std::vector<char> data, std::string metaJson, std::string defaultLocale, bool hexPrecision, std::string langMap)
+std::string DLGE::Convert(Version version, std::vector<char> data, std::string metaJson, std::string defaultLocale, bool hexPrecision, std::string langMap)
 {
     buffer buff(data);
 
@@ -1160,7 +1225,7 @@ void addDepend(
 }
 
 bool processContainer(
-    Language::Version version,
+    Version version,
     buffer &buff,
     json container,
     std::unordered_map<uint32_t, uint32_t> &indexMap,
@@ -1179,12 +1244,12 @@ bool processContainer(
             buff.write<uint32_t>(TagMap.has_value(soundTag) ? TagMap.get_key(soundTag) : hexStringToNum(soundTag));
             buff.write<uint32_t>(hexStringToNum(container.at("wavName").get<std::string>()));
 
-            if (version != Language::Version::H2016)
+            if (version != Version::H2016)
                 buff.write<uint32_t>(0x00);
 
             for (const auto &[language, index] : languages)
             {
-                if (version == Language::Version::H2016)
+                if (version == Version::H2016)
                     buff.write<uint32_t>(0x00);
 
                 if (defLocale == language)
@@ -1454,9 +1519,9 @@ bool processContainer(
     return true;
 }
 
-Language::Rebuilt Language::DLGE::Rebuild(Language::Version version, std::string jsonString, std::string defaultLocale, std::string langMap)
+Rebuilt DLGE::Rebuild(Version version, std::string jsonString, std::string defaultLocale, std::string langMap)
 {
-    Language::Rebuilt out{};
+    Rebuilt out{};
     tsl::ordered_map<std::string, std::string> depends{};
 
     // We require it to be ordered. These are, like usual, the H2 languages.
