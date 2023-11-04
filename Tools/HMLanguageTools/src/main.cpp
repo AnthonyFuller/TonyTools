@@ -12,6 +12,31 @@ using namespace TonyTools::Language;
 #define LOG(x) std::cout << x << std::endl
 #define LOG_AND_EXIT(x) std::cout << x << std::endl; std::exit(0)
 
+#pragma region EXE File Path
+#ifdef _WIN32
+#include <windows.h>
+#elif
+#include <unistd.h>
+#endif
+
+std::filesystem::path GetExeDirectory()
+{
+#ifdef _WIN32
+    // Windows specific
+    wchar_t szPath[MAX_PATH];
+    GetModuleFileNameW( NULL, szPath, MAX_PATH );
+#else
+    // Linux specific
+    char szPath[PATH_MAX];
+    ssize_t count = readlink( "/proc/self/exe", szPath, PATH_MAX );
+    if( count < 0 || count >= PATH_MAX )
+        return {}; // some error
+    szPath[count] = '\0';
+#endif
+    return std::filesystem::path{ szPath }.parent_path() / ""; // to finish the folder path with (back)slash
+}
+#pragma endregion
+
 argparse::ArgumentParser program("HMLanguageTools", "v1.7.1");
 
 void toUppercase(std::string &inputstr)
@@ -62,7 +87,8 @@ void writeFile(std::string path, const char* ptr, size_t size)
 
 int main(int argc, char *argv[])
 {
-    if (std::filesystem::exists("hash_list.hmla")) {
+    std::string HLPath = (GetExeDirectory() / "hash_list.hmla").string();
+    if (std::filesystem::exists(HLPath)) {
         HashList::Load(readFile("hash_list.hmla"));
     } else {
         LOG("[WARN] Hash list not found next to exe! It will not be loaded.");
