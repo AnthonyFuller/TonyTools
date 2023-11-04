@@ -86,7 +86,7 @@ FetchContent_Declare(json
 # Tessil ordered-map (we only use the set)
 FetchContent_Declare(tessil
     GIT_REPOSITORY  https://github.com/Tessil/ordered-map.git
-    GIT_TAG         v1.0.0
+    GIT_TAG         v1.1.0
 )
 
 if(TONYTOOLS_BUILD_TOOLS)
