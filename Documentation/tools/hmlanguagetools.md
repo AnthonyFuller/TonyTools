@@ -7,6 +7,8 @@ outline: deep
 This tool converts CLNG, DITL, DLGE, LOCR, and RTLV to JSON and vice-versa.  
 It is a CLI tool, meaning there is no GUI and you must use a terminal i.e. PowerShell.
 
+For hash resolution (in DLGE and LOCR), you require the hash list next to the exe. You can download the latest version [here](https://github.com/glacier-modding/Hitman-l10n-Hashes/releases/latest/download/hash_list.hmla).
+
 :::warning
 ResourceLib is required for this tool. For more information, see the [installation](/general/installation#resourcelib) page.
 :::

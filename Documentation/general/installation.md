@@ -30,6 +30,9 @@ All tools are CLI, to install them, you can either:
 - Extract them to a directory that is on your PATH, so they can be used anywhere.
 - Extract them to a folder and use them directly from there.
 
+For tools that require a hash list (HMLanguageTools), you need to place it next to the exe. You can download the latest
+version [here](https://github.com/glacier-modding/Hitman-l10n-Hashes/releases/latest/download/hash_list.hmla).
+
 ## Libraries
 Libraries themselves are statically linked, meaning there are no shared libraries to link to.
 

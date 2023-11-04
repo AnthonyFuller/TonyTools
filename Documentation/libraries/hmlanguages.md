@@ -56,6 +56,8 @@ Work has been started on various hash lists that can be optionally loaded by the
 - DLGE [soundtags](#glossary) and [switch cases](#switch).
 - [LINE](#glossary) hashes
 
+You can download the latest version [here](https://github.com/glacier-modding/Hitman-l10n-Hashes/releases/latest/download/hash_list.hmla).
+
 A custom binary format is used to store these, more information on this can be seen below.
 
 ### Format {#hash-list-format}
@@ -84,6 +86,37 @@ struct HashListEntry {
     uint32_t    hash;   // The CRC32 hash
     const char* string; // The original string (null terminated)
 }
+```
+
+### API
+
+External programs have to load the hash list manually. Below are the functions that do this.
+
+```cpp
+// All functions and structs below are in the
+// TonyTools::Language::HashList namespace.
+
+// Holds the status information about the hash list.
+// Returned from the "GetStatus" function.
+struct Status {
+    bool loaded;
+    uint32_t version;
+};
+
+// Loads the hash list from a vector comprised
+// of the hash list file data.
+// Returns if it was successful or not.
+bool Load(std::vector<char> data);
+
+// Same as above, but takes a pointer and
+// size of the data.
+bool Load(const char* ptr, uint32_t size);
+
+// Clears the currently stored hash list.
+void Clear();
+
+// Gets the current status of the hash list.
+Status GetStatus();
 ```
 
 ## API Overview
