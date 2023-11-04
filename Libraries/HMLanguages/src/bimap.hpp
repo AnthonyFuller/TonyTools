@@ -166,6 +166,10 @@ namespace stde
 		{
 			return m_key_tree.size();
 		}
+		void clear() {
+			m_key_tree.clear();
+			m_value_tree.clear();
+		}
 	};
 
 	template<
