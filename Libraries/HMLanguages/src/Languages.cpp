@@ -555,13 +555,14 @@ std::string LOCR::Convert(Version version, std::vector<char> data, std::string m
         uint32_t numStrings = buff.read<uint32_t>();
         for (int k = 0; k < numStrings; k++)
         {
-            uint32_t hash = buff.read<uint32_t>();
+            uint32_t hashNum = buff.read<uint32_t>();
             std::string str = (symmetric && version == Version::H2016)
                                 ? symmetricDecrypt(buff.read<std::vector<char>>())
                                 : xteaDecrypt(buff.read<std::vector<char>>());
             buff.index += 1;
 
-            j.at("languages").at(languages.at(i)).push_back({std::format("{:08X}", hash), str});
+            std::string hash = LineMap.has_key(hashNum) ? LineMap.get_value(hashNum) : std::format("{:08X}", hashNum);
+            j.at("languages").at(languages.at(i)).push_back({hash, str});
         }
     }
 
@@ -629,7 +630,7 @@ Rebuilt LOCR::Rebuild(Version version, std::string jsonString, bool symmetric)
             buff.write<uint32_t>(strings.size());
             for (const auto &[strHash, string] : strings.items())
             {
-                buff.write<uint32_t>(hexStringToNum(strHash));
+                buff.write<uint32_t>(LineMap.has_value(strHash) ? LineMap.get_key(strHash) : hexStringToNum(strHash));
                 buff.write<std::vector<char>>((symmetric && version == Version::H2016)
                                                 ? symmetricEncrypt(string.get<std::string>())
                                                 : xteaEncrypt(string.get<std::string>())
