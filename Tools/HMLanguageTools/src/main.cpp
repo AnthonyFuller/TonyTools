@@ -37,7 +37,7 @@ std::filesystem::path GetExeDirectory()
 }
 #pragma endregion
 
-argparse::ArgumentParser program("HMLanguageTools", "v1.8.0");
+argparse::ArgumentParser program("HMLanguageTools", "v1.8.1");
 
 void toUppercase(std::string &inputstr)
 {
