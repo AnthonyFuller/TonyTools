@@ -329,6 +329,12 @@ bool HashList::Load(std::vector<char> data) {
 bool HashList::Load(const char* ptr, uint32_t size) {
     return Load(std::vector<char>(ptr, ptr + size));
 }
+
+std::string HashList::GetLineHash(std::string value) {
+    if (!HashListStatus.loaded) return value;
+
+    return LineMap.has_value(value) ? std::format("{:08X}", LineMap.get_key(value)) : value;
+}
 #pragma endregion
 
 #pragma region RTLV

@@ -67,6 +67,14 @@ namespace Language
          * @return Status struct of the current status of the hash list.
          */
         Status GetStatus();
+
+        /**
+         * @brief Gets the LINE hash of a given value.
+         * 
+         * @param value The string to find the hash of.
+         * @return std::string The zero-padded, 4-byte, string of the hash, or the input if not found/loaded.
+         */
+        std::string GetLineHash(std::string value);
     } // namespace HashList
 
     namespace CLNG
