@@ -335,6 +335,12 @@ std::string HashList::GetLineHash(std::string value) {
 
     return LineMap.has_value(value) ? std::format("{:08X}", LineMap.get_key(value)) : value;
 }
+
+std::string HashList::GetLine(uint32_t hash) {
+    if (!HashListStatus.loaded) return std::format("{:08X}", hash);
+
+    return LineMap.has_key(hash) ? LineMap.get_value(hash) : std::format("{:08X}", hash);
+}
 #pragma endregion
 
 #pragma region RTLV

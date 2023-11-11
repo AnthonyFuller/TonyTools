@@ -75,6 +75,14 @@ namespace Language
          * @return std::string The zero-padded, 4-byte, string of the hash, or the input if not found/loaded.
          */
         std::string GetLineHash(std::string value);
+
+        /**
+         * @brief Gets the LINE value from a given hash.
+         * 
+         * @param hash The hash to fine the LINE of.
+         * @return std::string The LINE of the given hash, otherwise the zero-padded, 4-byte, string of the hash.
+         */
+        std::string GetLine(uint32_t hash);
     } // namespace HashList
 
     namespace CLNG
