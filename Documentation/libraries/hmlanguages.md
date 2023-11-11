@@ -117,6 +117,16 @@ void Clear();
 
 // Gets the current status of the hash list.
 Status GetStatus();
+
+// Gets the LINE hash from a given value.
+// Returns the zero-padded, 4-byte, string of the hash,
+// or the input if it is not found.
+std::string GetLineHash(std::string value);
+
+// Gets the LINE from a given hash.
+// Returns the LINE of the hash,
+// otherwise the zero-padded, 4-byte, string of the hash.
+std::string GetLine(uint32_t hash);
 ```
 
 ## API Overview
