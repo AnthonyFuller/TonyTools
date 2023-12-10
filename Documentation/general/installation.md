@@ -48,7 +48,7 @@ project(MyProject)
 set(TONYTOOLS_BUILD_TOOLS OFF)
 FetchContent_Declare(tonytools
     GIT_REPOSITORY  https://github.com/AnthonyFuller/TonyTools.git
-    GIT_TAG         v1.8.1
+    GIT_TAG         v1.8.2
 )
 
 FetchContent_MakeAvailable(tonytools)
