@@ -435,9 +435,9 @@ Rebuilt RTLV::Rebuild(Version version, std::string jsonString, std::string langM
     {
         json jSrc = json::parse(jsonString);
 
-        if (jSrc.at("videos").size() < 1 || jSrc.at("subtitles").size() < 1)
+        if (jSrc.at("videos").size() < 1)
         {
-            fprintf(stderr, "[LANG//RTLV] Videos and/or subtitles object is empty!\n");
+            fprintf(stderr, "[LANG//RTLV] Videos object is empty!\n");
             return {};
         }
 
@@ -452,10 +452,10 @@ Rebuilt RTLV::Rebuild(Version version, std::string jsonString, std::string langM
         }
 
         json j = {
-            {"AudioLanguages", {}},
-            {"VideoRidsPerAudioLanguage", {}},
-            {"SubtitleLanguages", {}},
-            {"SubtitleMarkupsPerLanguage", {}}
+            {"AudioLanguages", json::array()},
+            {"VideoRidsPerAudioLanguage", json::array()},
+            {"SubtitleLanguages", json::array()},
+            {"SubtitleMarkupsPerLanguage", json::array()}
         };
 
         for (const auto &[lang, video] : jSrc.at("videos").items())
