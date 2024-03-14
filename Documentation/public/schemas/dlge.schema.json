@@ -71,7 +71,7 @@
                 "wavName": {
                     "type": "string",
                     "title": "Wav Name",
-                    "description": "The name of the wav file (or hash if unavailable) for this container.",
+                    "description": "The name of the wav file (or hash if unavailable) for this container. Must be lowercase.",
                     "pattern": "^[a-z0-9_]*$"
                 },
                 "soundtag": {
