@@ -10,7 +10,9 @@
     "license": "MIT",
     "type": "module",
     "devDependencies": {
-        "vitepress": "^1.1.4"
+        "@vue/server-renderer": "^3.4.27",
+        "vitepress": "^1.1.4",
+        "vue": "^3.4.27"
     },
     "packageManager": "yarn@4.2.2"
 }

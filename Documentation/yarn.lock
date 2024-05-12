@@ -776,7 +776,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vue/server-renderer@npm:3.4.27":
+"@vue/server-renderer@npm:3.4.27, @vue/server-renderer@npm:^3.4.27":
   version: 3.4.27
   resolution: "@vue/server-renderer@npm:3.4.27"
   dependencies:
@@ -1935,7 +1935,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "tt-docs@workspace:."
   dependencies:
+    "@vue/server-renderer": "npm:^3.4.27"
     vitepress: "npm:^1.1.4"
+    vue: "npm:^3.4.27"
   languageName: unknown
   linkType: soft
 
@@ -2046,7 +2048,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vue@npm:^3.4.25":
+"vue@npm:^3.4.25, vue@npm:^3.4.27":
   version: 3.4.27
   resolution: "vue@npm:3.4.27"
   dependencies:
