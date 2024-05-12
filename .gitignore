@@ -58,3 +58,9 @@ _deps
 Documentation/node_modules
 Documentation/.vitepress/cache
 Documentation/.vitepress/dist
+Documentation/.yarn/*
+Documentation/!.yarn/releases
+Documentation/!.yarn/plugins
+Documentation/!.yarn/sdks
+Documentation/!.yarn/versions
+.pnp.*

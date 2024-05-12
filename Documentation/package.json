@@ -11,5 +11,6 @@
     "type": "module",
     "devDependencies": {
         "vitepress": "^1.1.4"
-    }
+    },
+    "packageManager": "yarn@4.2.2"
 }
