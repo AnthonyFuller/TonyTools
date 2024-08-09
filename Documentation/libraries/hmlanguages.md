@@ -579,7 +579,7 @@ And we're all done, take a breather, go get a drink, and revel in the fact that 
 The classic (and possibly the most popular) localization format from the World of Assassination trilogy.
 
 This format defines a [LINE](#glossary) hash to a string per language.
-Currently, there is no hash list for these (one is planned for far in the future), so they are all output as CRC32 hashes in hexadecimal.
+When the [hash list](#hash-list) is loaded, if the LINE is known it will be output, otherwise it will be output as the CRC32 hash in hexadecimal.
 A language map **is required** for convert as per the [table](#language-maps) whether that be from the version or user supplied.
 
 The JSON format allows for users to put the plain-text version e.g. `UI_LOCATION_PARIS_COUNTRY` instead of the hash, these will be hashed upon rebuilding.
