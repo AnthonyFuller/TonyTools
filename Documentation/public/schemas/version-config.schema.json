@@ -1,0 +1,53 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "https://tonytools.win/schemas/version-config.schema.json",
+    "type": "object",
+    "description": "A hm-version-switcher config file.",
+    "properties": {
+        "$schema": {
+            "type": "string",
+            "format": "uri",
+            "description": "The schema URL, if you're seeing this you probably already know what it is."
+        },
+        "current_version": {
+            "type": "string",
+            "description": "The current selected version, must exist in the versions object."
+        },
+        "versions": {
+            "type": "object",
+            "description": "A map of different versions where the key is the name.",
+            "properties": {
+                "path": {
+                    "type": "string",
+                    "description": "Path to the folder containing this version's 'Retail' and 'Runtime' folders and 'Launcher.exe'."
+                },
+                "patch_level": {
+                    "type": "integer",
+                    "description": "The patch level of this version, assumes lower patch levels are the same. Set to -1 to move all base chunks and patches."
+                },
+                "chunk_overrides": {
+                    "type": "object",
+                    "description": "Overrides of patch levels for certain chunks.",
+                    "patternProperties": {
+                        "\\bchunk(0|[1-9][0-9]?)\\b": {
+                            "type": "integer",
+                            "description": "The patch level of this chunk, assumes lower patch levels are the same. Set to -1 to move base chunk and all patches."
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "required": [
+                "path",
+                "patch_level"
+            ],
+            "minProperties": 1,
+            "additionalProperties": false
+        }
+    },
+    "required": [
+        "current_version",
+        "versions"
+    ],
+    "additionalProperties": false
+}
