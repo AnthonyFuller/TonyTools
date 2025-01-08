@@ -16,31 +16,38 @@
         "versions": {
             "type": "object",
             "description": "A map of different versions where the key is the name.",
-            "properties": {
-                "path": {
-                    "type": "string",
-                    "description": "Path to the folder containing this version's 'Retail' and 'Runtime' folders and 'Launcher.exe'."
-                },
-                "patch_level": {
-                    "type": "integer",
-                    "description": "The patch level of this version, assumes lower patch levels are the same. Set to -1 to move all base chunks and patches."
-                },
-                "chunk_overrides": {
+            "patternProperties": {
+                "*": {
                     "type": "object",
-                    "description": "Overrides of patch levels for certain chunks.",
-                    "patternProperties": {
-                        "\\bchunk(0|[1-9][0-9]?)\\b": {
+                    "description": "A version.",
+                    "properties": {
+                        "path": {
+                            "type": "string",
+                            "description": "Path to the folder containing this version's 'Retail' and 'Runtime' folders and 'Launcher.exe'."
+                        },
+                        "patch_level": {
                             "type": "integer",
-                            "description": "The patch level of this chunk, assumes lower patch levels are the same. Set to -1 to move base chunk and all patches."
+                            "description": "The patch level of this version, assumes lower patch levels are the same. Set to -1 to move all base chunks and patches."
+                        },
+                        "chunk_overrides": {
+                            "type": "object",
+                            "description": "Overrides of patch levels for certain chunks.",
+                            "patternProperties": {
+                                "\\bchunk(0|[1-9][0-9]?)\\b": {
+                                    "type": "integer",
+                                    "description": "The patch level of this chunk, assumes lower patch levels are the same. Set to -1 to move base chunk and all patches."
+                                }
+                            },
+                            "additionalProperties": false
                         }
                     },
+                    "required": [
+                        "path",
+                        "patch_level"
+                    ],
                     "additionalProperties": false
                 }
             },
-            "required": [
-                "path",
-                "patch_level"
-            ],
             "minProperties": 1,
             "additionalProperties": false
         }
