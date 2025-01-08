@@ -17,7 +17,7 @@
             "type": "object",
             "description": "A map of different versions where the key is the name.",
             "patternProperties": {
-                "*": {
+                ".*": {
                     "type": "object",
                     "description": "A version.",
                     "properties": {
@@ -33,7 +33,7 @@
                             "type": "object",
                             "description": "Overrides of patch levels for certain chunks.",
                             "patternProperties": {
-                                "\\bchunk(0|[1-9][0-9]?)\\b": {
+                                "^chunk(0|[1-9][0-9]?)$": {
                                     "type": "integer",
                                     "description": "The patch level of this chunk, assumes lower patch levels are the same. Set to -1 to move base chunk and all patches."
                                 }
