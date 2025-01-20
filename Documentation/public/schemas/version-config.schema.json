@@ -9,6 +9,14 @@
             "format": "uri",
             "description": "The schema URL, if you're seeing this you probably already know what it is."
         },
+        "retail_path": {
+            "type": "string",
+            "description": "Path to the game's Retail folder."
+        },
+        "runtime_path": {
+            "type": "string",
+            "description": "Path to the game's Runtime folder."
+        },
         "current_version": {
             "type": "string",
             "description": "The current selected version, must exist in the versions object."
@@ -53,6 +61,8 @@
         }
     },
     "required": [
+        "retail_path",
+        "runtime_path",
         "current_version",
         "versions"
     ],
