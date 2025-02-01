@@ -1,0 +1,38 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "https://tonytools.win/schemas/texture-meta.schema.json",
+    "type": "object",
+    "description": "A Simple Mod Framework v3 texture metadata file.",
+    "properties": {
+        "$schema": {
+            "type": "string",
+            "format": "uri",
+            "description": "The schema URL, if you're seeing this you probably already know what it is."
+        },
+        "text": {
+            "type": "string",
+            "description": "The hash or path of the output TEXT file."
+        },
+        "texd": {
+            "type": "string",
+            "description": "The hash or path of the output TEXD file, remove/set to null if you do not want a TEXD to be generated."
+        },
+        "format": {
+            "type": "string",
+            "description": "The texture format to use, if in doubt, remove the property to use the default (BC7).",
+            "enum": ["R16G16B16A16", "R8G8B8A8", "R8G8", "A8", "BC1", "BC2", "BC3", "BC4", "BC5", "BC7"]
+        },
+        "type": {
+            "type": "string",
+            "description": "The type of this texture, colour (diffuse), normal, height, etc.",
+            "enum": ["Colour", "Normal", "Height", "CompoundNormal", "Billboard", "Projection", "Emission", "Cubemap", "UNKNOWN512"]
+        },
+        "interpretAs": {
+            "type": "string",
+            "description": "<TODO>",
+            "enum": ["Colour", "Normal", "Height", "CompoundNormal", "Billboard", "Cubemap", "Emission", "Volume"]
+        }
+    },
+    "required": ["text", "type"],
+    "additionalProperties": false
+}
