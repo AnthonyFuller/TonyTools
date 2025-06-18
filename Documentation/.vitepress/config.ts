@@ -1,7 +1,4 @@
 import { defineConfig } from "vitepress"
-import { createRequire } from "node:module"
-
-const require = createRequire(import.meta.url)
 
 export default defineConfig({
     title: "TonyTools",
@@ -62,13 +59,6 @@ export default defineConfig({
         }
     },
     cleanUrls: true,
-    vite: {
-        resolve: {
-            alias: {
-                "vue/server-renderer": require.resolve("vue/server-renderer"),
-            }
-        }
-    },
     sitemap: {
         hostname: "https://tonytools.win"
     }
