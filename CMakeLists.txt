@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.25.0)
+cmake_minimum_required(VERSION 4.3.1)
 include(FetchContent)
 
 project(TonyTools)
@@ -31,14 +31,14 @@ if(TONYTOOLS_BUILD_TOOLS)
     set(BUILD_SAMPLE OFF)
     FetchContent_Declare(directxtex
         GIT_REPOSITORY  https://github.com/microsoft/DirectXTex.git
-        GIT_TAG         jan2023
+        GIT_TAG         mar2026
     )
 
     # libmorton
     set(BUILD_TESTING OFF)
     FetchContent_Declare(libmorton
         GIT_REPOSITORY  https://github.com/Forceflow/libmorton.git
-        GIT_TAG         v0.2.11
+        GIT_TAG         v0.2.12
     )
 
     # lz4
@@ -47,14 +47,14 @@ if(TONYTOOLS_BUILD_TOOLS)
     set(LZ4_BUNDLED_MODE ON)
     FetchContent_Declare(lz4
         GIT_REPOSITORY  https://github.com/lz4/lz4.git
-        GIT_TAG         v1.9.4
+        GIT_TAG         v1.10.0
         SOURCE_SUBDIR   build/cmake
     )
 
     # argparse
     FetchContent_Declare(argparse
         GIT_REPOSITORY  https://github.com/p-ranav/argparse.git
-        GIT_TAG         v2.9
+        GIT_TAG         v3.2
     )
 
     # bit7z
