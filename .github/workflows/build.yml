@@ -44,7 +44,7 @@ jobs:
         cmake --build _build
 
     - name: Upload build artifact [Released]
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v7
       with:
         name: "TonyTools"
         path: |
@@ -54,7 +54,7 @@ jobs:
           _build/GFXFzip.exe
 
     - name: Upload build artifact [Dev]
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v7
       with:
         name: "TonyTools-Dev"
         path: |
@@ -77,13 +77,13 @@ jobs:
       run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
 
     - name: Download main artifact
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v8
       with:
         name: TonyTools
         path: TonyTools
 
     - name: Download dev artifact
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v8
       with:
         name: TonyTools-Dev
         path: TonyTools-Dev
@@ -99,7 +99,7 @@ jobs:
         zip -r TonyTools-Dev.zip *
 
     - name: Create release
-      uses: softprops/action-gh-release@v1
+      uses: softprops/action-gh-release@v3
       with:
         prerelease: ${{ contains(github.ref, '-pre') }}
         tag_name: ${{ steps.get_version.outputs.VERSION }}
