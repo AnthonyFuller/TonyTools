@@ -1,0 +1,5 @@
+[tools]
+cmake = "latest"
+ninja = "latest"
+node = "lts"
+pnpm = "latest"

@@ -10,11 +10,7 @@
     "license": "MIT",
     "type": "module",
     "devDependencies": {
-        "@types/node": "^22.13.14",
-        "vitepress": "^1.6.3"
-    },
-    "volta": {
-        "node": "22.16.0",
-        "pnpm": "10.12.1"
+        "@types/node": "^22.19.17",
+        "vitepress": "^1.6.4"
     }
 }
